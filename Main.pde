@@ -14,29 +14,35 @@ int[] array;
 int[] colours;
 int count = 0;
 int count2 = 0;
-int arraySize = 600;
+int arraySize;
+int arrayMax;
+int arrayMin;
 int stepsPerSecond = 1;
 int maxSteps = 3840;
 int minSteps = 1;
 
 void settings() {
-	// size(2500, 600, OPENGL);
-	// size(1980, 600, P2D);
+	// size(1000, 600, OPENGL);
+	// size(1000, 600, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(P2D, 1);
+	fullScreen(P2D, 2);
 	// fullScreen(1);
-	// noSmooth();
+	noSmooth();
 }
 
 void setup()
 {
-	surface.setResizable(true);
+	// surface.setResizable(true);
 	background(0);
 	stroke(0);
 	// noStroke();
 	fill(255);
 	gen = new ArrayGenerator();
-	b = new Barchart();
+	b = new Barchart(0, 0, width, height);
+	arrayMax = (int)((b.w/2));
+	arrayMin = 10;
+	arraySize = arrayMin;
+	println(arrayMax);
 	array = gen.random(arraySize);
 	colours = gen.blanks(arraySize);
 	bubble = new BubbleSort(array, colours);
@@ -46,7 +52,7 @@ void setup()
 	speedSlider = new TickSlider(110, 30, 150, 20, 0, 12);
 	// slider2 = new Slider(110, 30, 150, 20);
 
-	sizeSlider = new Slider(570, 30, 150, 20);
+	sizeSlider = new SizeSlider(570, 30, 150, 20);
 
 	//Reset Button
 	reset = new Reset(270, 10, 90, 50);
@@ -67,7 +73,7 @@ void draw() {
 	}
 	int[] a = bubble.getArray();
 	int[] c = bubble.getColours();
-	b.render(a, c);
+	b.render2(a, c);
 	play.render();
 	speedSlider.render();
 	reset.render();
@@ -145,7 +151,7 @@ void bubble(int[] array) {
 			}
 		}
 	}
-	Barchart b2 = new Barchart();
+	Barchart b2 = new Barchart(0, 0, width, height);
 	// b2.render(array);
 }
 

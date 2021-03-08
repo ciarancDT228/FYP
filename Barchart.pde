@@ -5,23 +5,31 @@ class Barchart{
 	// int[] array = {1, 2, 3, 4, 5};
 	int[] array;
 	int[] colours;
+	float posX, posY, w, h;
 	float border;
-	float viewWidth, viewHeight;
-	float w;
+	float strokeWeight;
+	float barWidth;
 	float max;
+	float thickness;
 
-	public Barchart() {
+	public Barchart(float posX, float posY, float w, float h) {
 		border = 20;
-		viewWidth = width - (border*2);
-		viewHeight = height - (border*2);
+		this.posX = posX;
+		this.posY = posY;
+		this.w = w - (border*2);
+		this.h = h - (border*2);
 	}
 
 	// void update(float wid, float hei) {
 	// 	border = mouseX;
-	// 	viewWidth = wid - (border*2);
-	// 	viewHeight = hei - (border*2);
-	// 	w = viewWidth/array.length;
+	// 	w = wid - (border*2);
+	// 	h = hei - (border*2);
+	// 	barWidth = w/array.length;
 	// }
+
+	void update() {
+		
+	}
 
 	void render(int[] a, int[] c) {
 		strokeWeight(1);
@@ -29,7 +37,7 @@ class Barchart{
 		array = a;
 		colours = c;
 		max = getMax();
-		w = viewWidth/array.length;
+		barWidth = w/array.length;
 		for (int i = 0; i < array.length; i++) {
 			if(c[i] == 0) {
 				fill(255);
@@ -40,11 +48,37 @@ class Barchart{
 			else {
 				fill(0, 255, 0);
 			}
-			float x1 = map(i, 0, array.length, 0, viewWidth) + border;
-			float y1 = map(array[i], 0, max, viewHeight+border, border);
-			float h = map(array[i], 0, max, 0, viewHeight);
-			rect(x1, y1, w, h);
+			float x1 = map(i, 0, array.length, 0, w) + border;
+			float y1 = map(array[i], 0, max, h+border, border);
+			float barHeight = map(array[i], 0, max, 0, h);
+			rect(x1, y1, barWidth, barHeight);
 		}
+	}
+
+	void render2(int[] a, int[] c) {
+		strokeWeight = (w-(a.length-1))/a.length;
+		strokeWeight(strokeWeight);
+		strokeCap(SQUARE);
+		stroke(255);
+		array = a;
+		colours = c;
+		max = getMax();
+		for (int i = 0; i < a.length; i++) {
+			if(c[i] == 0) {
+				stroke(255);
+			}
+			else if (c[i] == 1) {
+				stroke(255, 0, 0);
+			}
+			else {
+				stroke(0, 255, 0);
+			}
+			float x1 = map(i, 0, a.length, 0, w) + border + strokeWeight/2;
+			float y1 = map(a[i], 0, max, h+border, border);
+			float barHeight = map(a[i], 0, max, 0, h);
+			line(x1, y1, x1, y1 + barHeight);
+		}
+		strokeCap(ROUND);
 	}
 
 	float getMax() {

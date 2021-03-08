@@ -12,7 +12,7 @@ class TickSlider extends Slider {
 
 	public TickSlider(float posX, float posY, float w, float h, int tick, int numTicks) {
 		super(posX, posY, w, h);
-		this.thumbX = map(stepsPerSecond, minSteps, maxSteps, 200, 350);
+		this.thumbX = map(stepsPerSecond, minSteps, maxSteps, posX, posX + w);
 		this.tick = tick;
 		this.numTicks = numTicks;
 	}
@@ -26,7 +26,6 @@ class TickSlider extends Slider {
 		if(depressed) {
 			if(inRangeX()) {
 				thumbX = getTickLocation();
-				println("Inside update: " + thumbX);
 			}
 			else if (mouseX < posX) {
 				thumbX = posX;

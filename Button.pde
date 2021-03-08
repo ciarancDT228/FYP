@@ -19,6 +19,7 @@ class Button extends Component {
 	}
 
 		void render() {
+		noStroke();
 		fill(255);
 		if(offset) {
 			rect(posX - offsetXY, posY + offsetXY, w, h);

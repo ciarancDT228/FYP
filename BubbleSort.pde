@@ -29,6 +29,8 @@ class BubbleSort extends Algorithm {
 		this.array = array;
 		this.colours = colours;
 		counter = array.length;
+		oldPos1 = 0;
+		oldPos0 = 0;
 	}
 
 	void steps(int x) {

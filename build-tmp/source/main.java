@@ -30,29 +30,35 @@ int[] array;
 int[] colours;
 int count = 0;
 int count2 = 0;
-int arraySize = 600;
+int arraySize;
+int arrayMax;
+int arrayMin;
 int stepsPerSecond = 1;
 int maxSteps = 3840;
 int minSteps = 1;
 
 public void settings() {
-	// size(2500, 600, OPENGL);
-	// size(1980, 600, P2D);
+	// size(1000, 600, OPENGL);
+	// size(1000, 600, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(P2D, 1);
+	fullScreen(P2D, 2);
 	// fullScreen(1);
-	// noSmooth();
+	noSmooth();
 }
 
 public void setup()
 {
-	surface.setResizable(true);
+	// surface.setResizable(true);
 	background(0);
 	stroke(0);
 	// noStroke();
 	fill(255);
 	gen = new ArrayGenerator();
-	b = new Barchart();
+	b = new Barchart(0, 0, width, height);
+	arrayMax = (int)((b.w/2));
+	arrayMin = 10;
+	arraySize = arrayMin;
+	println(arrayMax);
 	array = gen.random(arraySize);
 	colours = gen.blanks(arraySize);
 	bubble = new BubbleSort(array, colours);
@@ -62,7 +68,7 @@ public void setup()
 	speedSlider = new TickSlider(110, 30, 150, 20, 0, 12);
 	// slider2 = new Slider(110, 30, 150, 20);
 
-	sizeSlider = new Slider(570, 30, 150, 20);
+	sizeSlider = new SizeSlider(570, 30, 150, 20);
 
 	//Reset Button
 	reset = new Reset(270, 10, 90, 50);
@@ -83,7 +89,7 @@ public void draw() {
 	}
 	int[] a = bubble.getArray();
 	int[] c = bubble.getColours();
-	b.render(a, c);
+	b.render2(a, c);
 	play.render();
 	speedSlider.render();
 	reset.render();
@@ -161,7 +167,7 @@ public void bubble(int[] array) {
 			}
 		}
 	}
-	Barchart b2 = new Barchart();
+	Barchart b2 = new Barchart(0, 0, width, height);
 	// b2.render(array);
 }
 
@@ -221,23 +227,31 @@ class Barchart{
 	// int[] array = {1, 2, 3, 4, 5};
 	int[] array;
 	int[] colours;
+	float posX, posY, w, h;
 	float border;
-	float viewWidth, viewHeight;
-	float w;
+	float strokeWeight;
+	float barWidth;
 	float max;
+	float thickness;
 
-	public Barchart() {
+	public Barchart(float posX, float posY, float w, float h) {
 		border = 20;
-		viewWidth = width - (border*2);
-		viewHeight = height - (border*2);
+		this.posX = posX;
+		this.posY = posY;
+		this.w = w - (border*2);
+		this.h = h - (border*2);
 	}
 
 	// void update(float wid, float hei) {
 	// 	border = mouseX;
-	// 	viewWidth = wid - (border*2);
-	// 	viewHeight = hei - (border*2);
-	// 	w = viewWidth/array.length;
+	// 	w = wid - (border*2);
+	// 	h = hei - (border*2);
+	// 	barWidth = w/array.length;
 	// }
+
+	public void update() {
+		
+	}
 
 	public void render(int[] a, int[] c) {
 		strokeWeight(1);
@@ -245,7 +259,7 @@ class Barchart{
 		array = a;
 		colours = c;
 		max = getMax();
-		w = viewWidth/array.length;
+		barWidth = w/array.length;
 		for (int i = 0; i < array.length; i++) {
 			if(c[i] == 0) {
 				fill(255);
@@ -256,11 +270,37 @@ class Barchart{
 			else {
 				fill(0, 255, 0);
 			}
-			float x1 = map(i, 0, array.length, 0, viewWidth) + border;
-			float y1 = map(array[i], 0, max, viewHeight+border, border);
-			float h = map(array[i], 0, max, 0, viewHeight);
-			rect(x1, y1, w, h);
+			float x1 = map(i, 0, array.length, 0, w) + border;
+			float y1 = map(array[i], 0, max, h+border, border);
+			float barHeight = map(array[i], 0, max, 0, h);
+			rect(x1, y1, barWidth, barHeight);
 		}
+	}
+
+	public void render2(int[] a, int[] c) {
+		strokeWeight = (w-(a.length-1))/a.length;
+		strokeWeight(strokeWeight);
+		strokeCap(SQUARE);
+		stroke(255);
+		array = a;
+		colours = c;
+		max = getMax();
+		for (int i = 0; i < a.length; i++) {
+			if(c[i] == 0) {
+				stroke(255);
+			}
+			else if (c[i] == 1) {
+				stroke(255, 0, 0);
+			}
+			else {
+				stroke(0, 255, 0);
+			}
+			float x1 = map(i, 0, a.length, 0, w) + border + strokeWeight/2;
+			float y1 = map(a[i], 0, max, h+border, border);
+			float barHeight = map(a[i], 0, max, 0, h);
+			line(x1, y1, x1, y1 + barHeight);
+		}
+		strokeCap(ROUND);
 	}
 
 	public float getMax() {
@@ -306,6 +346,8 @@ class BubbleSort extends Algorithm {
 		this.array = array;
 		this.colours = colours;
 		counter = array.length;
+		oldPos1 = 0;
+		oldPos0 = 0;
 	}
 
 	public void steps(int x) {
@@ -419,6 +461,7 @@ class Button extends Component {
 	}
 
 		public void render() {
+		noStroke();
 		fill(255);
 		if(offset) {
 			rect(posX - offsetXY, posY + offsetXY, w, h);
@@ -541,15 +584,28 @@ class Reset extends Button{
 	public void mouseUp() {
 		if(correctLocation() && depressed) {
 			//do some thing
+			arraySize = sizeSlider.getVal();
 			array = gen.random(arraySize);
 			colours = gen.blanks(arraySize);
 			bubble.reset(array, colours);
 			play.active = false;
+
 		}
 		depressed = false;
 		offset = false;
 	}
 
+}
+class SizeSlider extends Slider {
+
+	public SizeSlider(float posX, float posY, float w, float h) {
+		super(posX, posY, w, h);
+		this.thumbX = map(arraySize, arrayMin, arrayMax, posX, posX + w);
+	}
+
+	public int getVal() {
+		return(int)(map(thumbX, posX, posX + w, arrayMin, arrayMax));
+	}
 }
 class Slider extends Component{
 
@@ -580,7 +636,6 @@ class Slider extends Component{
 		if(depressed) {
 			if(inRangeX()) {
 				thumbX = mouseX;
-				println("Inside update: " + thumbX);
 			}
 			else if (mouseX < posX) {
 				thumbX = posX;
@@ -667,7 +722,7 @@ class TickSlider extends Slider {
 
 	public TickSlider(float posX, float posY, float w, float h, int tick, int numTicks) {
 		super(posX, posY, w, h);
-		this.thumbX = map(stepsPerSecond, minSteps, maxSteps, 200, 350);
+		this.thumbX = map(stepsPerSecond, minSteps, maxSteps, posX, posX + w);
 		this.tick = tick;
 		this.numTicks = numTicks;
 	}
@@ -681,7 +736,6 @@ class TickSlider extends Slider {
 		if(depressed) {
 			if(inRangeX()) {
 				thumbX = getTickLocation();
-				println("Inside update: " + thumbX);
 			}
 			else if (mouseX < posX) {
 				thumbX = posX;

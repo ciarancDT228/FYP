@@ -27,7 +27,6 @@ class Slider extends Component{
 		if(depressed) {
 			if(inRangeX()) {
 				thumbX = mouseX;
-				println("Inside update: " + thumbX);
 			}
 			else if (mouseX < posX) {
 				thumbX = posX;
