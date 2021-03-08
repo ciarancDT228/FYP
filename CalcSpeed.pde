@@ -20,5 +20,5 @@ static class CalcSpeed {
 		}
 		return modulus;
 	}
-
+//
 }

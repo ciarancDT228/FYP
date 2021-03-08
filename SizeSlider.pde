@@ -8,4 +8,5 @@ class SizeSlider extends Slider {
 	int getVal() {
 		return(int)(map(thumbX, posX, posX + w, arrayMin, arrayMax));
 	}
+	//
 }
