@@ -51,8 +51,9 @@ class BubbleSort extends Algorithm {
 		if(pos1 < stop) {
 			compare();
 		}
+		//If not sorted
 		else if (!checkSorted()) {
-			// colours[pos0] = 0;
+			stop--;
 			pos1 = 1;
 			pos0 = 0;
 			compare();
