@@ -4,47 +4,66 @@ class Slider extends Component{
 	float thumbX, thumbRadius;
 	float w, h;
 	float centreX, centreY;
+	int strokeS, strokeM, strokeL;
 	boolean depressed, active;
 
-	public Slider(float posX, float posY, float w, float h, float thumbX) {
+	public Slider(float posX, float posY, float w, float h) {
 		this.posX = posX;
 		this.posY = posY;
 		this.w = w;
 		this.h = h;
-		this.thumbX = thumbX;
 		thumbRadius = h;
 		depressed = false;
 		active = false;
 		centreX = posX + (w/2);
 		centreY = posY + (h/2);
+		this.thumbX = centreX;
+		strokeS = (int)(h/10);
+		strokeM = (int)(h/5);
+		strokeL = (int)(h/3.33);
 	}
-
 
 	void update() {
 		if(depressed) {
-			if(inRange()) {
+			if(inRangeX()) {
 				thumbX = mouseX;
+				println("Inside update: " + thumbX);
+			}
+			else if (mouseX < posX) {
+				thumbX = posX;
+			}
+			else if (mouseX > posX + w) {
+				thumbX = posX + w;
 			}
 		}
 	}
 
 	void render() {
 		//Draw track base
-		strokeWeight(4);
-		stroke(150);
+		strokeWeight(strokeM);
+		stroke(100);
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
-		stroke(200);
+		strokeWeight(strokeL);
+		stroke(255);
 		line(posX, centreY, thumbX, centreY);
-		//Draw Thumb
 		stroke(0);
 		strokeWeight(0);
-		fill(200);
+		//Draw highlight for hover and depressed
+		if(depressed) {
+			fill(255, 130);
+			circle(thumbX, centreY, thumbRadius * 2);
+		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
+			fill(255, 40);
+			circle(thumbX, centreY, thumbRadius * 2);
+		}
+		//Draw Thumb
+		fill(255);
 		circle(thumbX, centreY, thumbRadius);
 	}
 
 	void mouseDown() {
-		if(correctLocation()) {
+		if(insideBoundsXY()) {
 			depressed = true;
 		}
 	}
@@ -55,8 +74,9 @@ class Slider extends Component{
 		}
 	}
 
-	boolean correctLocation() {
-		if(distance(thumbX, centreY, mouseX, mouseY) <= thumbRadius) {
+	boolean insideBoundsXY() {
+		if(mouseX >= posX - (h/2) && mouseX <= posX + w + (h/2) 
+			&& mouseY >= posY && mouseY <= posY + h) {
 			return true;
 		} else {
 			return false;
@@ -67,16 +87,16 @@ class Slider extends Component{
 		return (float)Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
 	}
 
-	boolean inRange() {
-		if(mouseX > posX && mouseX < posX + w) {
+	boolean inRangeX() {
+		if(mouseX >= posX && mouseX <= posX + w) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	int getSpeed() {
-		return(SpeedControl.getNumSteps2(20));
+	int getVal() {
+		return(int)(map(thumbX, posX, posX + w, minSteps, maxSteps));
 	}
 
 }

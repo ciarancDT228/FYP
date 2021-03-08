@@ -1,4 +1,4 @@
-ArrayList<Button> buttons = new ArrayList<Button>();
+ArrayList<Component> components = new ArrayList<Component>();
 
 
 Barchart b;
@@ -6,19 +6,25 @@ ArrayGenerator gen;
 BubbleSort bubble;
 Algorithm algo;
 Play play;
-Slider slider;
-SpeedControl speedCtrl;
+Reset reset;
+Slider speedSlider;
+Slider sizeSlider;
+// Slider slider2;
+int[] array;
+int[] colours;
 int count = 0;
+int count2 = 0;
 int arraySize = 600;
-int stepsPerSecond = 1000;
-int maxSteps = 5000;
+int stepsPerSecond = 1;
+int maxSteps = 3840;
 int minSteps = 1;
 
 void settings() {
 	// size(2500, 600, OPENGL);
-	size(1980, 600, P2D);
+	// size(1980, 600, P2D);
 	// fullScreen(P2D, SPAN);
-	// fullScreen(P2D, 2);
+	fullScreen(P2D, 1);
+	// fullScreen(1);
 	// noSmooth();
 }
 
@@ -31,18 +37,22 @@ void setup()
 	fill(255);
 	gen = new ArrayGenerator();
 	b = new Barchart();
-	int[] array = gen.random(arraySize);
-	int[] colours = gen.blanks(arraySize);
+	array = gen.random(arraySize);
+	colours = gen.blanks(arraySize);
 	bubble = new BubbleSort(array, colours);
-	play = new Play(10, 10, 100, 50);
+	play = new Play(10, 10, 90, 50);
 
 	//Initiating Slider
-	float thumbX = map(stepsPerSecond, minSteps, maxSteps, 200, 350);
-	slider = new Slider(200, 30, 150, 20, thumbX);
+	speedSlider = new TickSlider(110, 30, 150, 20, 0, 12);
+	// slider2 = new Slider(110, 30, 150, 20);
 
-	buttons.add(play);
+	sizeSlider = new Slider(570, 30, 150, 20);
+
+	//Reset Button
+	reset = new Reset(270, 10, 90, 50);
+
+	components.add(play);
 	play.render();
-	speedCtrl = new SpeedControl();
 }
 
 void draw() {
@@ -50,48 +60,49 @@ void draw() {
 	count++;
 
 	background(0);
-	if(count % speedCtrl.getModulus(stepsPerSecond) == 0) {
+	if(count % CalcSpeed.getModulus(speedSlider.getVal()) == 0) {
 		if(!bubble.sorted && play.active) {
-			bubble.steps(speedCtrl.getNumSteps(stepsPerSecond));
+			bubble.steps(CalcSpeed.getNumSteps(speedSlider.getVal()));
 		}
 	}
 	int[] a = bubble.getArray();
 	int[] c = bubble.getColours();
 	b.render(a, c);
 	play.render();
-	slider.render();
+	speedSlider.render();
+	reset.render();
+	sizeSlider.render();
+	// if(count % 60 == 0) {
+	// 	count2++;
+	// 	println(count2);
+	// }
 }
 
 void update() {
-	if(mousePressed) {
-		for (int i = 0; i < buttons.size(); i++) {
-			Button b = buttons.get(i);
-			if(b instanceof Play) {
-				((Play)b).update();
-			}
-		}
-	}
-	slider.update();
+	play.update();
+	speedSlider.update();
+	reset.update();
+	sizeSlider.update();
 }
 
 void mousePressed() {
-	for (int i = 0; i < buttons.size(); i++) {
-		Button b = buttons.get(i);
-		if(b instanceof Play) {
-			((Play)b).mouseDown();
-		}
-	}
-	slider.mouseDown();
+	play.mouseDown();
+	speedSlider.mouseDown();
+	reset.mouseDown();
+	sizeSlider.mouseDown();
 }
 
 void mouseReleased() {
-	for (int i = 0; i < buttons.size(); i++) {
-		Button b = buttons.get(i);
-		if(b instanceof Play) {
-			((Play)b).mouseUp();
-		}
-	}
-	slider.mouseUp();
+	play.mouseUp();
+	speedSlider.mouseUp();
+	reset.mouseUp();
+	sizeSlider.mouseUp();
+	// for (int i = 0; i < components.size(); i++) {
+	// 	Component b = components.get(i);
+	// 	if(c instanceof Play) {
+	// 		((Play)b).mouseUp();
+	// 	}
+	// }
 }
 
 
