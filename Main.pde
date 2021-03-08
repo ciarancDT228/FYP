@@ -71,6 +71,7 @@ void update() {
 			}
 		}
 	}
+	slider.update();
 }
 
 void mousePressed() {
@@ -80,6 +81,7 @@ void mousePressed() {
 			((Play)b).mouseDown();
 		}
 	}
+	slider.mouseDown();
 }
 
 void mouseReleased() {
@@ -89,6 +91,7 @@ void mouseReleased() {
 			((Play)b).mouseUp();
 		}
 	}
+	slider.mouseUp();
 }
 
 

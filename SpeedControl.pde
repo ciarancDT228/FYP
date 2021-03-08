@@ -30,4 +30,13 @@ class SpeedControl {
 		return numSteps;
 	}
 
+	static int getNumSteps2(int x) {
+		if(x < 60) {
+			numSteps = 1;
+		} else {
+			numSteps = x;
+		}
+		return numSteps;
+	}
+
 }

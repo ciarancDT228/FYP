@@ -87,6 +87,7 @@ public void update() {
 			}
 		}
 	}
+	slider.update();
 }
 
 public void mousePressed() {
@@ -96,6 +97,7 @@ public void mousePressed() {
 			((Play)b).mouseDown();
 		}
 	}
+	slider.mouseDown();
 }
 
 public void mouseReleased() {
@@ -105,6 +107,7 @@ public void mouseReleased() {
 			((Play)b).mouseUp();
 		}
 	}
+	slider.mouseUp();
 }
 
 
@@ -486,7 +489,7 @@ class Play extends Button{
 class Slider extends Component{
 
 	float posX, posY;
-	float thumbX, thumbRadius, thumbTempX;
+	float thumbX, thumbRadius;
 	float w, h;
 	float centreX, centreY;
 	boolean depressed, active;
@@ -497,7 +500,6 @@ class Slider extends Component{
 		this.w = w;
 		this.h = h;
 		this.thumbX = thumbX;
-		thumbTempX = thumbX;
 		thumbRadius = h;
 		depressed = false;
 		active = false;
@@ -505,13 +507,11 @@ class Slider extends Component{
 		centreY = posY + (h/2);
 	}
 
+
 	public void update() {
 		if(depressed) {
 			if(inRange()) {
-				thumbTempX = mouseX;
-			}
-			else {
-				thumbTempX = thumbX;
+				thumbX = mouseX;
 			}
 		}
 	}
@@ -523,12 +523,12 @@ class Slider extends Component{
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
 		stroke(200);
-		line(posX, centreY, thumbTempX, centreY);
+		line(posX, centreY, thumbX, centreY);
 		//Draw Thumb
 		stroke(0);
 		strokeWeight(0);
 		fill(200);
-		circle(thumbTempX, centreY, thumbRadius);
+		circle(thumbX, centreY, thumbRadius);
 	}
 
 	public void mouseDown() {
@@ -538,15 +538,9 @@ class Slider extends Component{
 	}
 
 	public void mouseUp() {
-		if(correctLocation() && depressed) {
-			//do some thing
-			if(active) {
-				active = false;
-			} else {
-				active = true;
-			}
+		if(depressed) {
+			depressed = false;
 		}
-		depressed = false;
 	}
 
 	public boolean correctLocation() {
@@ -562,12 +556,15 @@ class Slider extends Component{
 	}
 
 	public boolean inRange() {
-		if(mouseX > posX && mouseX < posX + w 
-			&& mouseY > posY && mouseY < posY + h) {
+		if(mouseX > posX && mouseX < posX + w) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	public int getSpeed() {
+		return(SpeedControl.getNumSteps2(20));
 	}
 
 }
@@ -595,6 +592,15 @@ class SpeedControl {
 	}
 
 	public int getNumSteps(int x) {
+		if(x < 60) {
+			numSteps = 1;
+		} else {
+			numSteps = x;
+		}
+		return numSteps;
+	}
+
+	public static int getNumSteps2(int x) {
 		if(x < 60) {
 			numSteps = 1;
 		} else {
