@@ -1,3 +1,5 @@
+
+import processing.sound.*;
 ArrayList<Component> components = new ArrayList<Component>();
 
 
@@ -20,6 +22,15 @@ int arrayMin;
 int stepsPerSecond = 1;
 int maxSteps = 3840;
 int minSteps = 1;
+
+//Sound stuff
+TriOsc triOsc;
+Env env;
+// Oscillator wave;
+float attackTime = 0.001;
+float sustainTime = 0.004;
+float sustainLevel = 0.3;
+float releaseTime = 0.2;
 
 void settings() {
 	// size(1000, 600, OPENGL);
@@ -46,16 +57,22 @@ void setup()
 	array = gen.random(arraySize);
 	colours = gen.blanks(arraySize);
 	bubble = new BubbleSort(array, colours);
-	play = new Play(10, 10, 90, 50);
 
-	//Initiating Slider
+	//Buttons
+	play = new Play(10, 10, 90, 50);
+	reset = new Reset(270, 10, 90, 50);
+	//Sliders
 	speedSlider = new TickSlider(110, 30, 150, 20, 0, 12);
+	sizeSlider = new SizeSlider(570, 30, 150, 20);
 	// slider2 = new Slider(110, 30, 150, 20);
 
-	sizeSlider = new SizeSlider(570, 30, 150, 20);
+	//Sounds
+	triOsc = new TriOsc(this); 
+	env = new Env(this);
+	// wave = new Oscillator(this);
+	triOsc.freq(200);
+	env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 
-	//Reset Button
-	reset = new Reset(270, 10, 90, 50);
 
 	components.add(play);
 	play.render();
@@ -69,11 +86,13 @@ void draw() {
 	if(count % CalcSpeed.getModulus(speedSlider.getVal()) == 0) {
 		if(!bubble.sorted && play.active) {
 			bubble.steps(CalcSpeed.getNumSteps(speedSlider.getVal()));
+			int[] a = bubble.getArray();
+			float fq = map(a[bubble.oldPos1], 1, arrayMax, 200, 600);
+			triOsc.freq(fq);
+			env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 		}
 	}
-	int[] a = bubble.getArray();
-	int[] c = bubble.getColours();
-	b.render2(a, c);
+	b.render(bubble.getArray(), bubble.getColours());
 	play.render();
 	speedSlider.render();
 	reset.render();

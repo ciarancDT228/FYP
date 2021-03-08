@@ -4,10 +4,9 @@ class BubbleSort extends Algorithm {
 	boolean sorted;
 	boolean swapping;
 	int counter;
-	int pos1;
-	int pos0;
-	int oldPos1;
-	int oldPos0;
+	int pos1, pos0;
+	int oldPos1, oldPos0;
+	int stop;
 	int[] array;
 	int[] colours;
 
@@ -19,6 +18,7 @@ class BubbleSort extends Algorithm {
 		this.array = array;
 		this.colours = colours;
 		counter = array.length;
+		stop = array.length;
 	}
 
 	void reset(int[] array, int[] colours) {
@@ -29,6 +29,7 @@ class BubbleSort extends Algorithm {
 		this.array = array;
 		this.colours = colours;
 		counter = array.length;
+		stop = array.length;
 		oldPos1 = 0;
 		oldPos0 = 0;
 	}
@@ -47,7 +48,7 @@ class BubbleSort extends Algorithm {
 		colours[oldPos1] = 0;
 		colours[oldPos0] = 0;
 		//If not at the end of the loop
-		if(pos1 < array.length) {
+		if(pos1 < stop) {
 			compare();
 		}
 		else if (!checkSorted()) {
@@ -62,8 +63,9 @@ class BubbleSort extends Algorithm {
 	}
 
 	void compare() {
+		//If a swap is needed
 		if(array[pos1] < array[pos0]) {
-			//Second time: swap and colour green
+			//If second time: swap and colour green
 			if(swapping) {
 				swap();
 				swapping = false;

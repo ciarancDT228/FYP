@@ -3,6 +3,8 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import processing.sound.*; 
+
 import java.util.HashMap; 
 import java.util.ArrayList; 
 import java.io.File; 
@@ -13,6 +15,8 @@ import java.io.OutputStream;
 import java.io.IOException; 
 
 public class main extends PApplet {
+
+
 
 ArrayList<Component> components = new ArrayList<Component>();
 
@@ -36,6 +40,15 @@ int arrayMin;
 int stepsPerSecond = 1;
 int maxSteps = 3840;
 int minSteps = 1;
+
+//Sound stuff
+TriOsc triOsc;
+Env env;
+// Oscillator wave;
+float attackTime = 0.001f;
+float sustainTime = 0.004f;
+float sustainLevel = 0.3f;
+float releaseTime = 0.2f;
 
 public void settings() {
 	// size(1000, 600, OPENGL);
@@ -62,16 +75,22 @@ public void setup()
 	array = gen.random(arraySize);
 	colours = gen.blanks(arraySize);
 	bubble = new BubbleSort(array, colours);
-	play = new Play(10, 10, 90, 50);
 
-	//Initiating Slider
+	//Buttons
+	play = new Play(10, 10, 90, 50);
+	reset = new Reset(270, 10, 90, 50);
+	//Sliders
 	speedSlider = new TickSlider(110, 30, 150, 20, 0, 12);
+	sizeSlider = new SizeSlider(570, 30, 150, 20);
 	// slider2 = new Slider(110, 30, 150, 20);
 
-	sizeSlider = new SizeSlider(570, 30, 150, 20);
+	//Sounds
+	triOsc = new TriOsc(this); 
+	env = new Env(this);
+	// wave = new Oscillator(this);
+	triOsc.freq(200);
+	env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 
-	//Reset Button
-	reset = new Reset(270, 10, 90, 50);
 
 	components.add(play);
 	play.render();
@@ -85,11 +104,13 @@ public void draw() {
 	if(count % CalcSpeed.getModulus(speedSlider.getVal()) == 0) {
 		if(!bubble.sorted && play.active) {
 			bubble.steps(CalcSpeed.getNumSteps(speedSlider.getVal()));
+			int[] a = bubble.getArray();
+			float fq = map(a[bubble.oldPos1], 1, arrayMax, 200, 600);
+			triOsc.freq(fq);
+			env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 		}
 	}
-	int[] a = bubble.getArray();
-	int[] c = bubble.getColours();
-	b.render2(a, c);
+	b.render(bubble.getArray(), bubble.getColours());
 	play.render();
 	speedSlider.render();
 	reset.render();
@@ -250,34 +271,10 @@ class Barchart{
 	// }
 
 	public void update() {
-		
+
 	}
 
 	public void render(int[] a, int[] c) {
-		strokeWeight(1);
-		stroke(0);
-		array = a;
-		colours = c;
-		max = getMax();
-		barWidth = w/array.length;
-		for (int i = 0; i < array.length; i++) {
-			if(c[i] == 0) {
-				fill(255);
-			}
-			else if (c[i] == 1) {
-				fill(255, 0, 0);
-			}
-			else {
-				fill(0, 255, 0);
-			}
-			float x1 = map(i, 0, array.length, 0, w) + border;
-			float y1 = map(array[i], 0, max, h+border, border);
-			float barHeight = map(array[i], 0, max, 0, h);
-			rect(x1, y1, barWidth, barHeight);
-		}
-	}
-
-	public void render2(int[] a, int[] c) {
 		strokeWeight = (w-(a.length-1))/a.length;
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
@@ -312,6 +309,31 @@ class Barchart{
 		}
 		return max;
 	}
+
+	//------------------------------------------------------------------------------------------------
+	public void render2(int[] a, int[] c) {
+		strokeWeight(1);
+		stroke(0);
+		array = a;
+		colours = c;
+		max = getMax();
+		barWidth = w/array.length;
+		for (int i = 0; i < array.length; i++) {
+			if(c[i] == 0) {
+				fill(255);
+			}
+			else if (c[i] == 1) {
+				fill(255, 0, 0);
+			}
+			else {
+				fill(0, 255, 0);
+			}
+			float x1 = map(i, 0, array.length, 0, w) + border;
+			float y1 = map(array[i], 0, max, h+border, border);
+			float barHeight = map(array[i], 0, max, 0, h);
+			rect(x1, y1, barWidth, barHeight);
+		}
+	}
 }
 
 
@@ -321,10 +343,9 @@ class BubbleSort extends Algorithm {
 	boolean sorted;
 	boolean swapping;
 	int counter;
-	int pos1;
-	int pos0;
-	int oldPos1;
-	int oldPos0;
+	int pos1, pos0;
+	int oldPos1, oldPos0;
+	int stop;
 	int[] array;
 	int[] colours;
 
@@ -336,6 +357,7 @@ class BubbleSort extends Algorithm {
 		this.array = array;
 		this.colours = colours;
 		counter = array.length;
+		stop = array.length;
 	}
 
 	public void reset(int[] array, int[] colours) {
@@ -346,6 +368,7 @@ class BubbleSort extends Algorithm {
 		this.array = array;
 		this.colours = colours;
 		counter = array.length;
+		stop = array.length;
 		oldPos1 = 0;
 		oldPos0 = 0;
 	}
@@ -364,7 +387,7 @@ class BubbleSort extends Algorithm {
 		colours[oldPos1] = 0;
 		colours[oldPos0] = 0;
 		//If not at the end of the loop
-		if(pos1 < array.length) {
+		if(pos1 < stop) {
 			compare();
 		}
 		else if (!checkSorted()) {
@@ -379,8 +402,9 @@ class BubbleSort extends Algorithm {
 	}
 
 	public void compare() {
+		//If a swap is needed
 		if(array[pos1] < array[pos0]) {
-			//Second time: swap and colour green
+			//If second time: swap and colour green
 			if(swapping) {
 				swap();
 				swapping = false;

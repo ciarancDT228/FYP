@@ -28,34 +28,10 @@ class Barchart{
 	// }
 
 	void update() {
-		
+
 	}
 
 	void render(int[] a, int[] c) {
-		strokeWeight(1);
-		stroke(0);
-		array = a;
-		colours = c;
-		max = getMax();
-		barWidth = w/array.length;
-		for (int i = 0; i < array.length; i++) {
-			if(c[i] == 0) {
-				fill(255);
-			}
-			else if (c[i] == 1) {
-				fill(255, 0, 0);
-			}
-			else {
-				fill(0, 255, 0);
-			}
-			float x1 = map(i, 0, array.length, 0, w) + border;
-			float y1 = map(array[i], 0, max, h+border, border);
-			float barHeight = map(array[i], 0, max, 0, h);
-			rect(x1, y1, barWidth, barHeight);
-		}
-	}
-
-	void render2(int[] a, int[] c) {
 		strokeWeight = (w-(a.length-1))/a.length;
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
@@ -89,6 +65,31 @@ class Barchart{
 			}
 		}
 		return max;
+	}
+
+	//------------------------------------------------------------------------------------------------
+	void render2(int[] a, int[] c) {
+		strokeWeight(1);
+		stroke(0);
+		array = a;
+		colours = c;
+		max = getMax();
+		barWidth = w/array.length;
+		for (int i = 0; i < array.length; i++) {
+			if(c[i] == 0) {
+				fill(255);
+			}
+			else if (c[i] == 1) {
+				fill(255, 0, 0);
+			}
+			else {
+				fill(0, 255, 0);
+			}
+			float x1 = map(i, 0, array.length, 0, w) + border;
+			float y1 = map(array[i], 0, max, h+border, border);
+			float barHeight = map(array[i], 0, max, 0, h);
+			rect(x1, y1, barWidth, barHeight);
+		}
 	}
 }
 
