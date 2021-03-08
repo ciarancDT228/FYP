@@ -51,10 +51,10 @@ class Slider extends Component{
 		//Draw highlight for hover and depressed
 		if(depressed) {
 			fill(255, 130);
-			circle(thumbX, centreY, thumbRadius * 2);
+			circle(thumbX, centreY, thumbRadius * 2.5);
 		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
 			fill(255, 40);
-			circle(thumbX, centreY, thumbRadius * 2);
+			circle(thumbX, centreY, thumbRadius * 2.5);
 		}
 		//Draw Thumb
 		fill(255);
