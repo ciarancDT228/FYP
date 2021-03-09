@@ -2,7 +2,6 @@
 import processing.sound.*;
 ArrayList<Component> components = new ArrayList<Component>();
 
-
 Barchart b;
 ArrayGenerator gen;
 BubbleSort bubble;
@@ -11,7 +10,6 @@ Play play;
 Reset reset;
 Slider speedSlider;
 Slider sizeSlider;
-// Slider slider2;
 int[] array;
 int[] colours;
 int count = 0;
@@ -54,17 +52,19 @@ void settings() {
 void setup()
 {
 	// surface.setResizable(true);
+	// noStroke();
 	background(0);
 	stroke(0);
-	// noStroke();
 	fill(255);
-	gen = new ArrayGenerator();
-	b = new Barchart(0, 0, width, height);
-	arrayMax = (int)((b.w/2));
-	arrayMin = 10;
-	arraySize = arrayMin;
-	println(arrayMax);
-	array = gen.random(arraySize);
+	gen = new ArrayGenerator(); //Array Generator
+	// b = new Barchart(0, 0, width, height); //Barchart
+	// b = new Barchart(530, 120, 150, 20);
+	b = new Barchart(width/4, height/4, width/2, height/2);
+	arrayMax = (int)((b.w/2)); //Max array size
+	arrayMin = 10; //Min array size
+	arraySize = (arrayMax - arrayMin)/2; //Initial array size
+	// println(arrayMax);
+	array = gen.random(arraySize); //Generate
 	colours = gen.blanks(arraySize);
 	bubble = new BubbleSort(array, colours);
 
@@ -72,25 +72,17 @@ void setup()
 	play = new Play(10, 10, 90, 50);
 	reset = new Reset(270, 10, 90, 50);
 	//Sliders
-	speedSlider = new TickSlider(110, 30, 150, 20, 0, 14);
-	sizeSlider = new Slider(370, 30, 150, 20, arrayMin, arrayMax, arraySize);
-	soundAttSlider = new Slider(530, 30, 150, 20, 0.001, 1.0, 0.001);
-	soundSusTSlider = new Slider(530, 50, 150, 20, 0.001, 1.0, 0.004);
-	soundSusLSlider = new Slider(530, 70, 150, 20, 0.001, 1.0, 0.3);
-	soundRelSlider = new Slider(530, 90, 150, 20, 0.001, 1.0, 0.2);
-	// slider2 = new Slider(110, 30, 150, 20);
+	speedSlider = new TickSlider(110, 30, 150, 20, 0, 14); //Speed
+	sizeSlider = new Slider(370, 30, 150, 20, arrayMin, arrayMax, arraySize); //Size
+	soundAttSlider = new Slider(530, 30, 150, 20, 0.001, 1.0, 0.001); // Sound
+	soundSusTSlider = new Slider(530, 50, 150, 20, 0.001, 1.0, 0.004); // Sound
+	soundSusLSlider = new Slider(530, 70, 150, 20, 0.001, 1.0, 0.3); // Sound
+	soundRelSlider = new Slider(530, 90, 150, 20, 0.001, 1.0, 0.2); // Sound
 
 	//Sounds
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
 	sound = new Sound(attackTime, sustainTime, sustainLevel, releaseTime, 100, 700);
-	// triOsc.freq(200);
-	// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
-	sound();
-
-
-	components.add(play);
-	play.render();
 }
 
 void draw() {
@@ -157,37 +149,7 @@ void mouseReleased() {
 	soundSusTSlider.mouseUp();
 	soundSusLSlider.mouseUp();
 	soundRelSlider.mouseUp();
-	// for (int i = 0; i < components.size(); i++) {
-	// 	Component b = components.get(i);
-	// 	if(c instanceof Play) {
-	// 		((Play)b).mouseUp();
-	// 	}
-	// }
 }
-
-void sound() {
-	// for (int i = 0; i < 50; i++) {
-	// 	float fq = map(i, 0, 50, 100, 700);
-	// 	triOsc.freq(fq);
-	// 	env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
-	// }
-
-	sound.setAtt(soundAttSlider.getValFloat());
-	sound.setSusL(soundSusTSlider.getValFloat());
-	sound.setSusT(soundSusLSlider.getValFloat());
-	sound.setRel(soundRelSlider.getValFloat());
-	float fq = (float)((Math.random() * 500) + 100);
-	triOsc.freq(fq);
-	sound.play();
-
-	// int[] a = bubble.getArray();
-	// float fq = map(a[bubble.oldPos1], 1, arrayMax, 200, 600);
-	// triOsc.freq(fq);
-	// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
-}
-
-
-
 
 //---------------------------------------------------------------------------------------------------
 int[] array1;

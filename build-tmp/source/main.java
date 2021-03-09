@@ -20,7 +20,6 @@ public class main extends PApplet {
 
 ArrayList<Component> components = new ArrayList<Component>();
 
-
 Barchart b;
 ArrayGenerator gen;
 BubbleSort bubble;
@@ -29,7 +28,6 @@ Play play;
 Reset reset;
 Slider speedSlider;
 Slider sizeSlider;
-// Slider slider2;
 int[] array;
 int[] colours;
 int count = 0;
@@ -72,17 +70,19 @@ public void settings() {
 public void setup()
 {
 	// surface.setResizable(true);
+	// noStroke();
 	background(0);
 	stroke(0);
-	// noStroke();
 	fill(255);
-	gen = new ArrayGenerator();
-	b = new Barchart(0, 0, width, height);
-	arrayMax = (int)((b.w/2));
-	arrayMin = 10;
-	arraySize = arrayMin;
-	println(arrayMax);
-	array = gen.random(arraySize);
+	gen = new ArrayGenerator(); //Array Generator
+	// b = new Barchart(0, 0, width, height); //Barchart
+	// b = new Barchart(530, 120, 150, 20);
+	b = new Barchart(width/4, height/4, width/2, height/2);
+	arrayMax = (int)((b.w/2)); //Max array size
+	arrayMin = 10; //Min array size
+	arraySize = (arrayMax - arrayMin)/2; //Initial array size
+	// println(arrayMax);
+	array = gen.random(arraySize); //Generate
 	colours = gen.blanks(arraySize);
 	bubble = new BubbleSort(array, colours);
 
@@ -90,25 +90,17 @@ public void setup()
 	play = new Play(10, 10, 90, 50);
 	reset = new Reset(270, 10, 90, 50);
 	//Sliders
-	speedSlider = new TickSlider(110, 30, 150, 20, 0, 14);
-	sizeSlider = new Slider(370, 30, 150, 20, arrayMin, arrayMax, arraySize);
-	soundAttSlider = new Slider(530, 30, 150, 20, 0.001f, 1.0f, 0.001f);
-	soundSusTSlider = new Slider(530, 50, 150, 20, 0.001f, 1.0f, 0.004f);
-	soundSusLSlider = new Slider(530, 70, 150, 20, 0.001f, 1.0f, 0.3f);
-	soundRelSlider = new Slider(530, 90, 150, 20, 0.001f, 1.0f, 0.2f);
-	// slider2 = new Slider(110, 30, 150, 20);
+	speedSlider = new TickSlider(110, 30, 150, 20, 0, 14); //Speed
+	sizeSlider = new Slider(370, 30, 150, 20, arrayMin, arrayMax, arraySize); //Size
+	soundAttSlider = new Slider(530, 30, 150, 20, 0.001f, 1.0f, 0.001f); // Sound
+	soundSusTSlider = new Slider(530, 50, 150, 20, 0.001f, 1.0f, 0.004f); // Sound
+	soundSusLSlider = new Slider(530, 70, 150, 20, 0.001f, 1.0f, 0.3f); // Sound
+	soundRelSlider = new Slider(530, 90, 150, 20, 0.001f, 1.0f, 0.2f); // Sound
 
 	//Sounds
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
 	sound = new Sound(attackTime, sustainTime, sustainLevel, releaseTime, 100, 700);
-	// triOsc.freq(200);
-	// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
-	sound();
-
-
-	components.add(play);
-	play.render();
 }
 
 public void draw() {
@@ -175,37 +167,7 @@ public void mouseReleased() {
 	soundSusTSlider.mouseUp();
 	soundSusLSlider.mouseUp();
 	soundRelSlider.mouseUp();
-	// for (int i = 0; i < components.size(); i++) {
-	// 	Component b = components.get(i);
-	// 	if(c instanceof Play) {
-	// 		((Play)b).mouseUp();
-	// 	}
-	// }
 }
-
-public void sound() {
-	// for (int i = 0; i < 50; i++) {
-	// 	float fq = map(i, 0, 50, 100, 700);
-	// 	triOsc.freq(fq);
-	// 	env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
-	// }
-
-	sound.setAtt(soundAttSlider.getValFloat());
-	sound.setSusL(soundSusTSlider.getValFloat());
-	sound.setSusT(soundSusLSlider.getValFloat());
-	sound.setRel(soundRelSlider.getValFloat());
-	float fq = (float)((Math.random() * 500) + 100);
-	triOsc.freq(fq);
-	sound.play();
-
-	// int[] a = bubble.getArray();
-	// float fq = map(a[bubble.oldPos1], 1, arrayMax, 200, 600);
-	// triOsc.freq(fq);
-	// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
-}
-
-
-
 
 //---------------------------------------------------------------------------------------------------
 int[] array1;
@@ -332,6 +294,10 @@ class Barchart{
 
 	public void render(int[] a, int[] c) {
 		strokeWeight = (w-(a.length-1))/a.length;
+
+		fill(0);
+		rect(posX, posY, w + border*2, h + border*2);
+		fill(255);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
 		stroke(255);
@@ -348,8 +314,8 @@ class Barchart{
 			else {
 				stroke(0, 255, 0);
 			}
-			float x1 = map(i, 0, a.length, 0, w) + border + strokeWeight/2;
-			float y1 = map(a[i], 0, max, h+border, border);
+			float x1 = map(i, 0, a.length, posX, posX + w) + border + strokeWeight/2;
+			float y1 = map(a[i], 0, max, posY + h + border, posY + border);
 			float barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
 		}
@@ -435,8 +401,8 @@ class BubbleSort extends Algorithm {
 	public void steps(int x) {
 		numsteps = x;
 
-		println("speedSlider.getVal: " + speedSlider.getVal());
-		println("numsteps: " + numsteps);
+		// println("speedSlider.getVal: " + speedSlider.getVal());
+		// println("numsteps: " + numsteps);
 		for (int i = 0; i < colours.length; i++) {
 			colours[i] = 0;
 		}

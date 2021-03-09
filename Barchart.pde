@@ -33,6 +33,10 @@ class Barchart{
 
 	void render(int[] a, int[] c) {
 		strokeWeight = (w-(a.length-1))/a.length;
+
+		fill(0);
+		rect(posX, posY, w + border*2, h + border*2);
+		fill(255);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
 		stroke(255);
@@ -49,8 +53,8 @@ class Barchart{
 			else {
 				stroke(0, 255, 0);
 			}
-			float x1 = map(i, 0, a.length, 0, w) + border + strokeWeight/2;
-			float y1 = map(a[i], 0, max, h+border, border);
+			float x1 = map(i, 0, a.length, posX, posX + w) + border + strokeWeight/2;
+			float y1 = map(a[i], 0, max, posY + h + border, posY + border);
 			float barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
 		}

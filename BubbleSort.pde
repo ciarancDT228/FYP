@@ -40,8 +40,8 @@ class BubbleSort extends Algorithm {
 	void steps(int x) {
 		numsteps = x;
 
-		println("speedSlider.getVal: " + speedSlider.getVal());
-		println("numsteps: " + numsteps);
+		// println("speedSlider.getVal: " + speedSlider.getVal());
+		// println("numsteps: " + numsteps);
 		for (int i = 0; i < colours.length; i++) {
 			colours[i] = 0;
 		}
