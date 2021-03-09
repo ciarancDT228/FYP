@@ -16,9 +16,14 @@ int[] array;
 int[] colours;
 int count = 0;
 int count2 = 0;
+
+//Array Size
 int arraySize;
 int arrayMax;
 int arrayMin;
+
+//Speed
+int speed = 1;
 int stepsPerSecond = 1;
 int maxSteps = 3840;
 int minSteps = 1;
@@ -26,11 +31,10 @@ int minSteps = 1;
 //Sound stuff
 TriOsc triOsc;
 Env env;
-// Oscillator wave;
 float attackTime = 0.001;
-float sustainTime = 0.004;
+float sustainTime = 0.001;
 float sustainLevel = 0.3;
-float releaseTime = 0.2;
+float releaseTime = 0.1;
 
 void settings() {
 	// size(1000, 600, OPENGL);
@@ -69,9 +73,9 @@ void setup()
 	//Sounds
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
-	// wave = new Oscillator(this);
-	triOsc.freq(200);
-	env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+	// triOsc.freq(200);
+	// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+	sound();
 
 
 	components.add(play);
@@ -80,16 +84,13 @@ void setup()
 
 void draw() {
 	update();
+	// sound();
 	count++;
 
 	background(0);
-	if(count % CalcSpeed.getModulus(speedSlider.getVal()) == 0) {
-		if(!bubble.sorted && play.active) {
-			bubble.steps(CalcSpeed.getNumSteps(speedSlider.getVal()));
-			// int[] a = bubble.getArray();
-			// float fq = map(a[bubble.oldPos1], 1, arrayMax, 200, 600);
-			// triOsc.freq(fq);
-			// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+	if (count % CalcSpeed.getModulus(speed) == 0) {
+		if (!bubble.sorted && play.active) {
+			bubble.steps(CalcSpeed.getNumSteps(speed));
 		}
 	}
 	b.render(bubble.getArray(), bubble.getColours());
@@ -97,10 +98,6 @@ void draw() {
 	speedSlider.render();
 	reset.render();
 	sizeSlider.render();
-	// if(count % 60 == 0) {
-	// 	count2++;
-	// 	println(count2);
-	// }
 }
 
 void update() {
@@ -128,6 +125,22 @@ void mouseReleased() {
 	// 		((Play)b).mouseUp();
 	// 	}
 	// }
+}
+
+void sound() {
+	// for (int i = 0; i < 50; i++) {
+	// 	float fq = map(i, 0, 50, 100, 700);
+	// 	triOsc.freq(fq);
+	// 	env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+	// }
+	float fq = (float)((Math.random() * 500) + 100);
+	triOsc.freq(fq);
+	env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+
+	// int[] a = bubble.getArray();
+	// float fq = map(a[bubble.oldPos1], 1, arrayMax, 200, 600);
+	// triOsc.freq(fq);
+	// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 }
 
 

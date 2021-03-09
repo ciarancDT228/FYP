@@ -29,6 +29,7 @@ class TickSlider extends Slider {
 				tick = numTicks;
 			}
 		}
+		setVal();
 	}
 
 	void render() {
@@ -71,6 +72,15 @@ class TickSlider extends Slider {
 		}
 		//return x[tick];
 		// return (int)Math.pow(2, tick);
+	}
+
+	void setVal() {
+		int[] x = {1, 2, 4, 10, 15, 30, 60, 120, 240, 480, 960, 1920, 3840, 7680, 15360};
+		if(tick < 4) {
+			speed = x[tick];
+		} else {
+			speed = (int)Math.pow(2, tick - 3) * 15;
+		}
 	}
 
 }

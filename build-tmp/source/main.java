@@ -34,9 +34,14 @@ int[] array;
 int[] colours;
 int count = 0;
 int count2 = 0;
+
+//Array Size
 int arraySize;
 int arrayMax;
 int arrayMin;
+
+//Speed
+int speed = 1;
 int stepsPerSecond = 1;
 int maxSteps = 3840;
 int minSteps = 1;
@@ -44,11 +49,10 @@ int minSteps = 1;
 //Sound stuff
 TriOsc triOsc;
 Env env;
-// Oscillator wave;
 float attackTime = 0.001f;
-float sustainTime = 0.004f;
+float sustainTime = 0.001f;
 float sustainLevel = 0.3f;
-float releaseTime = 0.2f;
+float releaseTime = 0.1f;
 
 public void settings() {
 	// size(1000, 600, OPENGL);
@@ -87,9 +91,9 @@ public void setup()
 	//Sounds
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
-	// wave = new Oscillator(this);
-	triOsc.freq(200);
-	env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+	// triOsc.freq(200);
+	// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+	sound();
 
 
 	components.add(play);
@@ -98,16 +102,13 @@ public void setup()
 
 public void draw() {
 	update();
+	// sound();
 	count++;
 
 	background(0);
-	if(count % CalcSpeed.getModulus(speedSlider.getVal()) == 0) {
-		if(!bubble.sorted && play.active) {
-			bubble.steps(CalcSpeed.getNumSteps(speedSlider.getVal()));
-			// int[] a = bubble.getArray();
-			// float fq = map(a[bubble.oldPos1], 1, arrayMax, 200, 600);
-			// triOsc.freq(fq);
-			// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+	if (count % CalcSpeed.getModulus(speed) == 0) {
+		if (!bubble.sorted && play.active) {
+			bubble.steps(CalcSpeed.getNumSteps(speed));
 		}
 	}
 	b.render(bubble.getArray(), bubble.getColours());
@@ -115,10 +116,6 @@ public void draw() {
 	speedSlider.render();
 	reset.render();
 	sizeSlider.render();
-	// if(count % 60 == 0) {
-	// 	count2++;
-	// 	println(count2);
-	// }
 }
 
 public void update() {
@@ -146,6 +143,22 @@ public void mouseReleased() {
 	// 		((Play)b).mouseUp();
 	// 	}
 	// }
+}
+
+public void sound() {
+	// for (int i = 0; i < 50; i++) {
+	// 	float fq = map(i, 0, 50, 100, 700);
+	// 	triOsc.freq(fq);
+	// 	env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+	// }
+	float fq = (float)((Math.random() * 500) + 100);
+	triOsc.freq(fq);
+	env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+
+	// int[] a = bubble.getArray();
+	// float fq = map(a[bubble.oldPos1], 1, arrayMax, 200, 600);
+	// triOsc.freq(fq);
+	// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 }
 
 
@@ -381,11 +394,11 @@ class BubbleSort extends Algorithm {
 
 		println("speedSlider.getVal: " + speedSlider.getVal());
 		println("numsteps: " + numsteps);
-		for(int i = 0; i < colours.length; i++) {
+		for (int i = 0; i < colours.length; i++) {
 			colours[i] = 0;
 		}
-		for(int i = 0; i < x; i++) {
-			if(!sorted) {
+		for (int i = 0; i < x; i++) {
+			if (!sorted) {
 				stepThrough();
 			} else {
 				break;
@@ -395,8 +408,8 @@ class BubbleSort extends Algorithm {
 
 	public void stepThrough() {
 		checkSorted();
-		if(!sorted) {
-			if(pos1 < stop) {
+		if (!sorted) {
+			if (pos1 < stop) {
 				compare2();
 			} else {
 				stop--;
@@ -405,6 +418,28 @@ class BubbleSort extends Algorithm {
 				compare2();
 			}
 		}
+	}
+
+	public void compare() {
+		colours[pos1] = 1;
+		colours[pos0] = 1;
+		if (array[pos1] < array[pos0]) {
+			if (swapping) {
+				swap();
+				swapping = false;
+			} else {
+				swapping = true;
+			}
+		} if (!swapping) {
+			pos1++;
+			pos0++;
+		}
+	}
+
+	public void swap() {
+		int temp = array[pos0];
+		array[pos0] = array[pos1];
+		array[pos1] = temp;
 	}
 
 	public void compare2() {
@@ -442,25 +477,7 @@ class BubbleSort extends Algorithm {
 		}
 	}
 
-	public void compare() {
-		colours[pos1] = 1;
-		colours[pos0] = 1;
-		if (array[pos1] < array[pos0]) {
-			if (swapping) {
-				swap2();
-				swapping = false;
-			} else {
-				swapping = true;
-			}
-		} if (!swapping) {
-			pos1++;
-			pos0++;
-		}
-		
-	}
-
-
-	public void swap() {
+	public void swap2() {
 		int temp = array[pos0];
 		array[pos0] = array[pos1];
 		array[pos1] = temp;
@@ -473,12 +490,6 @@ class BubbleSort extends Algorithm {
 		}
 		pos1++;
 		pos0++;
-	}
-
-	public void swap2() {
-		int temp = array[pos0];
-		array[pos0] = array[pos1];
-		array[pos1] = temp;
 	}
 
 	public void checkSorted() {
@@ -801,6 +812,7 @@ class TickSlider extends Slider {
 				tick = numTicks;
 			}
 		}
+		setVal();
 	}
 
 	public void render() {
@@ -843,6 +855,15 @@ class TickSlider extends Slider {
 		}
 		//return x[tick];
 		// return (int)Math.pow(2, tick);
+	}
+
+	public void setVal() {
+		int[] x = {1, 2, 4, 10, 15, 30, 60, 120, 240, 480, 960, 1920, 3840, 7680, 15360};
+		if(tick < 4) {
+			speed = x[tick];
+		} else {
+			speed = (int)Math.pow(2, tick - 3) * 15;
+		}
 	}
 
 }
