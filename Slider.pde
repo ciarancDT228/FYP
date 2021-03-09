@@ -5,7 +5,26 @@ class Slider extends Component{
 	float w, h;
 	float centreX, centreY;
 	int strokeS, strokeM, strokeL;
+	float minVal, maxVal;
 	boolean depressed, active;
+
+	public Slider(float posX, float posY, float w, float h, float minVal, float maxVal, float initVal) {
+		this.posX = posX;
+		this.posY = posY;
+		this.w = w;
+		this.h = h;
+		thumbRadius = h;
+		depressed = false;
+		active = false;
+		centreX = posX + (w/2);
+		centreY = posY + (h/2);
+		this.minVal = minVal;
+		this.maxVal = maxVal;
+		this.thumbX = map(initVal, minVal, maxVal, posX, posX + w);
+		strokeS = (int)(h/10);
+		strokeM = (int)(h/5);
+		strokeL = (int)(h/3.33);
+	}
 
 	public Slider(float posX, float posY, float w, float h) {
 		this.posX = posX;
@@ -95,7 +114,11 @@ class Slider extends Component{
 	}
 
 	int getVal() {
-		return(int)(map(thumbX, posX, posX + w, minSteps, maxSteps));
+		return(int)(map(thumbX, posX, posX + w, minVal, maxVal));
+	}
+
+	float getValFloat() {
+		return(map(thumbX, posX, posX + w, minVal, maxVal));
 	}
 
 }

@@ -33,7 +33,7 @@ Slider sizeSlider;
 int[] array;
 int[] colours;
 int count = 0;
-int count2 = 0;
+int time = 0;
 
 //Array Size
 int arraySize;
@@ -47,18 +47,24 @@ int maxSteps = 3840;
 int minSteps = 1;
 
 //Sound stuff
+float maxFreq = 700;
 TriOsc triOsc;
 Env env;
+Sound sound;
+Slider soundAttSlider;
+Slider soundSusTSlider;
+Slider soundSusLSlider;
+Slider soundRelSlider;
 float attackTime = 0.001f;
-float sustainTime = 0.001f;
+float sustainTime = 0.004f;
 float sustainLevel = 0.3f;
-float releaseTime = 0.1f;
+float releaseTime = 0.2f;
 
 public void settings() {
 	// size(1000, 600, OPENGL);
-	// size(800, 600, P2D);
+	size(800, 600, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(P2D, 1);
+	// fullScreen(P2D, 1);
 	// fullScreen(1);
 	noSmooth();
 }
@@ -85,12 +91,17 @@ public void setup()
 	reset = new Reset(270, 10, 90, 50);
 	//Sliders
 	speedSlider = new TickSlider(110, 30, 150, 20, 0, 14);
-	sizeSlider = new SizeSlider(570, 30, 150, 20);
+	sizeSlider = new Slider(370, 30, 150, 20, arrayMin, arrayMax, arraySize);
+	soundAttSlider = new Slider(530, 30, 150, 20, 0.001f, 1.0f, 0.001f);
+	soundSusTSlider = new Slider(530, 50, 150, 20, 0.001f, 1.0f, 0.004f);
+	soundSusLSlider = new Slider(530, 70, 150, 20, 0.001f, 1.0f, 0.3f);
+	soundRelSlider = new Slider(530, 90, 150, 20, 0.001f, 1.0f, 0.2f);
 	// slider2 = new Slider(110, 30, 150, 20);
 
 	//Sounds
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
+	sound = new Sound(attackTime, sustainTime, sustainLevel, releaseTime, 100, 700);
 	// triOsc.freq(200);
 	// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 	sound();
@@ -102,13 +113,23 @@ public void setup()
 
 public void draw() {
 	update();
-	// sound();
 	count++;
+
+	// sound();
+	// if (count % 60 == 0) {
+	// 	sound();
+	// 	println("Time: " + time + "att: " + soundAttSlider.getValFloat());
+	// 	println("Time: " + time + "susT: " + soundSusTSlider.getValFloat());
+	// 	println("Time: " + time + "susL: " + soundSusLSlider.getValFloat());
+	// 	println("Time: " + time + "rel: " + soundRelSlider.getValFloat());
+	// 	time++;
+	// }
 
 	background(0);
 	if (count % CalcSpeed.getModulus(speed) == 0) {
 		if (!bubble.sorted && play.active) {
 			bubble.steps(CalcSpeed.getNumSteps(speed));
+			sound.play();
 		}
 	}
 	b.render(bubble.getArray(), bubble.getColours());
@@ -116,6 +137,10 @@ public void draw() {
 	speedSlider.render();
 	reset.render();
 	sizeSlider.render();
+	soundAttSlider.render();
+	soundSusTSlider.render();
+	soundSusLSlider.render();
+	soundRelSlider.render();
 }
 
 public void update() {
@@ -123,6 +148,11 @@ public void update() {
 	speedSlider.update();
 	reset.update();
 	sizeSlider.update();
+	sound.update();
+	// soundAttSlider.update();
+	// soundSusTSlider.update();
+	// soundSusLSlider.update();
+	// soundRelSlider.update();
 }
 
 public void mousePressed() {
@@ -130,6 +160,10 @@ public void mousePressed() {
 	speedSlider.mouseDown();
 	reset.mouseDown();
 	sizeSlider.mouseDown();
+	soundAttSlider.mouseDown();
+	soundSusTSlider.mouseDown();
+	soundSusLSlider.mouseDown();
+	soundRelSlider.mouseDown();
 }
 
 public void mouseReleased() {
@@ -137,6 +171,10 @@ public void mouseReleased() {
 	speedSlider.mouseUp();
 	reset.mouseUp();
 	sizeSlider.mouseUp();
+	soundAttSlider.mouseUp();
+	soundSusTSlider.mouseUp();
+	soundSusLSlider.mouseUp();
+	soundRelSlider.mouseUp();
 	// for (int i = 0; i < components.size(); i++) {
 	// 	Component b = components.get(i);
 	// 	if(c instanceof Play) {
@@ -151,9 +189,14 @@ public void sound() {
 	// 	triOsc.freq(fq);
 	// 	env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 	// }
+
+	sound.setAtt(soundAttSlider.getValFloat());
+	sound.setSusL(soundSusTSlider.getValFloat());
+	sound.setSusT(soundSusLSlider.getValFloat());
+	sound.setRel(soundRelSlider.getValFloat());
 	float fq = (float)((Math.random() * 500) + 100);
 	triOsc.freq(fq);
-	env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+	sound.play();
 
 	// int[] a = bubble.getArray();
 	// float fq = map(a[bubble.oldPos1], 1, arrayMax, 200, 600);
@@ -668,18 +711,6 @@ class Reset extends Button{
 	}
 
 }
-class SizeSlider extends Slider {
-
-	public SizeSlider(float posX, float posY, float w, float h) {
-		super(posX, posY, w, h);
-		this.thumbX = map(arraySize, arrayMin, arrayMax, posX, posX + w);
-	}
-
-	public int getVal() {
-		return(int)(map(thumbX, posX, posX + w, arrayMin, arrayMax));
-	}
-	//
-}
 class Slider extends Component{
 
 	float posX, posY;
@@ -687,7 +718,26 @@ class Slider extends Component{
 	float w, h;
 	float centreX, centreY;
 	int strokeS, strokeM, strokeL;
+	float minVal, maxVal;
 	boolean depressed, active;
+
+	public Slider(float posX, float posY, float w, float h, float minVal, float maxVal, float initVal) {
+		this.posX = posX;
+		this.posY = posY;
+		this.w = w;
+		this.h = h;
+		thumbRadius = h;
+		depressed = false;
+		active = false;
+		centreX = posX + (w/2);
+		centreY = posY + (h/2);
+		this.minVal = minVal;
+		this.maxVal = maxVal;
+		this.thumbX = map(initVal, minVal, maxVal, posX, posX + w);
+		strokeS = (int)(h/10);
+		strokeM = (int)(h/5);
+		strokeL = (int)(h/3.33f);
+	}
 
 	public Slider(float posX, float posY, float w, float h) {
 		this.posX = posX;
@@ -777,7 +827,80 @@ class Slider extends Component{
 	}
 
 	public int getVal() {
-		return(int)(map(thumbX, posX, posX + w, minSteps, maxSteps));
+		return(int)(map(thumbX, posX, posX + w, minVal, maxVal));
+	}
+
+	public float getValFloat() {
+		return(map(thumbX, posX, posX + w, minVal, maxVal));
+	}
+
+}
+class Sound {
+
+	float attackTime;
+	float sustainTime;
+	float sustainLevel;
+	float releaseTime;
+	float minFreq;
+	float maxFreq;
+
+	public Sound(float att, float susT, float susL, float rel, float minFreq, float maxFreq) {
+		this.attackTime = att;
+		this.sustainTime = susT;
+		this.sustainLevel = susL;
+		this.releaseTime = rel;
+		this.minFreq = minFreq;
+		this.maxFreq = maxFreq;
+	}
+
+	public void update() {
+		soundAttSlider.update();
+		soundSusTSlider.update();
+		soundSusLSlider.update();
+		soundRelSlider.update();
+	}
+
+	public void play() {
+		int min = array.length+1;
+		int max = 0;
+		int med = 0;
+
+		setAtt(soundAttSlider.getValFloat());
+		setSusL(soundSusTSlider.getValFloat());
+		setSusT(soundSusLSlider.getValFloat());
+		setRel(soundRelSlider.getValFloat());
+
+		for(int i = 0; i < colours.length; i++) {
+			if (colours[i] > 0) {
+				if(array[i] > max) {
+					max = array[i];
+				}
+				if (array[i] < min) {
+					min = array[i];
+				}
+			}
+		}
+		med = (max - min) / 2;
+		triOsc.freq(map(med, 0, array.length, minFreq, maxFreq));
+		env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+		// triOsc.freq(map(min, 0, array.length, minFreq, maxFreq));
+		// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+	}
+
+	public void setAtt(float att) {
+		this.attackTime = att;
+	}
+
+	public void setSusT(float susT) {
+		this.sustainTime = susT;
+	}
+
+	public void setSusL(float susL) {
+		this.sustainLevel = susL;
+	}
+
+	public void setRel(float rel) {
+		this.releaseTime = rel;
 	}
 
 }
