@@ -410,12 +410,12 @@ class BubbleSort extends Algorithm {
 		checkSorted();
 		if (!sorted) {
 			if (pos1 < stop) {
-				compare2();
+				compare();
 			} else {
 				stop--;
 				pos1 = 1;
 				pos0 = 0;
-				compare2();
+				compare();
 			}
 		}
 	}
