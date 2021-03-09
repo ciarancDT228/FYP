@@ -9,6 +9,7 @@ class BubbleSort extends Algorithm {
 	int stop;
 	int[] array;
 	int[] colours;
+	int numsteps;
 
 	public BubbleSort(int[] array, int[] colours) {
 		sorted = false;
@@ -19,6 +20,7 @@ class BubbleSort extends Algorithm {
 		this.colours = colours;
 		counter = array.length;
 		stop = array.length;
+		numsteps = 0;
 	}
 
 	void reset(int[] array, int[] colours) {
@@ -32,9 +34,17 @@ class BubbleSort extends Algorithm {
 		stop = array.length;
 		oldPos1 = 0;
 		oldPos0 = 0;
+		numsteps = 0;
 	}
 
 	void steps(int x) {
+		numsteps = x;
+
+		println("speedSlider.getVal: " + speedSlider.getVal());
+		println("numsteps: " + numsteps);
+		for(int i = 0; i < colours.length; i++) {
+			colours[i] = 0;
+		}
 		for(int i = 0; i < x; i++) {
 			if(!sorted) {
 				stepThrough();
@@ -45,47 +55,44 @@ class BubbleSort extends Algorithm {
 	}
 
 	void stepThrough() {
-		colours[oldPos1] = 0;
-		colours[oldPos0] = 0;
-		//If not at the end of the loop
-		if(pos1 < stop) {
-			compare();
-		}
-		//If not sorted
-		else if (!checkSorted()) {
-			stop--;
-			pos1 = 1;
-			pos0 = 0;
-			compare();
-		}
-		else {
-			this.sorted = true;
+		checkSorted();
+		if(!sorted) {
+			if(pos1 < stop) {
+				compare2();
+			} else {
+				stop--;
+				pos1 = 1;
+				pos0 = 0;
+				compare2();
+			}
 		}
 	}
 
-	void compare() {
+	void compare2() {
+
 		//If a swap is needed
-		if(array[pos1] < array[pos0]) {
+		if (array[pos1] < array[pos0]) {
+
 			//If second time: swap and colour green
-			if(swapping) {
+			if (swapping) {
 				swap();
 				swapping = false;
-			}
-			else {
+			} else {
+
 				//First time: don't increment, colour red
-				if(pos1 < array.length) {
+				if (pos1 < array.length) {
 					colours[pos1] = 1;
 				}
+
 				// colours[pos1] = 1;
 				colours[pos0] = 1;
 				oldPos1 = pos1;
 				oldPos0 = pos0;
 				swapping = true;
 			}
-		}
-		else {
+		} else {
 			//don't swap, increment, colour red
-			if(pos1 < array.length) {
+			if (pos1 < array.length) {
 				colours[pos1] = 1;
 			}
 			colours[pos0] = 1;
@@ -96,17 +103,46 @@ class BubbleSort extends Algorithm {
 		}
 	}
 
+	void compare() {
+		colours[pos1] = 1;
+		colours[pos0] = 1;
+		if (array[pos1] < array[pos0]) {
+			if (swapping) {
+				swap2();
+				swapping = false;
+			} else {
+				swapping = true;
+			}
+		} if (!swapping) {
+			pos1++;
+			pos0++;
+		}
+		
+	}
+
+
 	void swap() {
 		int temp = array[pos0];
 		array[pos0] = array[pos1];
 		array[pos1] = temp;
-		colours[pos1] = 2;
-		colours[pos0] = 2;
+		if(numsteps > -1) {
+			colours[pos1] = 1;
+			colours[pos0] = 1;
+		} else {
+			colours[pos1] = 2;
+			colours[pos0] = 2;
+		}
 		pos1++;
 		pos0++;
 	}
 
-	boolean checkSorted() {
+	void swap2() {
+		int temp = array[pos0];
+		array[pos0] = array[pos1];
+		array[pos1] = temp;
+	}
+
+	void checkSorted() {
 		boolean sorted = true;
 		for(int i = 1; i < array.length; i++) {
 			if(array[i] < array[i - 1]) {
@@ -114,7 +150,7 @@ class BubbleSort extends Algorithm {
 				break;
 			}
 		}
-		return sorted;
+		this.sorted = sorted;
 	}
 
 	public int[] getArray() {

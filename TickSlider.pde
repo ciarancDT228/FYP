@@ -1,12 +1,5 @@
 class TickSlider extends Slider {
 
-	// float posX, posY;
-	// float thumbX, thumbRadius;
-	// float w, h;
-	// float centreX, centreY;
-	// int strokeS, strokeM, strokeL;
-	// boolean depressed, active;
-	// float thumbX;
 	int tick;
 	int numTicks;
 
@@ -18,8 +11,8 @@ class TickSlider extends Slider {
 	}
 
 	int getTickLocation() {
-		tick = (int)map(mouseX, posX, posX + w, 0, 12);
-		return (int)map(tick, 0, 12, posX, posX + w);
+		tick = (int)map(mouseX, posX, posX + w, 0, numTicks);
+		return (int)map(tick, 0, numTicks, posX, posX + w);
 	}
 
 	void update() {
@@ -29,9 +22,11 @@ class TickSlider extends Slider {
 			}
 			else if (mouseX < posX) {
 				thumbX = posX;
+				tick = 0;
 			}
 			else if (mouseX > posX + w) {
 				thumbX = posX + w;
+				tick = numTicks;
 			}
 		}
 	}
@@ -68,7 +63,14 @@ class TickSlider extends Slider {
 	}
 
 	int getVal() {
-		return (int)Math.pow(2, tick);
+		int[] x = {1, 2, 4, 10, 15, 30, 60, 120, 240, 480, 960, 1920, 3840, 7680, 15360};
+		if(tick < 4) {
+			return x[tick];
+		} else {
+			return (int)Math.pow(2, tick - 3) * 15;
+		}
+		//return x[tick];
+		// return (int)Math.pow(2, tick);
 	}
 
 }

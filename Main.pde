@@ -34,9 +34,9 @@ float releaseTime = 0.2;
 
 void settings() {
 	// size(1000, 600, OPENGL);
-	// size(1000, 600, P2D);
+	// size(800, 600, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(P2D, 2);
+	fullScreen(P2D, 1);
 	// fullScreen(1);
 	noSmooth();
 }
@@ -62,7 +62,7 @@ void setup()
 	play = new Play(10, 10, 90, 50);
 	reset = new Reset(270, 10, 90, 50);
 	//Sliders
-	speedSlider = new TickSlider(110, 30, 150, 20, 0, 12);
+	speedSlider = new TickSlider(110, 30, 150, 20, 0, 14);
 	sizeSlider = new SizeSlider(570, 30, 150, 20);
 	// slider2 = new Slider(110, 30, 150, 20);
 
@@ -86,10 +86,10 @@ void draw() {
 	if(count % CalcSpeed.getModulus(speedSlider.getVal()) == 0) {
 		if(!bubble.sorted && play.active) {
 			bubble.steps(CalcSpeed.getNumSteps(speedSlider.getVal()));
-			int[] a = bubble.getArray();
-			float fq = map(a[bubble.oldPos1], 1, arrayMax, 200, 600);
-			triOsc.freq(fq);
-			env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+			// int[] a = bubble.getArray();
+			// float fq = map(a[bubble.oldPos1], 1, arrayMax, 200, 600);
+			// triOsc.freq(fq);
+			// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 		}
 	}
 	b.render(bubble.getArray(), bubble.getColours());

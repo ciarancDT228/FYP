@@ -4,16 +4,16 @@ static class CalcSpeed {
 	static int numSteps;
 
 	static int getNumSteps(int x) {
-		if(x < 60) {
+		if(x <= 60) {
 			numSteps = 1;
 		} else {
-			numSteps = x;
+			numSteps = x / 60;
 		}
 		return numSteps;
 	}
 
 	static int getModulus(int x) {
-		if(x < 60) {
+		if(x <= 60) {
 			modulus = 60 / x;
 		} else {
 			modulus = 1;
