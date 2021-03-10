@@ -12,6 +12,8 @@ class Reset extends Button{
 			array = gen.random(arraySize);
 			colours = gen.blanks(arraySize);
 			bubble.reset(array, colours);
+			selection.reset(array, colours);
+			mergeSort.reset(array, colours);
 			play.active = false;
 
 		}

@@ -1,10 +1,18 @@
 
+import java.util.*;
 import processing.sound.*;
+
 ArrayList<Component> components = new ArrayList<Component>();
+
+Queue<int[]> queue = new LinkedList<int[]>();
 
 Barchart b;
 ArrayGenerator gen;
+
 BubbleSort bubble;
+SelectionSort selection;
+MergeSort mergeSort;
+
 Algorithm algo;
 Play play;
 Reset reset;
@@ -42,9 +50,9 @@ float releaseTime = 0.2;
 
 void settings() {
 	// size(1000, 600, OPENGL);
-	size(800, 600, P2D);
+	// size(800, 600, P2D);
 	// fullScreen(P2D, SPAN);
-	// fullScreen(P2D, 1);
+	fullScreen(P2D, 1);
 	// fullScreen(1);
 	noSmooth();
 }
@@ -53,6 +61,7 @@ void setup()
 {
 	// surface.setResizable(true);
 	// noStroke();
+	println(1/2);
 	background(0);
 	stroke(0);
 	fill(255);
@@ -63,10 +72,19 @@ void setup()
 	arrayMax = (int)((b.w/2)); //Max array size
 	arrayMin = 10; //Min array size
 	arraySize = (arrayMax - arrayMin)/2; //Initial array size
+	arraySize = 16;
 	// println(arrayMax);
+	println(arraySize);
 	array = gen.random(arraySize); //Generate
 	colours = gen.blanks(arraySize);
+
+	//Algorithms
 	bubble = new BubbleSort(array, colours);
+	selection = new SelectionSort(array, colours);
+	mergeSort = new MergeSort(array, colours);
+	// mergeSort.printQueue();
+	// mergeSort.fillQueue(0, 30);
+	
 
 	//Buttons
 	play = new Play(10, 10, 90, 50);
@@ -89,24 +107,36 @@ void draw() {
 	update();
 	count++;
 
-	// sound();
-	// if (count % 60 == 0) {
-	// 	sound();
-	// 	println("Time: " + time + "att: " + soundAttSlider.getValFloat());
-	// 	println("Time: " + time + "susT: " + soundSusTSlider.getValFloat());
-	// 	println("Time: " + time + "susL: " + soundSusLSlider.getValFloat());
-	// 	println("Time: " + time + "rel: " + soundRelSlider.getValFloat());
-	// 	time++;
-	// }
-
+	
 	background(0);
+
+	// //Bubble sort
+	// if (count % CalcSpeed.getModulus(speed) == 0) {
+	// 	if (!bubble.sorted && play.active) {
+	// 		bubble.steps(CalcSpeed.getNumSteps(speed));
+	// 		sound.play();
+	// 	}
+	// }
+	// b.render(bubble.getArray(), bubble.getColours());
+
+	// //Selection sort
+	// if (count % CalcSpeed.getModulus(speed) == 0) {
+	// 	if (!selection.sorted && play.active) {
+	// 		selection.steps(CalcSpeed.getNumSteps(speed));
+	// 		sound.play();
+	// 	}
+	// }
+	// b.render(selection.getArray(), selection.getColours());
+
+	//Merge sort
 	if (count % CalcSpeed.getModulus(speed) == 0) {
-		if (!bubble.sorted && play.active) {
-			bubble.steps(CalcSpeed.getNumSteps(speed));
+		if (!mergeSort.sorted && play.active) {
+			mergeSort.steps(CalcSpeed.getNumSteps(speed));
 			sound.play();
 		}
 	}
-	b.render(bubble.getArray(), bubble.getColours());
+	b.render(mergeSort.getArray(), mergeSort.getColours());
+
 	play.render();
 	speedSlider.render();
 	reset.render();
@@ -191,4 +221,14 @@ void bubble(int[] array) {
 	Barchart b2 = new Barchart(0, 0, width, height);
 	// b2.render(array);
 }
+
+	// sound();
+	// if (count % 60 == 0) {
+	// 	sound();
+	// 	println("Time: " + time + "att: " + soundAttSlider.getValFloat());
+	// 	println("Time: " + time + "susT: " + soundSusTSlider.getValFloat());
+	// 	println("Time: " + time + "susL: " + soundSusLSlider.getValFloat());
+	// 	println("Time: " + time + "rel: " + soundRelSlider.getValFloat());
+	// 	time++;
+	// }
 

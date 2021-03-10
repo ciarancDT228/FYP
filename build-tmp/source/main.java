@@ -3,6 +3,7 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import java.util.*; 
 import processing.sound.*; 
 
 import java.util.HashMap; 
@@ -18,11 +19,19 @@ public class main extends PApplet {
 
 
 
+
+
 ArrayList<Component> components = new ArrayList<Component>();
+
+Queue<int[]> queue = new LinkedList<int[]>();
 
 Barchart b;
 ArrayGenerator gen;
+
 BubbleSort bubble;
+SelectionSort selection;
+MergeSort mergeSort;
+
 Algorithm algo;
 Play play;
 Reset reset;
@@ -60,9 +69,9 @@ float releaseTime = 0.2f;
 
 public void settings() {
 	// size(1000, 600, OPENGL);
-	size(800, 600, P2D);
+	// size(800, 600, P2D);
 	// fullScreen(P2D, SPAN);
-	// fullScreen(P2D, 1);
+	fullScreen(P2D, 1);
 	// fullScreen(1);
 	noSmooth();
 }
@@ -71,6 +80,7 @@ public void setup()
 {
 	// surface.setResizable(true);
 	// noStroke();
+	println(1/2);
 	background(0);
 	stroke(0);
 	fill(255);
@@ -81,10 +91,19 @@ public void setup()
 	arrayMax = (int)((b.w/2)); //Max array size
 	arrayMin = 10; //Min array size
 	arraySize = (arrayMax - arrayMin)/2; //Initial array size
+	arraySize = 16;
 	// println(arrayMax);
+	println(arraySize);
 	array = gen.random(arraySize); //Generate
 	colours = gen.blanks(arraySize);
+
+	//Algorithms
 	bubble = new BubbleSort(array, colours);
+	selection = new SelectionSort(array, colours);
+	mergeSort = new MergeSort(array, colours);
+	// mergeSort.printQueue();
+	// mergeSort.fillQueue(0, 30);
+	
 
 	//Buttons
 	play = new Play(10, 10, 90, 50);
@@ -107,24 +126,36 @@ public void draw() {
 	update();
 	count++;
 
-	// sound();
-	// if (count % 60 == 0) {
-	// 	sound();
-	// 	println("Time: " + time + "att: " + soundAttSlider.getValFloat());
-	// 	println("Time: " + time + "susT: " + soundSusTSlider.getValFloat());
-	// 	println("Time: " + time + "susL: " + soundSusLSlider.getValFloat());
-	// 	println("Time: " + time + "rel: " + soundRelSlider.getValFloat());
-	// 	time++;
-	// }
-
+	
 	background(0);
+
+	// //Bubble sort
+	// if (count % CalcSpeed.getModulus(speed) == 0) {
+	// 	if (!bubble.sorted && play.active) {
+	// 		bubble.steps(CalcSpeed.getNumSteps(speed));
+	// 		sound.play();
+	// 	}
+	// }
+	// b.render(bubble.getArray(), bubble.getColours());
+
+	// //Selection sort
+	// if (count % CalcSpeed.getModulus(speed) == 0) {
+	// 	if (!selection.sorted && play.active) {
+	// 		selection.steps(CalcSpeed.getNumSteps(speed));
+	// 		sound.play();
+	// 	}
+	// }
+	// b.render(selection.getArray(), selection.getColours());
+
+	//Merge sort
 	if (count % CalcSpeed.getModulus(speed) == 0) {
-		if (!bubble.sorted && play.active) {
-			bubble.steps(CalcSpeed.getNumSteps(speed));
+		if (!mergeSort.sorted && play.active) {
+			mergeSort.steps(CalcSpeed.getNumSteps(speed));
 			sound.play();
 		}
 	}
-	b.render(bubble.getArray(), bubble.getColours());
+	b.render(mergeSort.getArray(), mergeSort.getColours());
+
 	play.render();
 	speedSlider.render();
 	reset.render();
@@ -210,8 +241,44 @@ public void bubble(int[] array) {
 	// b2.render(array);
 }
 
+	// sound();
+	// if (count % 60 == 0) {
+	// 	sound();
+	// 	println("Time: " + time + "att: " + soundAttSlider.getValFloat());
+	// 	println("Time: " + time + "susT: " + soundSusTSlider.getValFloat());
+	// 	println("Time: " + time + "susL: " + soundSusLSlider.getValFloat());
+	// 	println("Time: " + time + "rel: " + soundRelSlider.getValFloat());
+	// 	time++;
+	// }
 
 class Algorithm {
+
+	// void steps(int x) {
+	// 	numsteps = x;
+
+	// 	for (int i = 0; i < colours.length; i++) {
+	// 		colours[i] = 0;
+	// 	}
+	// 	for (int i = 0; i < x; i++) {
+	// 		if (!sorted) {
+	// 			stepThrough();
+	// 		} else {
+	// 			break;
+	// 		}
+	// 	}
+	// }
+
+	// void checkSorted() {
+	// 	boolean sorted = true;
+
+	// 	for(int i = 1; i < array.length; i++) {
+	// 		if(array[i] < array[i - 1]) {
+	// 			sorted = false;
+	// 			break;
+	// 		}
+	// 	}
+	// 	this.sorted = sorted;
+	// }
 
 }
 
@@ -295,7 +362,7 @@ class Barchart{
 	public void render(int[] a, int[] c) {
 		strokeWeight = (w-(a.length-1))/a.length;
 
-		fill(0);
+		fill(100);
 		rect(posX, posY, w + border*2, h + border*2);
 		fill(255);
 		strokeWeight(strokeWeight);
@@ -366,7 +433,6 @@ class BubbleSort extends Algorithm {
 	boolean swapping;
 	int counter;
 	int pos1, pos0;
-	int oldPos1, oldPos0;
 	int stop;
 	int[] array;
 	int[] colours;
@@ -393,16 +459,12 @@ class BubbleSort extends Algorithm {
 		this.colours = colours;
 		counter = array.length;
 		stop = array.length;
-		oldPos1 = 0;
-		oldPos0 = 0;
 		numsteps = 0;
 	}
 
 	public void steps(int x) {
 		numsteps = x;
 
-		// println("speedSlider.getVal: " + speedSlider.getVal());
-		// println("numsteps: " + numsteps);
 		for (int i = 0; i < colours.length; i++) {
 			colours[i] = 0;
 		}
@@ -439,7 +501,8 @@ class BubbleSort extends Algorithm {
 			} else {
 				swapping = true;
 			}
-		} if (!swapping) {
+		}
+		if (!swapping) {
 			pos1++;
 			pos0++;
 		}
@@ -449,56 +512,6 @@ class BubbleSort extends Algorithm {
 		int temp = array[pos0];
 		array[pos0] = array[pos1];
 		array[pos1] = temp;
-	}
-
-	public void compare2() {
-
-		//If a swap is needed
-		if (array[pos1] < array[pos0]) {
-
-			//If second time: swap and colour green
-			if (swapping) {
-				swap();
-				swapping = false;
-			} else {
-
-				//First time: don't increment, colour red
-				if (pos1 < array.length) {
-					colours[pos1] = 1;
-				}
-
-				// colours[pos1] = 1;
-				colours[pos0] = 1;
-				oldPos1 = pos1;
-				oldPos0 = pos0;
-				swapping = true;
-			}
-		} else {
-			//don't swap, increment, colour red
-			if (pos1 < array.length) {
-				colours[pos1] = 1;
-			}
-			colours[pos0] = 1;
-			oldPos1 = pos1;
-			oldPos0 = pos0;
-			pos1++;
-			pos0++;
-		}
-	}
-
-	public void swap2() {
-		int temp = array[pos0];
-		array[pos0] = array[pos1];
-		array[pos1] = temp;
-		if(numsteps > -1) {
-			colours[pos1] = 1;
-			colours[pos0] = 1;
-		} else {
-			colours[pos1] = 2;
-			colours[pos0] = 2;
-		}
-		pos1++;
-		pos0++;
 	}
 
 	public void checkSorted() {
@@ -647,6 +660,233 @@ class Component{
 	// }
 
 }
+class MergeSort {
+
+	Queue<int[]> lrQueue = new LinkedList<int[]>();
+	Queue<Integer> mergeQueue = new LinkedList<Integer>();
+	boolean sorted;
+	boolean swapping;
+	boolean startMerge;
+	boolean endMerge;
+	int counterA;
+	int counterL, counterR;
+	int sizeL, sizeR;
+	int l, m, r;
+	int[] array;
+	int[] copy;
+	int[] colours;
+	int[] positions;
+	int numsteps;
+	int stop;
+
+	public MergeSort(int[] array, int[] colours) {
+		lrQueue.clear();
+		mergeQueue.clear();
+		fillQueue(0, (array.length-1) * 2);
+		sorted = false;
+		swapping = false;
+		startMerge = false;
+		endMerge = true;
+		counterA = 0;
+		counterL = 0;
+		counterR = 0;
+		sizeL = 0;
+		sizeR = 0;
+		l = 0;
+		m = 0;
+		r = 0;
+		this.array = array;
+		this.copy = array;
+		this.colours = colours;
+		numsteps = 0;
+		stop = -1;
+	}
+
+	public void reset(int[] array, int[] colours) {
+		lrQueue.clear();
+		mergeQueue.clear();
+		fillQueue(0, (array.length-1) * 2);
+		sorted = false;
+		swapping = false;
+		startMerge = false;
+		endMerge = true;
+		counterA = 0;
+		counterL = 0;
+		counterR = 0;
+		sizeL = 0;
+		sizeR = 0;
+		l = 0;
+		m = 0;
+		r = 0;
+		this.array = array;
+		this.copy = array;
+		this.colours = colours;
+		numsteps = 0;
+	}
+
+	public void steps(int x) {
+		numsteps = x;
+
+		for (int i = 0; i < colours.length; i++) {
+			colours[i] = 0;
+		}
+		for (int i = 0; i < x; i++) {
+			if (!sorted) {
+				stepThrough();
+			} else {
+				break;
+			}
+		}
+	}
+
+	public void stepThrough() {
+		println("\n --New Step");
+		checkSorted();
+		if (!sorted) {
+			println("if not sorted");
+			if (endMerge) {
+				println("if endMerge");
+				if (lrQueue.size() > 0) {
+					positions = lrQueue.remove();
+					l = positions[0];
+					m = positions[1];
+					r = positions[2];
+					counterL = 0;
+					counterR = 0;
+					counterA = l;
+					sizeL = m - l + 1;
+					sizeR = r - m;
+					endMerge = false;
+					println("\nLine 96\ncounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + 
+					"\ncounterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
+				} else {
+					sorted = true;
+				}
+			}
+			if (startMerge) {
+				if (mergeQueue.size() > 0) {
+					println("Merge");
+					merge();
+				} else {
+					startMerge = false;
+					endMerge = true;
+					stop = counterA;
+				}
+			}
+			if (!startMerge && !endMerge) {
+				println("compare");
+				compare();
+			}
+		}
+	}
+
+	public void compare() {
+		println("\nBefore\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
+				"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
+		if (l < colours.length) {
+			colours[l] = 1;
+		}
+		if (r < colours.length) {
+			colours[r] = 1;
+		}
+		if (counterL < sizeL && counterR < sizeR) {
+			if (array[l + counterL] <= array[m + 1 + counterR]) {
+				//add value to queue
+				mergeQueue.add(array[l + counterL]);
+				counterL++;
+			} else {
+				//add value to queue
+				mergeQueue.add(array[m + 1 + counterR]);
+				counterR++;
+			}
+		//get the stragglers
+		} else if (counterL < sizeL) {
+			mergeQueue.add(array[l + counterL]);
+			counterL++;
+		} else if (counterR < sizeR) {
+			mergeQueue.add(array[m + 1 + counterR]);
+			counterR++;
+		} else {
+			//merge flag
+			startMerge = true;
+		}
+		println("After\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
+				"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
+	}
+
+	public void merge() {
+		colours[counterA] = 2;
+		array[counterA] = mergeQueue.remove();
+		// println("\nLine 130\ncounterA = " + counterA + "\tmergeQueue removed = " + array[counterA]);
+		counterA++;
+		if (mergeQueue.size() == 0) {
+			startMerge = false;
+			endMerge = true;
+		}
+	}
+
+
+		// Merges two subarrays of arr[].
+	    // First subarray is arr[l..m]
+	    // Second subarray is arr[m+1..r]
+
+	    // Find sizes of two subarrays to be merged
+
+	    /* Create temp arrays of this ^ size */
+
+	    /*Copy data to temp arrays*/
+
+	    /* Merge the temp arrays */
+
+	    // Initial indexes of first and second subarrays
+
+	    // Initial index of merged subarry array
+
+	    /* Copy remaining elements of L[] if any */
+
+	    /* Copy remaining elements of R[] if any */
+
+	public void fillQueue(int l, int r) {
+		int mid;
+
+		if (l < r) {
+			mid = l + (r - l) / 2;
+			fillQueue(l, mid);
+			fillQueue(mid + 1, r);
+			int[] positions = {l, mid, r};
+			lrQueue.add(positions);
+		}
+	}
+
+	public void printQueue() {
+		for (int i = 0; i < lrQueue.size(); i++) {
+			int[] positions = lrQueue.remove();
+			println("Step " + (i+1) + ":\tl: " + positions[0] +
+				"\tm: " + positions[1] + 
+				"\th: " + positions[2]);
+		}
+	}
+
+	public void checkSorted() {
+		boolean sorted = true;
+		for(int i = 1; i < array.length; i++) {
+			if(array[i] < array[i - 1]) {
+				sorted = false;
+				break;
+			}
+		}
+		this.sorted = sorted;
+	}
+
+	public int[] getArray() {
+		return array;
+	}
+
+	public int[] getColours() {
+		return colours;
+	}
+
+}
 
 class Play extends Button{
 
@@ -669,11 +909,143 @@ class Reset extends Button{
 			array = gen.random(arraySize);
 			colours = gen.blanks(arraySize);
 			bubble.reset(array, colours);
+			selection.reset(array, colours);
+			mergeSort.reset(array, colours);
 			play.active = false;
 
 		}
 		depressed = false;
 		offset = false;
+	}
+
+}
+class SelectionSort extends Algorithm{
+
+	boolean sorted;
+	boolean swapping;
+	int counter;
+	int pos1, pos0, posMin;
+	// int stop;
+	int[] array;
+	int[] colours;
+
+	public SelectionSort(int[] array, int[] colours) {
+		sorted = false;
+		swapping = false;
+		pos1 = 1;
+		pos0 = 0;
+		posMin = 0;
+		this.array = array;
+		this.colours = colours;
+		counter = array.length;
+		// stop = 0;
+	}
+
+	public void reset(int[] array, int[] colours) {
+		sorted = false;
+		swapping = false;
+		pos1 = 1;
+		pos0 = 0;
+		posMin = 0;
+		this.array = array;
+		this.colours = colours;
+		counter = array.length;
+		// stop = 0;
+	}
+
+	public void steps(int x) {
+		for (int i = 0; i < colours.length; i++) {
+			colours[i] = 0;
+		}
+		for (int i = 0; i < x; i++) {
+			if (!sorted) {
+				stepThrough();
+			} else {
+				break;
+			}
+		}
+	}
+
+	public void stepThrough() {
+		checkSorted();
+		if (!sorted) {
+			if (pos1 == array.length) {
+				pos0++;
+				posMin = pos0;
+				pos1 = pos0 + 1;
+				//loop, not compare
+				compare();
+			} else {
+				compare();
+			}
+		}
+	}
+
+	// void compare2() {
+	// 	if (!swapping) {
+	// 		colours[posMin] = 1;
+	// 		colours[pos1] = 1;
+	// 		colours[pos0] = 2;
+	// 		if (array[pos1] < array[posMin]) {
+	// 			posMin = pos1;
+	// 		}
+	// 		if (pos1 == array.length - 1) {
+	// 			swapping = true;
+	// 		}
+	// 		pos1++;
+	// 	} else {
+	// 		swap();
+	// 	}
+	// }
+
+	public void compare() {
+		colours[posMin] = 1;
+		colours[pos1] = 1;
+		if (pos0 > 0) {
+			colours[pos0 - 1] = 2;
+		}
+		if (array[pos1] < array[posMin]) {
+			posMin = pos1;
+		}
+		if (pos1 == array.length - 1) {
+			if (swapping) {
+				swap();
+				swapping = false;
+				colours[pos1] = 0;
+				colours[pos0] = 1;
+			} else {
+				swapping = true;
+			}
+		}
+		if (!swapping) {
+			pos1++;
+		}
+	}
+
+	public void swap() {
+		int temp = array[pos0];
+		array[pos0] = array[posMin];
+		array[posMin] = temp;
+	}
+
+	public void checkSorted() {
+		boolean sorted = true;
+
+		for(int i = 1; i < array.length; i++) {
+			if(array[i] < array[i - 1]) {
+				sorted = false;
+				break;
+			}
+		}
+		this.sorted = sorted;
+	}
+
+	public int[] getArray() {
+		return array;
+	}
+
+	public int[] getColours() {
+		return colours;
 	}
 
 }

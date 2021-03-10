@@ -34,7 +34,7 @@ class Barchart{
 	void render(int[] a, int[] c) {
 		strokeWeight = (w-(a.length-1))/a.length;
 
-		fill(0);
+		fill(100);
 		rect(posX, posY, w + border*2, h + border*2);
 		fill(255);
 		strokeWeight(strokeWeight);
