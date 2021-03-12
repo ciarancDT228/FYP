@@ -136,6 +136,9 @@ void draw() {
 		if (!mergeSort.sorted && play.active) {
 			mergeSort.steps(CalcSpeed.getNumSteps(speed));
 			sound.play();
+	        //  for(int i = 0; i<colours.length-1; i++){
+	        //     print(colours[i] + ", ");
+        	// }
 		}
 	}
 	b.render(mergeSort.getArray(), mergeSort.getColours());

@@ -6,6 +6,7 @@ class MergeSort {
 	// boolean swapping;
 	boolean startMerge;
 	boolean endMerge;
+	boolean first;
 	int counterA;
 	int counterL, counterR;
 	int sizeL, sizeR;
@@ -15,7 +16,7 @@ class MergeSort {
 	int[] colours;
 	int[] positions;
 	int numsteps;
-	int stop;
+	// int stop;
 
 	public MergeSort(int[] array, int[] colours) {
 		lrQueue.clear();
@@ -25,6 +26,7 @@ class MergeSort {
 		// swapping = false;
 		startMerge = false;
 		endMerge = true;
+		first = false;
 		counterA = 0;
 		counterL = 0;
 		counterR = 0;
@@ -37,7 +39,7 @@ class MergeSort {
 		this.copy = array;
 		this.colours = colours;
 		numsteps = 0;
-		stop = -1;
+		// stop = -1;
 	}
 
 	void reset(int[] array, int[] colours) {
@@ -48,6 +50,7 @@ class MergeSort {
 		// swapping = false;
 		startMerge = false;
 		endMerge = true;
+		first = false;
 		counterA = 0;
 		counterL = 0;
 		counterR = 0;
@@ -82,6 +85,22 @@ class MergeSort {
 		checkSorted();
 		if (!sorted) {
 			println("if not sorted");
+			//Colours
+			if (counterL == sizeL && counterR == sizeR) {
+				startMerge = true;
+			}
+			//Merge
+			if (startMerge) {
+				if (mergeQueue.size() > 0) {
+					println("Merge");
+					merge();
+				} else {
+					startMerge = false;
+					endMerge = true;
+					// stop = counterA - 1;
+				}
+			}
+			//Reset
 			if (endMerge) {
 				println("if endMerge");
 				if (lrQueue.size() > 0) {
@@ -95,37 +114,17 @@ class MergeSort {
 					sizeL = m - l + 1;
 					sizeR = r - m;
 					endMerge = false;
+					first = true;
 					println("\nLine 96\ncounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + 
 					"\ncounterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
 				} else {
 					sorted = true;
 				}
 			}
-			if (startMerge) {
-				if (mergeQueue.size() > 0) {
-					println("Merge");
-					merge();
-				} else {
-					startMerge = false;
-					endMerge = true;
-					stop = counterA;
-				}
-			}
-			if (!startMerge) {
-				if (!startMerge && !endMerge) {
-					println("compare");
-					compare();
-				}
-				if (l + counterL < colours.length) {
-					colours[l + counterL] = 1;
-				} else {
-					colours[l + counterL - 1] = 1;
-				}
-				if (m + 1 + counterR < colours.length && m  + counterR < r) {
-					colours[m + 1 + counterR] = 1;
-				} else {
-					colours[m + 1 + counterR - 1] = 0;
-				}
+			//Compare
+			if (!startMerge && !endMerge) {
+				println("compare");
+				compare();
 			}
 		}
 	}
@@ -133,16 +132,17 @@ class MergeSort {
 	void compare() {
 		println("\nBefore\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
 				"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
-		// if (l + counterL < colours.length) {
-		// 	colours[l + counterL] = 1;
-		// } else {
-		// 	colours[l + counterL - 1] = 1;
-		// }
-		// if (m + 1 + counterR < colours.length && m  + counterR < r) {
-		// 	colours[m + 1 + counterR] = 1;
-		// } else {
-		// 	colours[m + 1 + counterR - 1] = 0;
-		// }
+		
+		if (l + counterL < colours.length && l + counterL < m + 1) {
+			colours[l + counterL] = 1;
+		} else {
+			colours[l + counterL - 1] = 1;
+		}
+		if (m + 1 + counterR < colours.length && m + counterR < r) {
+			colours[m + 1 + counterR] = 1;
+		} else {
+			colours[m + 1 + counterR - 1] = 1;
+		}
 		
 		if (counterL < sizeL && counterR < sizeR) {
 			if (array[l + counterL] <= array[m + 1 + counterR]) {
@@ -174,10 +174,10 @@ class MergeSort {
 		array[counterA] = mergeQueue.remove();
 		// println("\nLine 130\ncounterA = " + counterA + "\tmergeQueue removed = " + array[counterA]);
 		counterA++;
-		if (mergeQueue.size() == 0) {
-			startMerge = false;
-			endMerge = true;
-		}
+		// if (mergeQueue.size() == 0) {
+		// 	startMerge = false;
+		// 	endMerge = true;
+		// }
 	}
 
 
