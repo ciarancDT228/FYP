@@ -50,9 +50,9 @@ float releaseTime = 0.2;
 
 void settings() {
 	// size(1000, 600, OPENGL);
-	// size(800, 600, P2D);
+	size(800, 600, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(P2D, 1);
+	// fullScreen(P2D, 2);
 	// fullScreen(1);
 	noSmooth();
 }
@@ -66,17 +66,20 @@ void setup()
 	stroke(0);
 	fill(255);
 	gen = new ArrayGenerator(); //Array Generator
-	// b = new Barchart(0, 0, width, height); //Barchart
+	b = new Barchart(0, 0, width, height); //Barchart
 	// b = new Barchart(530, 120, 150, 20);
-	b = new Barchart(width/4, height/4, width/2, height/2);
+	// b = new Barchart(width/4, height/4, width/2, height/2);
 	arrayMax = (int)((b.w/2)); //Max array size
+	arrayMax = width;
+	println("\n" + arrayMax);
+	// arrayMax = 400; //Max array size
 	arrayMin = 10; //Min array size
 	arraySize = (arrayMax - arrayMin)/2; //Initial array size
 	arraySize = 16;
 	// println(arrayMax);
 	println(arraySize);
-	array = gen.random(arraySize); //Generate
-	colours = gen.blanks(arraySize);
+	array = GenerateArray.random(arraySize); //Generate
+	colours = GenerateArray.blanks(arraySize);
 
 	//Algorithms
 	bubble = new BubbleSort(array, colours);
@@ -182,6 +185,7 @@ void mouseReleased() {
 }
 
 //---------------------------------------------------------------------------------------------------
+/*
 int[] array1;
 int[] array2;
 int[] array3;
@@ -232,3 +236,4 @@ void bubble(int[] array) {
 	// 	time++;
 	// }
 
+*/

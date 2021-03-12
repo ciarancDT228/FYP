@@ -9,13 +9,13 @@ class Reset extends Button{
 		if(correctLocation() && depressed) {
 			//do some thing
 			arraySize = sizeSlider.getVal();
-			array = gen.random(arraySize);
-			colours = gen.blanks(arraySize);
+			array = GenerateArray.random(arraySize);
+			colours = GenerateArray.blanks(arraySize);
 			bubble.reset(array, colours);
 			selection.reset(array, colours);
 			mergeSort.reset(array, colours);
 			play.active = false;
-
+			println(arraySize);
 		}
 		depressed = false;
 		offset = false;

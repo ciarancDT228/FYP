@@ -3,7 +3,7 @@ class MergeSort {
 	Queue<int[]> lrQueue = new LinkedList<int[]>();
 	Queue<Integer> mergeQueue = new LinkedList<Integer>();
 	boolean sorted;
-	boolean swapping;
+	// boolean swapping;
 	boolean startMerge;
 	boolean endMerge;
 	int counterA;
@@ -22,7 +22,7 @@ class MergeSort {
 		mergeQueue.clear();
 		fillQueue(0, (array.length-1) * 2);
 		sorted = false;
-		swapping = false;
+		// swapping = false;
 		startMerge = false;
 		endMerge = true;
 		counterA = 0;
@@ -45,7 +45,7 @@ class MergeSort {
 		mergeQueue.clear();
 		fillQueue(0, (array.length-1) * 2);
 		sorted = false;
-		swapping = false;
+		// swapping = false;
 		startMerge = false;
 		endMerge = true;
 		counterA = 0;
@@ -111,9 +111,21 @@ class MergeSort {
 					stop = counterA;
 				}
 			}
-			if (!startMerge && !endMerge) {
-				println("compare");
-				compare();
+			if (!startMerge) {
+				if (!startMerge && !endMerge) {
+					println("compare");
+					compare();
+				}
+				if (l + counterL < colours.length) {
+					colours[l + counterL] = 1;
+				} else {
+					colours[l + counterL - 1] = 1;
+				}
+				if (m + 1 + counterR < colours.length && m  + counterR < r) {
+					colours[m + 1 + counterR] = 1;
+				} else {
+					colours[m + 1 + counterR - 1] = 0;
+				}
 			}
 		}
 	}
@@ -121,12 +133,17 @@ class MergeSort {
 	void compare() {
 		println("\nBefore\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
 				"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
-		if (l < colours.length) {
-			colours[l] = 1;
-		}
-		if (r < colours.length) {
-			colours[r] = 1;
-		}
+		// if (l + counterL < colours.length) {
+		// 	colours[l + counterL] = 1;
+		// } else {
+		// 	colours[l + counterL - 1] = 1;
+		// }
+		// if (m + 1 + counterR < colours.length && m  + counterR < r) {
+		// 	colours[m + 1 + counterR] = 1;
+		// } else {
+		// 	colours[m + 1 + counterR - 1] = 0;
+		// }
+		
 		if (counterL < sizeL && counterR < sizeR) {
 			if (array[l + counterL] <= array[m + 1 + counterR]) {
 				//add value to queue

@@ -69,9 +69,9 @@ float releaseTime = 0.2f;
 
 public void settings() {
 	// size(1000, 600, OPENGL);
-	// size(800, 600, P2D);
+	size(800, 600, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(P2D, 1);
+	// fullScreen(P2D, 2);
 	// fullScreen(1);
 	noSmooth();
 }
@@ -85,17 +85,20 @@ public void setup()
 	stroke(0);
 	fill(255);
 	gen = new ArrayGenerator(); //Array Generator
-	// b = new Barchart(0, 0, width, height); //Barchart
+	b = new Barchart(0, 0, width, height); //Barchart
 	// b = new Barchart(530, 120, 150, 20);
-	b = new Barchart(width/4, height/4, width/2, height/2);
+	// b = new Barchart(width/4, height/4, width/2, height/2);
 	arrayMax = (int)((b.w/2)); //Max array size
+	arrayMax = width;
+	println("\n" + arrayMax);
+	// arrayMax = 400; //Max array size
 	arrayMin = 10; //Min array size
 	arraySize = (arrayMax - arrayMin)/2; //Initial array size
 	arraySize = 16;
 	// println(arrayMax);
 	println(arraySize);
-	array = gen.random(arraySize); //Generate
-	colours = gen.blanks(arraySize);
+	array = GenerateArray.random(arraySize); //Generate
+	colours = GenerateArray.blanks(arraySize);
 
 	//Algorithms
 	bubble = new BubbleSort(array, colours);
@@ -201,10 +204,11 @@ public void mouseReleased() {
 }
 
 //---------------------------------------------------------------------------------------------------
+/*
 int[] array1;
 int[] array2;
 int[] array3;
-public void randomTester() {
+void randomTester() {
 	if(mouseX > 0) {
 		fill(255, 10);
 		float marker = 1;
@@ -224,7 +228,7 @@ public void randomTester() {
 	}
 }
 
-public void bubble(int[] array) {
+void bubble(int[] array) {
 	boolean sorted = false;
 	while(!sorted) {
 		sorted = true;
@@ -251,6 +255,7 @@ public void bubble(int[] array) {
 	// 	time++;
 	// }
 
+*/
 class Algorithm {
 
 	// void steps(int x) {
@@ -284,45 +289,39 @@ class Algorithm {
 
 class ArrayGenerator {
 
-	public int[] random2(int length) {
-		int[] tempArray = asc(length);
-		int[] randArray = new int[length];
-		for(int i = 0; i < randArray.length; i++) {
-			int rand = (int)(Math.random() * length);
-			randArray[i] = tempArray[rand];
-			for(int j = rand; j < length - 1; j++) {
-				tempArray[j] = tempArray[j+1];
-			}
-			length--;
-		}
-		return randArray;
-	}
+	public int[] sinWave(int length, float p){
+        int[] arr = new int[length];
+        for(int i = 0; i < length; i++){
+            arr[i] = (int)(Math.round((length/2)*sin((2*PI*p*i)/length)+((length/2)*sin(PI/2)))) + 1;
+        }
+        return arr;
+    }
 
 	public int[] random(int length) {
-		int[] randArray = asc(length);
-		for(int i = 0; i < randArray.length; i++) {
+		int[] arr = asc(length);
+		for(int i = 0; i < arr.length; i++) {
 			int rand = (int)(Math.random() * length);
-			int temp = randArray[i];
-			randArray[i] = randArray[rand];
-			randArray[rand] = temp;
+			int temp = arr[i];
+			arr[i] = arr[rand];
+			arr[rand] = temp;
 		}
-		return randArray;
+		return arr;
 	}
 
 	public int[] asc(int length) {
-		int[] array = new int[length];
-		for(int i = 0; i < array.length; i++) {
-			array[i] = i + 1;
+		int[] arr = new int[length];
+		for(int i = 0; i < arr.length; i++) {
+			arr[i] = i + 1;
 		}
-		return array;
+		return arr;
 	}
 
 	public int[] blanks(int length) {
-		int[] array = new int[length];
-		for(int i = 0; i < array.length; i++) {
-			array[i] = 0;
+		int[] arr = new int[length];
+		for(int i = 0; i < arr.length; i++) {
+			arr[i] = 0;
 		}
-		return array;
+		return arr;
 	}
 
 }
@@ -341,7 +340,7 @@ class Barchart{
 	float thickness;
 
 	public Barchart(float posX, float posY, float w, float h) {
-		border = 20;
+		border = 0;
 		this.posX = posX;
 		this.posY = posY;
 		this.w = w - (border*2);
@@ -360,8 +359,14 @@ class Barchart{
 	}
 
 	public void render(int[] a, int[] c) {
-		strokeWeight = (w-(a.length-1))/a.length;
+		float spacer = 0;
 
+		if (a.length > w / 2) {
+			strokeWeight = w / a.length;
+		} else {
+			strokeWeight = (w-(a.length-1))/a.length;
+			spacer = strokeWeight/2;
+		}
 		fill(100);
 		rect(posX, posY, w + border*2, h + border*2);
 		fill(255);
@@ -381,7 +386,7 @@ class Barchart{
 			else {
 				stroke(0, 255, 0);
 			}
-			float x1 = map(i, 0, a.length, posX, posX + w) + border + strokeWeight/2;
+			float x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
 			float y1 = map(a[i], 0, max, posY + h + border, posY + border);
 			float barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
@@ -660,12 +665,50 @@ class Component{
 	// }
 
 }
+static class GenerateArray {
+
+	public static int[] sinWave(int length, float p){
+        int[] arr = new int[length];
+        for(int i = 0; i < length; i++){
+            arr[i] = (int)(Math.round((length/2)*sin((2*PI*p*i)/length)+((length/2)*sin(PI/2)))) + 1;
+        }
+        return arr;
+    }
+
+	public static int[] random(int length) {
+		int[] arr = asc(length);
+		for(int i = 0; i < arr.length; i++) {
+			int rand = (int)(Math.random() * length);
+			int temp = arr[i];
+			arr[i] = arr[rand];
+			arr[rand] = temp;
+		}
+		return arr;
+	}
+
+	public static int[] asc(int length) {
+		int[] arr = new int[length];
+		for(int i = 0; i < arr.length; i++) {
+			arr[i] = i + 1;
+		}
+		return arr;
+	}
+
+	public static int[] blanks(int length) {
+		int[] arr = new int[length];
+		for(int i = 0; i < arr.length; i++) {
+			arr[i] = 0;
+		}
+		return arr;
+	}
+
+}
 class MergeSort {
 
 	Queue<int[]> lrQueue = new LinkedList<int[]>();
 	Queue<Integer> mergeQueue = new LinkedList<Integer>();
 	boolean sorted;
-	boolean swapping;
+	// boolean swapping;
 	boolean startMerge;
 	boolean endMerge;
 	int counterA;
@@ -684,7 +727,7 @@ class MergeSort {
 		mergeQueue.clear();
 		fillQueue(0, (array.length-1) * 2);
 		sorted = false;
-		swapping = false;
+		// swapping = false;
 		startMerge = false;
 		endMerge = true;
 		counterA = 0;
@@ -707,7 +750,7 @@ class MergeSort {
 		mergeQueue.clear();
 		fillQueue(0, (array.length-1) * 2);
 		sorted = false;
-		swapping = false;
+		// swapping = false;
 		startMerge = false;
 		endMerge = true;
 		counterA = 0;
@@ -773,9 +816,21 @@ class MergeSort {
 					stop = counterA;
 				}
 			}
-			if (!startMerge && !endMerge) {
-				println("compare");
-				compare();
+			if (!startMerge) {
+				if (!startMerge && !endMerge) {
+					println("compare");
+					compare();
+				}
+				if (l + counterL < colours.length) {
+					colours[l + counterL] = 1;
+				} else {
+					colours[l + counterL - 1] = 1;
+				}
+				if (m + 1 + counterR < colours.length && m  + counterR < r) {
+					colours[m + 1 + counterR] = 1;
+				} else {
+					colours[m + 1 + counterR - 1] = 0;
+				}
 			}
 		}
 	}
@@ -783,12 +838,17 @@ class MergeSort {
 	public void compare() {
 		println("\nBefore\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
 				"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
-		if (l < colours.length) {
-			colours[l] = 1;
-		}
-		if (r < colours.length) {
-			colours[r] = 1;
-		}
+		// if (l + counterL < colours.length) {
+		// 	colours[l + counterL] = 1;
+		// } else {
+		// 	colours[l + counterL - 1] = 1;
+		// }
+		// if (m + 1 + counterR < colours.length && m  + counterR < r) {
+		// 	colours[m + 1 + counterR] = 1;
+		// } else {
+		// 	colours[m + 1 + counterR - 1] = 0;
+		// }
+		
 		if (counterL < sizeL && counterR < sizeR) {
 			if (array[l + counterL] <= array[m + 1 + counterR]) {
 				//add value to queue
@@ -887,6 +947,10 @@ class MergeSort {
 	}
 
 }
+public class MyClass {
+
+
+}
 
 class Play extends Button{
 
@@ -906,13 +970,13 @@ class Reset extends Button{
 		if(correctLocation() && depressed) {
 			//do some thing
 			arraySize = sizeSlider.getVal();
-			array = gen.random(arraySize);
-			colours = gen.blanks(arraySize);
+			array = GenerateArray.random(arraySize);
+			colours = GenerateArray.blanks(arraySize);
 			bubble.reset(array, colours);
 			selection.reset(array, colours);
 			mergeSort.reset(array, colours);
 			play.active = false;
-
+			println(arraySize);
 		}
 		depressed = false;
 		offset = false;

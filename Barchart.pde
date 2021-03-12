@@ -13,7 +13,7 @@ class Barchart{
 	float thickness;
 
 	public Barchart(float posX, float posY, float w, float h) {
-		border = 20;
+		border = 0;
 		this.posX = posX;
 		this.posY = posY;
 		this.w = w - (border*2);
@@ -32,8 +32,14 @@ class Barchart{
 	}
 
 	void render(int[] a, int[] c) {
-		strokeWeight = (w-(a.length-1))/a.length;
+		float spacer = 0;
 
+		if (a.length > w / 2) {
+			strokeWeight = w / a.length;
+		} else {
+			strokeWeight = (w-(a.length-1))/a.length;
+			spacer = strokeWeight/2;
+		}
 		fill(100);
 		rect(posX, posY, w + border*2, h + border*2);
 		fill(255);
@@ -53,7 +59,7 @@ class Barchart{
 			else {
 				stroke(0, 255, 0);
 			}
-			float x1 = map(i, 0, a.length, posX, posX + w) + border + strokeWeight/2;
+			float x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
 			float y1 = map(a[i], 0, max, posY + h + border, posY + border);
 			float barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
