@@ -28,4 +28,21 @@ class AlgMenu {
 		randomBtn.render();
 	}
 
+	void update() {
+		this.posX = mouseX;
+		this.posY = mouseY;
+		mergeBtn.posX = mouseX + 7*px;
+		bubbleBtn.posX = mouseX + 114*px;
+		selectionBtn.posX = mouseX + 221*px;
+		randomBtn.posX = mouseX + 328*px;
+		mergeBtn.posY = mouseY + 7*py;
+		bubbleBtn.posY = mouseY + 7*py;
+		selectionBtn.posY = mouseY + 7*py;
+		randomBtn.posY = mouseY + 7*py;
+		mergeBtn.update();
+		bubbleBtn.update();
+		selectionBtn.update();
+		randomBtn.update();
+	}
+
 }

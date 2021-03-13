@@ -41,4 +41,9 @@ class Thumbnail {
 		textAlign(CENTER);
 		text(label, posX + 50*px, posY + 86*px);
 	}
+
+	void update() {
+		thumbnail.posX = this.posX + 16*px;
+		thumbnail.posY = this.posY + 14*px;
+	}
 }

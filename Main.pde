@@ -171,6 +171,7 @@ void update() {
 	reset.update();
 	sizeSlider.update();
 	sound.update();
+	algorithmMenu.update();
 	// soundAttSlider.update();
 	// soundSusTSlider.update();
 	// soundSusLSlider.update();

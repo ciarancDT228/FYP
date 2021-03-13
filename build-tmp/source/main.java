@@ -190,6 +190,7 @@ public void update() {
 	reset.update();
 	sizeSlider.update();
 	sound.update();
+	algorithmMenu.update();
 	// soundAttSlider.update();
 	// soundSusTSlider.update();
 	// soundSusLSlider.update();
@@ -299,6 +300,23 @@ class AlgMenu {
 		bubbleBtn.render();
 		selectionBtn.render();
 		randomBtn.render();
+	}
+
+	public void update() {
+		this.posX = mouseX;
+		this.posY = mouseY;
+		mergeBtn.posX = mouseX + 7*px;
+		bubbleBtn.posX = mouseX + 114*px;
+		selectionBtn.posX = mouseX + 221*px;
+		randomBtn.posX = mouseX + 328*px;
+		mergeBtn.posY = mouseY + 7*py;
+		bubbleBtn.posY = mouseY + 7*py;
+		selectionBtn.posY = mouseY + 7*py;
+		randomBtn.posY = mouseY + 7*py;
+		mergeBtn.update();
+		bubbleBtn.update();
+		selectionBtn.update();
+		randomBtn.update();
 	}
 
 }
@@ -776,7 +794,6 @@ class MergeBtn extends Thumbnail {
 		crr = GenerateArray.blanks(arrSize);
 		this.label = "Merge";
 	}
-
 
 }
 class MergeSort {
@@ -1438,6 +1455,11 @@ class Thumbnail {
 		textSize(16*px);
 		textAlign(CENTER);
 		text(label, posX + 50*px, posY + 86*px);
+	}
+
+	public void update() {
+		thumbnail.posX = this.posX + 16*px;
+		thumbnail.posY = this.posY + 14*px;
 	}
 }
 class TickSlider extends Slider {

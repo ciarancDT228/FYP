@@ -11,5 +11,4 @@ class MergeBtn extends Thumbnail {
 		this.label = "Merge";
 	}
 
-
 }
