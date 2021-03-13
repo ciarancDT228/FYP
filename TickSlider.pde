@@ -11,7 +11,7 @@ class TickSlider extends Slider {
 	}
 
 	int getTickLocation() {
-		tick = (int)map(mouseX, posX, posX + w, 0, numTicks);
+		tick = (int)round(map(mouseX, posX, posX + w, 0, numTicks));
 		return (int)map(tick, 0, numTicks, posX, posX + w);
 	}
 

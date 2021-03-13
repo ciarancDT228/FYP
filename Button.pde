@@ -15,7 +15,7 @@ class Button extends Component {
 		depressed = false;
 		active = false;
 		offset = false;
-		offsetXY = 4;
+		offsetXY = 4*px;
 	}
 
 		void render() {

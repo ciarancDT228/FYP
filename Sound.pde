@@ -35,6 +35,8 @@ class Sound {
 
 		for(int i = 0; i < colours.length; i++) {
 			if (colours[i] > 0) {
+				triOsc.freq(map(array[i], 0, array.length, minFreq, maxFreq));
+				env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 				if(array[i] > max) {
 					max = array[i];
 				}
@@ -44,8 +46,8 @@ class Sound {
 			}
 		}
 		med = (max - min) / 2;
-		triOsc.freq(map(med, 0, array.length, minFreq, maxFreq));
-		env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+		// triOsc.freq(map(med, 0, array.length, minFreq, maxFreq));
+		// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 		// triOsc.freq(map(min, 0, array.length, minFreq, maxFreq));
 		// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 	}

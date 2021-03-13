@@ -78,9 +78,10 @@ AlgMenu algorithmMenu;
 
 public void settings() {
 	// size(1000, 600, OPENGL);
-	// size(1536, 846, P2D);
+	size(1536, 846, P2D);
+	// size(800, 200, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(P2D, 2);
+	// fullScreen(P2D, 2);
 	// fullScreen(1);
 	noSmooth();
 }
@@ -90,7 +91,7 @@ public void setup()
 	px = (width*5.2083333f*pow(10, -4));
 	py = (height*9.2592592f*pow(10, -4));
 	println(Math.log10(68)*68);
-	// surface.setResizable(true);
+	surface.setResizable(true);
 	// noStroke();
 	background(0);
 	stroke(0);
@@ -101,7 +102,7 @@ public void setup()
 	arrayMax = width;
 	arrayMin = 10; //Min array size
 	arraySize = (int)b.w/2; //Initial array size
-	arraySize = 680;
+	// arraySize = 680;
 	array = GenerateArray.random(arraySize); //Generate
 	colours = GenerateArray.blanks(arraySize);
 
@@ -117,7 +118,7 @@ public void setup()
 	play = new Play(10, 10, 100, 100);
 	reset = new Reset(270, 10, 90, 50);
 	//Sliders
-	speedSlider = new TickSlider(110, 30, 150, 20, 0, 14); //Speed
+	speedSlider = new TickSlider(80*px, 920*py, 1760*px, 80*py, 1, 14); //Speed
 	sizeSlider = new Slider(370, 30, 150, 20, arrayMin, arrayMax, arraySize); //Size
 	soundAttSlider = new Slider(530, 30, 150, 20, 0.001f, 1.0f, 0.001f); // Sound
 	soundSusTSlider = new Slider(530, 50, 150, 20, 0.001f, 1.0f, 0.004f); // Sound
@@ -139,16 +140,16 @@ public void draw() {
 	
 	background(0);
 
-	//Bubble sort
-	if (count % CalcSpeed.getModulus(speed) == 0) {
-		if (!bubble.sorted && play.active) {
-			count2++;
-			println(count2);
-			bubble.steps(CalcSpeed.getNumSteps(speed));
-			sound.play();
-		}
-	}
-	b.render(bubble.getArray(), bubble.getColours());
+	// //Bubble sort
+	// if (count % CalcSpeed.getModulus(speed) == 0) {
+	// 	if (!bubble.sorted && play.active) {
+	// 		count2++;
+	// 		println(count2);
+	// 		bubble.steps(CalcSpeed.getNumSteps(speed));
+	// 		sound.play();
+	// 	}
+	// }
+	// b.render(bubble.getArray(), bubble.getColours());
 
 	// //Selection sort
 	// if (count % CalcSpeed.getModulus(speed) == 0) {
@@ -159,18 +160,18 @@ public void draw() {
 	// }
 	// b.render(selection.getArray(), selection.getColours());
 
-	// //Merge sort
-	// if (count % CalcSpeed.getModulus(speed) == 0) {
-	// 	if (!mergeSort.sorted && play.active) {
-	// 		count2++;
-	// 		println(count2);
-	// 		mergeSort.steps(CalcSpeed.getNumSteps(speed));
-	// 		sound.play();
-	//         //  for(int i = 0; i<colours.length-1; i++){
-	//         //     print(colours[i] + ", ");
- //        	// }
-	// 	}
-	// }
+	//Merge sort
+	if (count % CalcSpeed.getModulus(speed) == 0) {
+		if (!mergeSort.sorted && play.active) {
+			count2++;
+			println(count2);
+			mergeSort.steps(CalcSpeed.getNumSteps(speed));
+			sound.play();
+	        //  for(int i = 0; i<colours.length-1; i++){
+	        //     print(colours[i] + ", ");
+        	// }
+		}
+	}
 	b.render(mergeSort.getArray(), mergeSort.getColours());
 
 	play.render();
@@ -185,6 +186,8 @@ public void draw() {
 }
 
 public void update() {
+	px = (width*5.2083333f*pow(10, -4));
+	py = (height*9.2592592f*pow(10, -4));
 	play.update();
 	speedSlider.update();
 	reset.update();
@@ -206,6 +209,11 @@ public void mousePressed() {
 	soundSusTSlider.mouseDown();
 	soundSusLSlider.mouseDown();
 	soundRelSlider.mouseDown();
+	//Update algorithm thumbnails
+	for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
+		Thumbnail t = algorithmMenu.algThumbs.get(i);
+		t.mouseDown();
+	}
 }
 
 public void mouseReleased() {
@@ -217,6 +225,11 @@ public void mouseReleased() {
 	soundSusTSlider.mouseUp();
 	soundSusLSlider.mouseUp();
 	soundRelSlider.mouseUp();
+	//Update algorithm thumbnails
+	for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
+		Thumbnail t = algorithmMenu.algThumbs.get(i);
+		t.mouseUp();
+	}
 }
 
 //---------------------------------------------------------------------------------------------------
@@ -274,6 +287,7 @@ void bubble(int[] array) {
 */
 class AlgMenu {
 
+	ArrayList<Thumbnail> algThumbs;
 	float posX, posY, w, h;
 	Thumbnail mergeBtn;
 	Thumbnail bubbleBtn;
@@ -285,10 +299,15 @@ class AlgMenu {
 		this.posY = posY;
 		this.w = 435*px;
 		this.h = 114*py;
-		this.mergeBtn = new MergeBtn(posX + 7*px, posY + 7*py, 100*px);
-		this.bubbleBtn = new BubbleBtn(posX + 114*px, posY + 7*py, 100*px);
-		this.selectionBtn = new SelectionBtn(posX + 221*px, posY + 7*py, 100*px);
-		this.randomBtn = new BubbleBtn(posX + 328*px, posY + 7*py, 100*px);
+		this.mergeBtn = new MergeBtn(posX + 7*px, posY + 7*py, 100*px, 100*py);
+		this.bubbleBtn = new BubbleBtn(posX + 114*px, posY + 7*py, 100*px, 100*py);
+		this.selectionBtn = new SelectionBtn(posX + 221*px, posY + 7*py, 100*px, 100*py);
+		this.randomBtn = new BubbleBtn(posX + 328*px, posY + 7*py, 100*px, 100*py);
+		algThumbs = new ArrayList<Thumbnail>();
+		algThumbs.add(mergeBtn);
+		algThumbs.add(bubbleBtn);
+		algThumbs.add(selectionBtn);
+		algThumbs.add(randomBtn);
 	}
 
 	public void render() {
@@ -296,15 +315,17 @@ class AlgMenu {
 		stroke(0);
 		fill(255);
 		rect(posX, posY, w, h, 8*px);
-		mergeBtn.render();
-		bubbleBtn.render();
-		selectionBtn.render();
-		randomBtn.render();
+		for (int i = 0; i < algThumbs.size(); i++) {
+			Thumbnail t = algThumbs.get(i);
+			t.render();
+		}
 	}
 
-	public void update() {
+	public void updatePos() {
 		this.posX = mouseX;
 		this.posY = mouseY;
+		this.w = 435*px;
+		this.h = 114*py;
 		mergeBtn.posX = mouseX + 7*px;
 		bubbleBtn.posX = mouseX + 114*px;
 		selectionBtn.posX = mouseX + 221*px;
@@ -313,10 +334,17 @@ class AlgMenu {
 		bubbleBtn.posY = mouseY + 7*py;
 		selectionBtn.posY = mouseY + 7*py;
 		randomBtn.posY = mouseY + 7*py;
-		mergeBtn.update();
-		bubbleBtn.update();
-		selectionBtn.update();
-		randomBtn.update();
+		mergeBtn.updatePos();
+		bubbleBtn.updatePos();
+		selectionBtn.updatePos();
+		randomBtn.updatePos();
+	}
+
+	public void update() {
+		for (int i = 0; i < algThumbs.size(); i++) {
+			Thumbnail t = algThumbs.get(i);
+			t.update();
+		}
 	}
 
 }
@@ -353,40 +381,40 @@ class Algorithm {
 
 class ArrayGenerator {
 
-	public int[] sinWave(int length, float p){
-        int[] arr = new int[length];
-        for(int i = 0; i < length; i++){
-            arr[i] = (int)(Math.round((length/2)*sin((2*PI*p*i)/length)+((length/2)*sin(PI/2)))) + 1;
-        }
-        return arr;
-    }
+	// int[] sinWave(int length, float p){
+ //        int[] arr = new int[length];
+ //        for(int i = 0; i < length; i++){
+ //            arr[i] = (int)(Math.round((length/2)*sin((2*PI*p*i)/length)+((length/2)*sin(PI/2)))) + 1;
+ //        }
+ //        return arr;
+ //    }
 
-	public int[] random(int length) {
-		int[] arr = asc(length);
-		for(int i = 0; i < arr.length; i++) {
-			int rand = (int)(Math.random() * length);
-			int temp = arr[i];
-			arr[i] = arr[rand];
-			arr[rand] = temp;
-		}
-		return arr;
-	}
+	// int[] random(int length) {
+	// 	int[] arr = asc(length);
+	// 	for(int i = 0; i < arr.length; i++) {
+	// 		int rand = (int)(Math.random() * length);
+	// 		int temp = arr[i];
+	// 		arr[i] = arr[rand];
+	// 		arr[rand] = temp;
+	// 	}
+	// 	return arr;
+	// }
 
-	public int[] asc(int length) {
-		int[] arr = new int[length];
-		for(int i = 0; i < arr.length; i++) {
-			arr[i] = i + 1;
-		}
-		return arr;
-	}
+	// int[] asc(int length) {
+	// 	int[] arr = new int[length];
+	// 	for(int i = 0; i < arr.length; i++) {
+	// 		arr[i] = i + 1;
+	// 	}
+	// 	return arr;
+	// }
 
-	public int[] blanks(int length) {
-		int[] arr = new int[length];
-		for(int i = 0; i < arr.length; i++) {
-			arr[i] = 0;
-		}
-		return arr;
-	}
+	// int[] blanks(int length) {
+	// 	int[] arr = new int[length];
+	// 	for(int i = 0; i < arr.length; i++) {
+	// 		arr[i] = 0;
+	// 	}
+	// 	return arr;
+	// }
 
 }
 
@@ -500,13 +528,19 @@ class BubbleBtn extends Thumbnail {
 
 	BubbleSort b;
 
-	public BubbleBtn(float posX, float posY, float d) {
-		super(posX, posY, d);
+	public BubbleBtn(float posX, float posY, float w, float h) {
+		super(posX, posY, w, h);
 		b = new BubbleSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize));
 		b.steps(200000);
 		arr = b.getArray();
 		crr = GenerateArray.blanks(arrSize);
 		this.label = "Bubble";
+	}
+
+	public void mouseUp() {
+		if (correctLocation() && depressed) {
+			super.mouseUp(this);
+		}
 	}
 
 }
@@ -635,7 +669,7 @@ class Button extends Component {
 		depressed = false;
 		active = false;
 		offset = false;
-		offsetXY = 4;
+		offsetXY = 4*px;
 	}
 
 		public void render() {
@@ -786,14 +820,39 @@ class MergeBtn extends Thumbnail {
 
 	MergeSort m;
 
-	public MergeBtn(float posX, float posY, float d) {
-		super(posX, posY, d);
+	public MergeBtn(float posX, float posY, float w, float h) {
+		super(posX, posY, w, h);
 		m = new MergeSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize));
 		m.steps(10300);
 		arr = m.getArray();
 		crr = GenerateArray.blanks(arrSize);
 		this.label = "Merge";
 	}
+
+	// void mouseUp() {
+	// 	if (correctLocation() && depressed) {
+	// 		println("MergeBtn Line 16");
+	// 		//do some thing
+	// 		if(!active) {
+	// 			for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
+	// 				Thumbnail t = algorithmMenu.algThumbs.get(i);
+	// 				if (!(t instanceof MergeBtn)) {
+	// 					t.active = false;
+	// 				}
+	// 			}
+	// 			active = true;
+	// 		}
+	// 	}
+	// 	depressed = false;
+	// 	offset = false;
+	// }
+	public void mouseUp() {
+		if (correctLocation() && depressed) {
+			super.mouseUp(this);
+		}
+	}
+
+
 
 }
 class MergeSort {
@@ -1080,13 +1139,19 @@ class SelectionBtn extends Thumbnail {
 
 	SelectionSort s;
 
-	public SelectionBtn(float posX, float posY, float d) {
-		super(posX, posY, d);
+	public SelectionBtn(float posX, float posY, float w, float h) {
+		super(posX, posY, w, h);
 		s = new SelectionSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize));
 		s.steps(180000);
 		arr = s.getArray();
 		crr = GenerateArray.blanks(arrSize);
 		this.label = "Selection";
+	}
+
+	public void mouseUp() {
+		if (correctLocation() && depressed) {
+			super.mouseUp(this);
+		}
 	}
 
 }
@@ -1381,6 +1446,8 @@ class Sound {
 
 		for(int i = 0; i < colours.length; i++) {
 			if (colours[i] > 0) {
+				triOsc.freq(map(array[i], 0, array.length, minFreq, maxFreq));
+				env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 				if(array[i] > max) {
 					max = array[i];
 				}
@@ -1390,8 +1457,8 @@ class Sound {
 			}
 		}
 		med = (max - min) / 2;
-		triOsc.freq(map(med, 0, array.length, minFreq, maxFreq));
-		env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+		// triOsc.freq(map(med, 0, array.length, minFreq, maxFreq));
+		// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 		// triOsc.freq(map(min, 0, array.length, minFreq, maxFreq));
 		// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 	}
@@ -1419,48 +1486,124 @@ class Thumbnail {
 	// float px;
 	int[] arr;
 	int[] crr;
-	Barchart thumbnail;
+	Barchart b;
 	int arrSize;
 	String label;
+	float fontSize;
+	float offsetXY;
+	boolean depressed;
+	boolean active;
+	boolean offset;
+	boolean highlight;
 
-	public Thumbnail (float posX, float posY, float d) {
+	public Thumbnail (float posX, float posY, float w, float h) {
 		this.posX = posX;
 		this.posY = posY;
-		this.w = d;
-		this.h = d;
+		this.w = w;
+		this.h = h;
+		this.fontSize = 16*px;
+		this.arrSize = 680;
+		depressed = false;
+		active = false;
+		offset = false;
+		highlight = false;
+		offsetXY = 4*px;
 		// px = d/100;
 		arrSize = (int)(68*10);
-		thumbnail = new Barchart(posX + 16*px, posY + 14*px, 68*px, 46*px);
+		b = new Barchart(posX + 16*px, posY + 14*px, 68*px, 46*py);
 	}
 
 	public void render() {
+		if(depressed){println("Thumbnail line 33");}
 		if ((int)1*px < 1) {
 			strokeWeight(1);
 		} else {
 			strokeWeight((int)1*px);
 		}
 		stroke(0);
-		fill(255);
-		rect(posX, posY, 100*px, 100*px, 8*px);
-		thumbnail.render(arr, crr);
+		if(active) {
+			fill(255);
+		} else {
+			fill(235);
+		}
+		rect(posX, posY, 100*px, 100*py, 8*px);
+		b.render(arr, crr);
 		noFill();
-		strokeWeight((int)3*px);
+		strokeWeight((int)4*px);
 		stroke(255);
-		rect(posX + 15*px, posY + 13*px, 70*px, 48*px, 8*px);
+		rect(posX + 15*px, posY + 13*py, 70*px, 48*py, 8*px);
 		noFill();
 		strokeWeight((int)2*px);
 		stroke(0);
-		rect(posX + 16*px, posY + 14*px, 68*px, 46*px, 8*px);
+		rect(posX + 16*px, posY + 14*py, 68*px, 46*py, 8*px);
 		fill(0);
-		textSize(16*px);
+		textSize(round(fontSize));
 		textAlign(CENTER);
-		text(label, posX + 50*px, posY + 86*px);
+		text(label, posX + 50*px, posY + 86*py);
+	}
+
+	public void updatePos() {
+		b.posX = this.posX + 16*px;
+		b.posY = this.posY + 14*py;
+		b.w = 68*px;
+		b.h = 46*py;
+		fontSize = 16*px;
 	}
 
 	public void update() {
-		thumbnail.posX = this.posX + 16*px;
-		thumbnail.posY = this.posY + 14*px;
+		updatePos();
+		if (correctLocation() && depressed) {
+			offset = true;
+		} else {
+			offset = false;
+		}
+		if (correctLocation() && !depressed) {
+			highlight = true;
+		}
 	}
+
+	public void mouseDown() {
+		if (correctLocation()) {
+			depressed = true;
+		}
+	}
+
+	public void mouseUp(Thumbnail child) {
+		if (correctLocation() && depressed) {
+			//do some thing
+			if(!active) {
+				for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
+					Thumbnail t = algorithmMenu.algThumbs.get(i);
+					if (!(t == child)) {
+						t.active = false;
+					}
+				}
+				active = true;
+			}
+		}
+		depressed = false;
+		offset = false;
+	}
+
+	public void mouseUp() {
+		for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
+			Thumbnail t = algorithmMenu.algThumbs.get(i);
+			t.mouseUp();
+		}
+	}
+
+	public boolean correctLocation() {
+		if (mouseX > this.posX && mouseX < this.posX + this.w
+			&& mouseY > this.posY && mouseY < this.posY + this.h) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// void deactivate() {
+	// 	this.active = false;
+	// }
 }
 class TickSlider extends Slider {
 
@@ -1475,7 +1618,7 @@ class TickSlider extends Slider {
 	}
 
 	public int getTickLocation() {
-		tick = (int)map(mouseX, posX, posX + w, 0, numTicks);
+		tick = (int)round(map(mouseX, posX, posX + w, 0, numTicks));
 		return (int)map(tick, 0, numTicks, posX, posX + w);
 	}
 
