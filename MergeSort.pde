@@ -81,10 +81,10 @@ class MergeSort {
 	}
 
 	void stepThrough() {
-		println("\n --New Step");
+		// println("\n --New Step");
 		checkSorted();
 		if (!sorted) {
-			println("if not sorted");
+			// println("if not sorted");
 			//Colours
 			if (counterL == sizeL && counterR == sizeR) {
 				startMerge = true;
@@ -92,7 +92,7 @@ class MergeSort {
 			//Merge
 			if (startMerge) {
 				if (mergeQueue.size() > 0) {
-					println("Merge");
+					// println("Merge");
 					merge();
 				} else {
 					startMerge = false;
@@ -102,7 +102,7 @@ class MergeSort {
 			}
 			//Reset
 			if (endMerge) {
-				println("if endMerge");
+				// println("if endMerge");
 				if (lrQueue.size() > 0) {
 					positions = lrQueue.remove();
 					l = positions[0];
@@ -115,23 +115,23 @@ class MergeSort {
 					sizeR = r - m;
 					endMerge = false;
 					first = true;
-					println("\nLine 96\ncounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + 
-					"\ncounterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
+					// println("\nLine 96\ncounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + 
+					// "\ncounterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
 				} else {
 					sorted = true;
 				}
 			}
 			//Compare
 			if (!startMerge && !endMerge) {
-				println("compare");
+				// println("compare");
 				compare();
 			}
 		}
 	}
 
 	void compare() {
-		println("\nBefore\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
-				"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
+		// println("\nBefore\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
+		// 		"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
 		
 		if (l + counterL < colours.length && l + counterL < m + 1) {
 			colours[l + counterL] = 1;
@@ -165,8 +165,8 @@ class MergeSort {
 			//merge flag
 			startMerge = true;
 		}
-		println("After\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
-				"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
+		// println("After\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
+		// 		"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
 	}
 
 	void merge() {

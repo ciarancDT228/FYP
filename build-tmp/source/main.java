@@ -25,6 +25,8 @@ ArrayList<Component> components = new ArrayList<Component>();
 
 Queue<int[]> queue = new LinkedList<int[]>();
 
+float px;
+float py;
 Barchart b;
 ArrayGenerator gen;
 
@@ -40,6 +42,7 @@ Slider sizeSlider;
 int[] array;
 int[] colours;
 int count = 0;
+int count2 = 0;
 int time = 0;
 
 //Array Size
@@ -67,36 +70,38 @@ float sustainTime = 0.004f;
 float sustainLevel = 0.3f;
 float releaseTime = 0.2f;
 
+// Thumbnail mergeBtn;
+// Thumbnail bubbleBtn;
+// Thumbnail selectionBtn;
+// Thumbnail randomBtn;
+AlgMenu algorithmMenu;
+
 public void settings() {
 	// size(1000, 600, OPENGL);
-	size(800, 600, P2D);
+	// size(1536, 846, P2D);
 	// fullScreen(P2D, SPAN);
-	// fullScreen(P2D, 2);
+	fullScreen(P2D, 2);
 	// fullScreen(1);
 	noSmooth();
 }
 
 public void setup()
 {
+	px = (width*5.2083333f*pow(10, -4));
+	py = (height*9.2592592f*pow(10, -4));
+	println(Math.log10(68)*68);
 	// surface.setResizable(true);
 	// noStroke();
-	println(1/2);
 	background(0);
 	stroke(0);
 	fill(255);
 	gen = new ArrayGenerator(); //Array Generator
 	b = new Barchart(0, 0, width, height); //Barchart
-	// b = new Barchart(530, 120, 150, 20);
-	// b = new Barchart(width/4, height/4, width/2, height/2);
-	arrayMax = (int)((b.w/2)); //Max array size
+	// arrayMax = (int)((b.w/2)); //Max array size
 	arrayMax = width;
-	println("\n" + arrayMax);
-	// arrayMax = 400; //Max array size
 	arrayMin = 10; //Min array size
-	arraySize = (arrayMax - arrayMin)/2; //Initial array size
-	arraySize = 16;
-	// println(arrayMax);
-	println(arraySize);
+	arraySize = (int)b.w/2; //Initial array size
+	arraySize = 680;
 	array = GenerateArray.random(arraySize); //Generate
 	colours = GenerateArray.blanks(arraySize);
 
@@ -109,7 +114,7 @@ public void setup()
 	
 
 	//Buttons
-	play = new Play(10, 10, 90, 50);
+	play = new Play(10, 10, 100, 100);
 	reset = new Reset(270, 10, 90, 50);
 	//Sliders
 	speedSlider = new TickSlider(110, 30, 150, 20, 0, 14); //Speed
@@ -123,6 +128,8 @@ public void setup()
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
 	sound = new Sound(attackTime, sustainTime, sustainLevel, releaseTime, 100, 700);
+
+	algorithmMenu = new AlgMenu(150*px, 150*py);
 }
 
 public void draw() {
@@ -132,14 +139,16 @@ public void draw() {
 	
 	background(0);
 
-	// //Bubble sort
-	// if (count % CalcSpeed.getModulus(speed) == 0) {
-	// 	if (!bubble.sorted && play.active) {
-	// 		bubble.steps(CalcSpeed.getNumSteps(speed));
-	// 		sound.play();
-	// 	}
-	// }
-	// b.render(bubble.getArray(), bubble.getColours());
+	//Bubble sort
+	if (count % CalcSpeed.getModulus(speed) == 0) {
+		if (!bubble.sorted && play.active) {
+			count2++;
+			println(count2);
+			bubble.steps(CalcSpeed.getNumSteps(speed));
+			sound.play();
+		}
+	}
+	b.render(bubble.getArray(), bubble.getColours());
 
 	// //Selection sort
 	// if (count % CalcSpeed.getModulus(speed) == 0) {
@@ -150,16 +159,18 @@ public void draw() {
 	// }
 	// b.render(selection.getArray(), selection.getColours());
 
-	//Merge sort
-	if (count % CalcSpeed.getModulus(speed) == 0) {
-		if (!mergeSort.sorted && play.active) {
-			mergeSort.steps(CalcSpeed.getNumSteps(speed));
-			sound.play();
-	        //  for(int i = 0; i<colours.length-1; i++){
-	        //     print(colours[i] + ", ");
-        	// }
-		}
-	}
+	// //Merge sort
+	// if (count % CalcSpeed.getModulus(speed) == 0) {
+	// 	if (!mergeSort.sorted && play.active) {
+	// 		count2++;
+	// 		println(count2);
+	// 		mergeSort.steps(CalcSpeed.getNumSteps(speed));
+	// 		sound.play();
+	//         //  for(int i = 0; i<colours.length-1; i++){
+	//         //     print(colours[i] + ", ");
+ //        	// }
+	// 	}
+	// }
 	b.render(mergeSort.getArray(), mergeSort.getColours());
 
 	play.render();
@@ -170,6 +181,7 @@ public void draw() {
 	soundSusTSlider.render();
 	soundSusLSlider.render();
 	soundRelSlider.render();
+	algorithmMenu.render();
 }
 
 public void update() {
@@ -259,6 +271,37 @@ void bubble(int[] array) {
 	// }
 
 */
+class AlgMenu {
+
+	float posX, posY, w, h;
+	Thumbnail mergeBtn;
+	Thumbnail bubbleBtn;
+	Thumbnail selectionBtn;
+	Thumbnail randomBtn;
+
+	public AlgMenu (float posX, float posY) {
+		this.posX = posX;
+		this.posY = posY;
+		this.w = 435*px;
+		this.h = 114*py;
+		this.mergeBtn = new MergeBtn(posX + 7*px, posY + 7*py, 100*px);
+		this.bubbleBtn = new BubbleBtn(posX + 114*px, posY + 7*py, 100*px);
+		this.selectionBtn = new SelectionBtn(posX + 221*px, posY + 7*py, 100*px);
+		this.randomBtn = new BubbleBtn(posX + 328*px, posY + 7*py, 100*px);
+	}
+
+	public void render() {
+		strokeWeight((int)1*px);
+		stroke(0);
+		fill(255);
+		rect(posX, posY, w, h, 8*px);
+		mergeBtn.render();
+		bubbleBtn.render();
+		selectionBtn.render();
+		randomBtn.render();
+	}
+
+}
 class Algorithm {
 
 	// void steps(int x) {
@@ -371,6 +414,7 @@ class Barchart{
 			spacer = strokeWeight/2;
 		}
 		fill(100);
+		noStroke();
 		rect(posX, posY, w + border*2, h + border*2);
 		fill(255);
 		strokeWeight(strokeWeight);
@@ -434,6 +478,20 @@ class Barchart{
 }
 
 
+class BubbleBtn extends Thumbnail {
+
+	BubbleSort b;
+
+	public BubbleBtn(float posX, float posY, float d) {
+		super(posX, posY, d);
+		b = new BubbleSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize));
+		b.steps(200000);
+		arr = b.getArray();
+		crr = GenerateArray.blanks(arrSize);
+		this.label = "Bubble";
+	}
+
+}
 
 class BubbleSort extends Algorithm {
 
@@ -706,6 +764,21 @@ static class GenerateArray {
 	}
 
 }
+class MergeBtn extends Thumbnail {
+
+	MergeSort m;
+
+	public MergeBtn(float posX, float posY, float d) {
+		super(posX, posY, d);
+		m = new MergeSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize));
+		m.steps(10300);
+		arr = m.getArray();
+		crr = GenerateArray.blanks(arrSize);
+		this.label = "Merge";
+	}
+
+
+}
 class MergeSort {
 
 	Queue<int[]> lrQueue = new LinkedList<int[]>();
@@ -789,10 +862,10 @@ class MergeSort {
 	}
 
 	public void stepThrough() {
-		println("\n --New Step");
+		// println("\n --New Step");
 		checkSorted();
 		if (!sorted) {
-			println("if not sorted");
+			// println("if not sorted");
 			//Colours
 			if (counterL == sizeL && counterR == sizeR) {
 				startMerge = true;
@@ -800,7 +873,7 @@ class MergeSort {
 			//Merge
 			if (startMerge) {
 				if (mergeQueue.size() > 0) {
-					println("Merge");
+					// println("Merge");
 					merge();
 				} else {
 					startMerge = false;
@@ -810,7 +883,7 @@ class MergeSort {
 			}
 			//Reset
 			if (endMerge) {
-				println("if endMerge");
+				// println("if endMerge");
 				if (lrQueue.size() > 0) {
 					positions = lrQueue.remove();
 					l = positions[0];
@@ -823,23 +896,23 @@ class MergeSort {
 					sizeR = r - m;
 					endMerge = false;
 					first = true;
-					println("\nLine 96\ncounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + 
-					"\ncounterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
+					// println("\nLine 96\ncounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + 
+					// "\ncounterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
 				} else {
 					sorted = true;
 				}
 			}
 			//Compare
 			if (!startMerge && !endMerge) {
-				println("compare");
+				// println("compare");
 				compare();
 			}
 		}
 	}
 
 	public void compare() {
-		println("\nBefore\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
-				"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
+		// println("\nBefore\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
+		// 		"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
 		
 		if (l + counterL < colours.length && l + counterL < m + 1) {
 			colours[l + counterL] = 1;
@@ -873,8 +946,8 @@ class MergeSort {
 			//merge flag
 			startMerge = true;
 		}
-		println("After\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
-				"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
+		// println("After\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
+		// 		"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
 	}
 
 	public void merge() {
@@ -983,6 +1056,20 @@ class Reset extends Button{
 		}
 		depressed = false;
 		offset = false;
+	}
+
+}
+class SelectionBtn extends Thumbnail {
+
+	SelectionSort s;
+
+	public SelectionBtn(float posX, float posY, float d) {
+		super(posX, posY, d);
+		s = new SelectionSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize));
+		s.steps(180000);
+		arr = s.getArray();
+		crr = GenerateArray.blanks(arrSize);
+		this.label = "Selection";
 	}
 
 }
@@ -1309,6 +1396,50 @@ class Sound {
 	}
 
 }
+class Thumbnail {
+
+	float posX, posY, w, h;
+	// float px;
+	int[] arr;
+	int[] crr;
+	Barchart thumbnail;
+	int arrSize;
+	String label;
+
+	public Thumbnail (float posX, float posY, float d) {
+		this.posX = posX;
+		this.posY = posY;
+		this.w = d;
+		this.h = d;
+		// px = d/100;
+		arrSize = (int)(68*10);
+		thumbnail = new Barchart(posX + 16*px, posY + 14*px, 68*px, 46*px);
+	}
+
+	public void render() {
+		if ((int)1*px < 1) {
+			strokeWeight(1);
+		} else {
+			strokeWeight((int)1*px);
+		}
+		stroke(0);
+		fill(255);
+		rect(posX, posY, 100*px, 100*px, 8*px);
+		thumbnail.render(arr, crr);
+		noFill();
+		strokeWeight((int)3*px);
+		stroke(255);
+		rect(posX + 15*px, posY + 13*px, 70*px, 48*px, 8*px);
+		noFill();
+		strokeWeight((int)2*px);
+		stroke(0);
+		rect(posX + 16*px, posY + 14*px, 68*px, 46*px, 8*px);
+		fill(0);
+		textSize(16*px);
+		textAlign(CENTER);
+		text(label, posX + 50*px, posY + 86*px);
+	}
+}
 class TickSlider extends Slider {
 
 	int tick;
@@ -1394,6 +1525,20 @@ class TickSlider extends Slider {
 		}
 	}
 
+}
+class View {
+
+	int arraySize;
+	Slider sizeSlider;
+	int[] array;
+	int[] colours;
+	float posX, posY, w, h;
+	// AlgMenu algMenu;
+	// GphMenu gphMenu;
+
+	public View() {
+
+	}
 }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "main" };

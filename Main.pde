@@ -6,6 +6,8 @@ ArrayList<Component> components = new ArrayList<Component>();
 
 Queue<int[]> queue = new LinkedList<int[]>();
 
+float px;
+float py;
 Barchart b;
 ArrayGenerator gen;
 
@@ -21,6 +23,7 @@ Slider sizeSlider;
 int[] array;
 int[] colours;
 int count = 0;
+int count2 = 0;
 int time = 0;
 
 //Array Size
@@ -48,36 +51,38 @@ float sustainTime = 0.004;
 float sustainLevel = 0.3;
 float releaseTime = 0.2;
 
+// Thumbnail mergeBtn;
+// Thumbnail bubbleBtn;
+// Thumbnail selectionBtn;
+// Thumbnail randomBtn;
+AlgMenu algorithmMenu;
+
 void settings() {
 	// size(1000, 600, OPENGL);
-	size(800, 600, P2D);
+	// size(1536, 846, P2D);
 	// fullScreen(P2D, SPAN);
-	// fullScreen(P2D, 2);
+	fullScreen(P2D, 2);
 	// fullScreen(1);
 	noSmooth();
 }
 
 void setup()
 {
+	px = (width*5.2083333*pow(10, -4));
+	py = (height*9.2592592*pow(10, -4));
+	println(Math.log10(68)*68);
 	// surface.setResizable(true);
 	// noStroke();
-	println(1/2);
 	background(0);
 	stroke(0);
 	fill(255);
 	gen = new ArrayGenerator(); //Array Generator
 	b = new Barchart(0, 0, width, height); //Barchart
-	// b = new Barchart(530, 120, 150, 20);
-	// b = new Barchart(width/4, height/4, width/2, height/2);
-	arrayMax = (int)((b.w/2)); //Max array size
+	// arrayMax = (int)((b.w/2)); //Max array size
 	arrayMax = width;
-	println("\n" + arrayMax);
-	// arrayMax = 400; //Max array size
 	arrayMin = 10; //Min array size
-	arraySize = (arrayMax - arrayMin)/2; //Initial array size
-	arraySize = 16;
-	// println(arrayMax);
-	println(arraySize);
+	arraySize = (int)b.w/2; //Initial array size
+	arraySize = 680;
 	array = GenerateArray.random(arraySize); //Generate
 	colours = GenerateArray.blanks(arraySize);
 
@@ -90,7 +95,7 @@ void setup()
 	
 
 	//Buttons
-	play = new Play(10, 10, 90, 50);
+	play = new Play(10, 10, 100, 100);
 	reset = new Reset(270, 10, 90, 50);
 	//Sliders
 	speedSlider = new TickSlider(110, 30, 150, 20, 0, 14); //Speed
@@ -104,6 +109,8 @@ void setup()
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
 	sound = new Sound(attackTime, sustainTime, sustainLevel, releaseTime, 100, 700);
+
+	algorithmMenu = new AlgMenu(150*px, 150*py);
 }
 
 void draw() {
@@ -113,14 +120,16 @@ void draw() {
 	
 	background(0);
 
-	// //Bubble sort
-	// if (count % CalcSpeed.getModulus(speed) == 0) {
-	// 	if (!bubble.sorted && play.active) {
-	// 		bubble.steps(CalcSpeed.getNumSteps(speed));
-	// 		sound.play();
-	// 	}
-	// }
-	// b.render(bubble.getArray(), bubble.getColours());
+	//Bubble sort
+	if (count % CalcSpeed.getModulus(speed) == 0) {
+		if (!bubble.sorted && play.active) {
+			count2++;
+			println(count2);
+			bubble.steps(CalcSpeed.getNumSteps(speed));
+			sound.play();
+		}
+	}
+	b.render(bubble.getArray(), bubble.getColours());
 
 	// //Selection sort
 	// if (count % CalcSpeed.getModulus(speed) == 0) {
@@ -131,16 +140,18 @@ void draw() {
 	// }
 	// b.render(selection.getArray(), selection.getColours());
 
-	//Merge sort
-	if (count % CalcSpeed.getModulus(speed) == 0) {
-		if (!mergeSort.sorted && play.active) {
-			mergeSort.steps(CalcSpeed.getNumSteps(speed));
-			sound.play();
-	        //  for(int i = 0; i<colours.length-1; i++){
-	        //     print(colours[i] + ", ");
-        	// }
-		}
-	}
+	// //Merge sort
+	// if (count % CalcSpeed.getModulus(speed) == 0) {
+	// 	if (!mergeSort.sorted && play.active) {
+	// 		count2++;
+	// 		println(count2);
+	// 		mergeSort.steps(CalcSpeed.getNumSteps(speed));
+	// 		sound.play();
+	//         //  for(int i = 0; i<colours.length-1; i++){
+	//         //     print(colours[i] + ", ");
+ //        	// }
+	// 	}
+	// }
 	b.render(mergeSort.getArray(), mergeSort.getColours());
 
 	play.render();
@@ -151,6 +162,7 @@ void draw() {
 	soundSusTSlider.render();
 	soundSusLSlider.render();
 	soundRelSlider.render();
+	algorithmMenu.render();
 }
 
 void update() {

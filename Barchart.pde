@@ -41,6 +41,7 @@ class Barchart{
 			spacer = strokeWeight/2;
 		}
 		fill(100);
+		noStroke();
 		rect(posX, posY, w + border*2, h + border*2);
 		fill(255);
 		strokeWeight(strokeWeight);
