@@ -11,10 +11,10 @@ class SelectionBtn extends Thumbnail {
 		this.label = "Selection";
 	}
 
-	void mouseUp() {
-		if (correctLocation() && depressed) {
-			super.mouseUp(this);
-		}
-	}
+	// void mouseUp() {
+	// 	if (correctLocation() && depressed) {
+	// 		super.mouseUp(this);
+	// 	}
+	// }
 
 }

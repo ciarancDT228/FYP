@@ -8,6 +8,7 @@ Queue<int[]> queue = new LinkedList<int[]>();
 
 float px;
 float py;
+Palette p;
 Barchart b;
 ArrayGenerator gen;
 
@@ -59,8 +60,8 @@ AlgMenu algorithmMenu;
 
 void settings() {
 	// size(1000, 600, OPENGL);
-	size(1536, 846, P2D);
-	// size(800, 200, P2D);
+	// size(1536, 846, P2D);
+	size(800, 200, P2D);
 	// fullScreen(P2D, SPAN);
 	// fullScreen(P2D, 2);
 	// fullScreen(1);
@@ -71,14 +72,14 @@ void setup()
 {
 	px = (width*5.2083333*pow(10, -4));
 	py = (height*9.2592592*pow(10, -4));
-	println(Math.log10(68)*68);
+	p = new Palette();
 	surface.setResizable(true);
 	// noStroke();
 	background(0);
 	stroke(0);
 	fill(255);
 	gen = new ArrayGenerator(); //Array Generator
-	b = new Barchart(0, 0, width, height); //Barchart
+	b = new Barchart(0*px, 0*py, width, height, 50*px); //Barchart
 	// arrayMax = (int)((b.w/2)); //Max array size
 	arrayMax = width;
 	arrayMin = 10; //Min array size
@@ -207,10 +208,11 @@ void mouseReleased() {
 	soundSusLSlider.mouseUp();
 	soundRelSlider.mouseUp();
 	//Update algorithm thumbnails
-	for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
-		Thumbnail t = algorithmMenu.algThumbs.get(i);
-		t.mouseUp();
-	}
+	// for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
+	// 	Thumbnail t = algorithmMenu.algThumbs.get(i);
+	// 	t.mouseUp();
+	// }
+	algorithmMenu.mouseUp();
 }
 
 //---------------------------------------------------------------------------------------------------

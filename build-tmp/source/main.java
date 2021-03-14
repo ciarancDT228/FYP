@@ -27,6 +27,7 @@ Queue<int[]> queue = new LinkedList<int[]>();
 
 float px;
 float py;
+Palette p;
 Barchart b;
 ArrayGenerator gen;
 
@@ -78,8 +79,8 @@ AlgMenu algorithmMenu;
 
 public void settings() {
 	// size(1000, 600, OPENGL);
-	size(1536, 846, P2D);
-	// size(800, 200, P2D);
+	// size(1536, 846, P2D);
+	size(800, 200, P2D);
 	// fullScreen(P2D, SPAN);
 	// fullScreen(P2D, 2);
 	// fullScreen(1);
@@ -90,14 +91,14 @@ public void setup()
 {
 	px = (width*5.2083333f*pow(10, -4));
 	py = (height*9.2592592f*pow(10, -4));
-	println(Math.log10(68)*68);
+	p = new Palette();
 	surface.setResizable(true);
 	// noStroke();
 	background(0);
 	stroke(0);
 	fill(255);
 	gen = new ArrayGenerator(); //Array Generator
-	b = new Barchart(0, 0, width, height); //Barchart
+	b = new Barchart(0*px, 0*py, width, height, 50*px); //Barchart
 	// arrayMax = (int)((b.w/2)); //Max array size
 	arrayMax = width;
 	arrayMin = 10; //Min array size
@@ -226,10 +227,11 @@ public void mouseReleased() {
 	soundSusLSlider.mouseUp();
 	soundRelSlider.mouseUp();
 	//Update algorithm thumbnails
-	for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
-		Thumbnail t = algorithmMenu.algThumbs.get(i);
-		t.mouseUp();
-	}
+	// for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
+	// 	Thumbnail t = algorithmMenu.algThumbs.get(i);
+	// 	t.mouseUp();
+	// }
+	algorithmMenu.mouseUp();
 }
 
 //---------------------------------------------------------------------------------------------------
@@ -299,9 +301,13 @@ class AlgMenu {
 		this.posY = posY;
 		this.w = 435*px;
 		this.h = 114*py;
+		println(100*px);
+		println(px);
 		this.mergeBtn = new MergeBtn(posX + 7*px, posY + 7*py, 100*px, 100*py);
 		this.bubbleBtn = new BubbleBtn(posX + 114*px, posY + 7*py, 100*px, 100*py);
+		// this.bubbleBtn.active = true;
 		this.selectionBtn = new SelectionBtn(posX + 221*px, posY + 7*py, 100*px, 100*py);
+		this.selectionBtn.active = true;
 		this.randomBtn = new BubbleBtn(posX + 328*px, posY + 7*py, 100*px, 100*py);
 		algThumbs = new ArrayList<Thumbnail>();
 		algThumbs.add(mergeBtn);
@@ -311,9 +317,8 @@ class AlgMenu {
 	}
 
 	public void render() {
-		strokeWeight((int)1*px);
-		stroke(0);
-		fill(255);
+		noStroke();
+		fill(p.foreground);
 		rect(posX, posY, w, h, 8*px);
 		for (int i = 0; i < algThumbs.size(); i++) {
 			Thumbnail t = algThumbs.get(i);
@@ -344,6 +349,13 @@ class AlgMenu {
 		for (int i = 0; i < algThumbs.size(); i++) {
 			Thumbnail t = algThumbs.get(i);
 			t.update();
+		}
+	}
+
+	public void mouseUp() {
+		for (int i = 0; i < algThumbs.size(); i++) {
+			Thumbnail t = algThumbs.get(i);
+			t.mouseUp();
 		}
 	}
 
@@ -431,8 +443,8 @@ class Barchart{
 	float max;
 	float thickness;
 
-	public Barchart(float posX, float posY, float w, float h) {
-		border = 0;
+	public Barchart(float posX, float posY, float w, float h, float border) {
+		this.border = border;
 		this.posX = posX;
 		this.posY = posY;
 		this.w = w - (border*2);
@@ -459,19 +471,19 @@ class Barchart{
 			strokeWeight = (w-(a.length-1))/a.length;
 			spacer = strokeWeight/2;
 		}
-		fill(100);
+		fill(p.background);
 		noStroke();
 		rect(posX, posY, w + border*2, h + border*2);
-		fill(255);
+		// fill(255);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
-		stroke(255);
+		// stroke(#ade8f4);
 		array = a;
 		colours = c;
-		max = getMax();
+		max = a.length;
 		for (int i = 0; i < a.length; i++) {
 			if(c[i] == 0) {
-				stroke(255);
+				stroke(p.font);
 			}
 			else if (c[i] == 1) {
 				stroke(255, 0, 0);
@@ -485,45 +497,32 @@ class Barchart{
 			line(x1, y1, x1, y1 + barHeight);
 		}
 		strokeCap(ROUND);
+		if (border > 0) {
+			stroke(p.foreground);
+			strokeWeight(border);
+			noFill();
+			rect(posX + border / 2, posY + border / 2, w + border, h + border, 8*px);
+		}
 	}
 
-	public float getMax() {
-		float max = 0;
-		for (int i = 0; i < array.length; i++) {
-			if(array[i] > max) {
-				max = array[i];
-			}
+	public void renderSimple(int[] a, Thumbnail t) {
+		strokeWeight = w / a.length;
+		fill(p.background);
+		noStroke();
+		rect(posX - t.offsetXY, posY + t.offsetXY, w, h);
+		strokeWeight(strokeWeight);
+		strokeCap(SQUARE);
+		max = a.length;
+		stroke(p.font);
+		for (int i = 0; i < a.length; i++) {
+			float x1 = map(i, 0, a.length, posX - t.offsetXY, posX - t.offsetXY + w);
+			float y1 = map(a[i], 0, max, posY + t.offsetXY + h, posY + t.offsetXY);
+			float barHeight = map(a[i], 0, max, 0, h);
+			line(x1, y1, x1, y1 + barHeight);
 		}
-		return max;
-	}
-
-	//------------------------------------------------------------------------------------------------
-	public void render2(int[] a, int[] c) {
-		strokeWeight(1);
-		stroke(0);
-		array = a;
-		colours = c;
-		max = getMax();
-		barWidth = w/array.length;
-		for (int i = 0; i < array.length; i++) {
-			if(c[i] == 0) {
-				fill(255);
-			}
-			else if (c[i] == 1) {
-				fill(255, 0, 0);
-			}
-			else {
-				fill(0, 255, 0);
-			}
-			float x1 = map(i, 0, array.length, 0, w) + border;
-			float y1 = map(array[i], 0, max, h+border, border);
-			float barHeight = map(array[i], 0, max, 0, h);
-			rect(x1, y1, barWidth, barHeight);
-		}
+		strokeCap(ROUND);
 	}
 }
-
-
 class BubbleBtn extends Thumbnail {
 
 	BubbleSort b;
@@ -537,11 +536,11 @@ class BubbleBtn extends Thumbnail {
 		this.label = "Bubble";
 	}
 
-	public void mouseUp() {
-		if (correctLocation() && depressed) {
-			super.mouseUp(this);
-		}
-	}
+	// void mouseUp() {
+	// 	if (correctLocation() && depressed) {
+	// 		super.mouseUp(this);
+	// 	}
+	// }
 
 }
 
@@ -660,21 +659,28 @@ class Button extends Component {
 	boolean depressed;
 	boolean active;
 	boolean offset;
+	int shade;
 
 	public Button(float posX, float posY, float w, float h) {
 		this.posX = posX;
 		this.posY = posY;
 		this.w = w;
 		this.h = h;
+		shade = p.foreground;
 		depressed = false;
 		active = false;
 		offset = false;
-		offsetXY = 4*px;
+		offsetXY = 2*px;
 	}
 
 		public void render() {
-		noStroke();
-		fill(255);
+		if (correctLocation()) {
+			strokeWeight(1*px);
+			stroke(p.accent);
+		} else {
+			noStroke();
+		}
+		fill(shade);
 		if(offset) {
 			rect(posX - offsetXY, posY + offsetXY, w, h);
 		} else {
@@ -684,8 +690,13 @@ class Button extends Component {
 
 	public void update() {
 		if(correctLocation() && depressed) {
+			shade = p.select;
 			offset = true;
-		} else {
+		} else if (correctLocation()) {
+			shade = p.hover;
+		}
+		else {
+			shade = p.foreground;
 			offset = false;
 		}
 	}
@@ -705,6 +716,7 @@ class Button extends Component {
 				active = true;
 			}
 		}
+		shade = p.foreground;
 		depressed = false;
 		offset = false;
 	}
@@ -831,26 +843,9 @@ class MergeBtn extends Thumbnail {
 
 	// void mouseUp() {
 	// 	if (correctLocation() && depressed) {
-	// 		println("MergeBtn Line 16");
-	// 		//do some thing
-	// 		if(!active) {
-	// 			for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
-	// 				Thumbnail t = algorithmMenu.algThumbs.get(i);
-	// 				if (!(t instanceof MergeBtn)) {
-	// 					t.active = false;
-	// 				}
-	// 			}
-	// 			active = true;
-	// 		}
+	// 		// super.mouseUp(this);
 	// 	}
-	// 	depressed = false;
-	// 	offset = false;
 	// }
-	public void mouseUp() {
-		if (correctLocation() && depressed) {
-			super.mouseUp(this);
-		}
-	}
 
 
 
@@ -1103,6 +1098,31 @@ public class MyClass {
 
 
 }
+class Palette {
+
+	int background;
+	int foreground;
+	int hover;
+	int select;
+	int accent;
+	int font;
+
+	int[] darkMode;
+
+
+	public Palette() {
+		// int[] b = {#03045e,#023e8a,#0077b6,#0096c7,#00b4d8,#48cae4,#90e0ef,#ade8f4,#caf0f8};
+		// int[] g = {#ffffff,#f5f7fa,#e6e9ed,#ccd1d9,#aab2bd,#88909b,#656d78,#434a54,#000000};
+		int[] darkMode = {0xff282828, 0xff535353, 0xff454545, 0xff383838, 0xff646464, 0xffdddddd};
+		this.darkMode = darkMode;
+		this.background = darkMode[0];
+		this.foreground = darkMode[1];
+		this.hover = darkMode[2];
+		this.select = darkMode[3];
+		this.accent = darkMode[4];
+		this.font = darkMode[5];
+	}
+}
 
 class Play extends Button{
 
@@ -1148,11 +1168,11 @@ class SelectionBtn extends Thumbnail {
 		this.label = "Selection";
 	}
 
-	public void mouseUp() {
-		if (correctLocation() && depressed) {
-			super.mouseUp(this);
-		}
-	}
+	// void mouseUp() {
+	// 	if (correctLocation() && depressed) {
+	// 		super.mouseUp(this);
+	// 	}
+	// }
 
 }
 class SelectionSort extends Algorithm{
@@ -1446,8 +1466,6 @@ class Sound {
 
 		for(int i = 0; i < colours.length; i++) {
 			if (colours[i] > 0) {
-				triOsc.freq(map(array[i], 0, array.length, minFreq, maxFreq));
-				env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 				if(array[i] > max) {
 					max = array[i];
 				}
@@ -1457,10 +1475,8 @@ class Sound {
 			}
 		}
 		med = (max - min) / 2;
-		// triOsc.freq(map(med, 0, array.length, minFreq, maxFreq));
-		// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
-		// triOsc.freq(map(min, 0, array.length, minFreq, maxFreq));
-		// env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
+		triOsc.freq(map(med, 0, array.length, minFreq, maxFreq));
+		env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 	}
 
 	public void setAtt(float att) {
@@ -1490,11 +1506,12 @@ class Thumbnail {
 	int arrSize;
 	String label;
 	float fontSize;
-	float offsetXY;
 	boolean depressed;
 	boolean active;
 	boolean offset;
+	float offsetXY;
 	boolean highlight;
+	int shade;
 
 	public Thumbnail (float posX, float posY, float w, float h) {
 		this.posX = posX;
@@ -1503,43 +1520,44 @@ class Thumbnail {
 		this.h = h;
 		this.fontSize = 16*px;
 		this.arrSize = 680;
+		shade = p.foreground;
 		depressed = false;
 		active = false;
 		offset = false;
+		offsetXY = 0*px;
 		highlight = false;
-		offsetXY = 4*px;
+		offsetXY = 2*px;
 		// px = d/100;
 		arrSize = (int)(68*10);
-		b = new Barchart(posX + 16*px, posY + 14*px, 68*px, 46*py);
+		b = new Barchart(posX + 16*px, posY + 14*px, 68*px, 46*py, 0);
 	}
 
 	public void render() {
-		if(depressed){println("Thumbnail line 33");}
-		if ((int)1*px < 1) {
-			strokeWeight(1);
+		// strokeWeight(1*px);
+		// stroke(0);
+		if (highlight) {
+			strokeWeight(1*px);
+			stroke(p.accent);
 		} else {
-			strokeWeight((int)1*px);
+			noStroke();
 		}
-		stroke(0);
-		if(active) {
-			fill(255);
-		} else {
-			fill(235);
-		}
-		rect(posX, posY, 100*px, 100*py, 8*px);
-		b.render(arr, crr);
+		fill(shade);
+		rect(posX - offsetXY, posY + offsetXY, 100*px, 100*py, 8*px);
+		b.renderSimple(arr, this);
+		// Overlay
 		noFill();
-		strokeWeight((int)4*px);
-		stroke(255);
-		rect(posX + 15*px, posY + 13*py, 70*px, 48*py, 8*px);
+		strokeWeight(4*px);
+		stroke(shade);
+		rect(posX - offsetXY + 15*px, posY + offsetXY + 13*py, 70*px, 48*py, 8*px);
+		// Border
 		noFill();
-		strokeWeight((int)2*px);
-		stroke(0);
-		rect(posX + 16*px, posY + 14*py, 68*px, 46*py, 8*px);
-		fill(0);
+		strokeWeight(2*px);
+		stroke(p.accent);
+		rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
+		fill(p.font);
 		textSize(round(fontSize));
 		textAlign(CENTER);
-		text(label, posX + 50*px, posY + 86*py);
+		text(label, posX - offsetXY + 50*px, posY + offsetXY + 86*py);
 	}
 
 	public void updatePos() {
@@ -1552,14 +1570,41 @@ class Thumbnail {
 
 	public void update() {
 		updatePos();
-		if (correctLocation() && depressed) {
-			offset = true;
+		if (!active) {
+			if (correctLocation()) {
+				if (depressed) {
+					shade = p.select;
+					highlight = true;
+					offset = true;
+					offsetXY = 1*px;
+				} else {
+					shade = p.hover;
+					highlight = false;
+					offset = false;
+					offsetXY = -1*px;
+				}
+			} else {
+				shade = p.foreground;
+				highlight = false;
+				offset = false;
+				offsetXY = 0*px;
+			}
 		} else {
-			offset = false;
-		}
-		if (correctLocation() && !depressed) {
+			shade = p.select;
 			highlight = true;
+			offset = true;
+			offsetXY = 0*px;
 		}
+
+		// if (correctLocation() && depressed) {
+		// 	shade = p.select;
+		// 	offset = true;
+		// } else {
+		// 	offset = false;
+		// }
+		// if (correctLocation() && !depressed) {
+		// 	shade = p.highlight;
+		// }
 	}
 
 	public void mouseDown() {
@@ -1568,27 +1613,46 @@ class Thumbnail {
 		}
 	}
 
-	public void mouseUp(Thumbnail child) {
+	// void mouseUp(Thumbnail child) {
+	// 	if (correctLocation() && depressed) {
+	// 		//do some thing
+	// 		if(!active) {
+	// 			for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
+	// 				Thumbnail t = algorithmMenu.algThumbs.get(i);
+	// 				if (!(t == child)) {
+	// 					t.active = false;
+	// 				}
+	// 			}
+	// 			active = true;
+	// 		}
+	// 	}
+	// 	depressed = false;
+	// 	offset = false;
+	// }
+
+	// void mouseUp() {
+	// 	for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
+	// 		Thumbnail t = algorithmMenu.algThumbs.get(i);
+	// 		t.mouseUp();
+	// 	}
+	// }
+
+	public void mouseUp() {
 		if (correctLocation() && depressed) {
 			//do some thing
 			if(!active) {
+				active = true;
 				for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
 					Thumbnail t = algorithmMenu.algThumbs.get(i);
-					if (!(t == child)) {
+					if (!(t == this)) {
 						t.active = false;
 					}
 				}
-				active = true;
 			}
-		}
-		depressed = false;
-		offset = false;
-	}
-
-	public void mouseUp() {
-		for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
-			Thumbnail t = algorithmMenu.algThumbs.get(i);
-			t.mouseUp();
+		} else {
+			depressed = false;
+			offset = false;
+			offsetXY = 0*px;
 		}
 	}
 
@@ -1698,11 +1762,24 @@ class View {
 	int[] array;
 	int[] colours;
 	float posX, posY, w, h;
+	Barchart b;
 	// AlgMenu algMenu;
 	// GphMenu gphMenu;
 
-	public View() {
+	public View(float posX, float posY, float w, float h) {
+		this.posX = posX;
+		this.posY = posY;
+		this.w = width;
+		this.h = height;
+		b = new Barchart(this.posX, this.posY, this.w, this.h, 50*px);
+	}
 
+	public void render() {
+
+	}
+
+	public void update() {
+		
 	}
 }
   static public void main(String[] passedArgs) {

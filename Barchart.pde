@@ -12,8 +12,8 @@ class Barchart{
 	float max;
 	float thickness;
 
-	public Barchart(float posX, float posY, float w, float h) {
-		border = 0;
+	public Barchart(float posX, float posY, float w, float h, float border) {
+		this.border = border;
 		this.posX = posX;
 		this.posY = posY;
 		this.w = w - (border*2);
@@ -40,19 +40,19 @@ class Barchart{
 			strokeWeight = (w-(a.length-1))/a.length;
 			spacer = strokeWeight/2;
 		}
-		fill(100);
+		fill(p.background);
 		noStroke();
 		rect(posX, posY, w + border*2, h + border*2);
-		fill(255);
+		// fill(255);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
-		stroke(255);
+		// stroke(#ade8f4);
 		array = a;
 		colours = c;
-		max = getMax();
+		max = a.length;
 		for (int i = 0; i < a.length; i++) {
 			if(c[i] == 0) {
-				stroke(255);
+				stroke(p.font);
 			}
 			else if (c[i] == 1) {
 				stroke(255, 0, 0);
@@ -66,42 +66,29 @@ class Barchart{
 			line(x1, y1, x1, y1 + barHeight);
 		}
 		strokeCap(ROUND);
+		if (border > 0) {
+			stroke(p.foreground);
+			strokeWeight(border);
+			noFill();
+			rect(posX + border / 2, posY + border / 2, w + border, h + border, 8*px);
+		}
 	}
 
-	float getMax() {
-		float max = 0;
-		for (int i = 0; i < array.length; i++) {
-			if(array[i] > max) {
-				max = array[i];
-			}
+	void renderSimple(int[] a, Thumbnail t) {
+		strokeWeight = w / a.length;
+		fill(p.background);
+		noStroke();
+		rect(posX - t.offsetXY, posY + t.offsetXY, w, h);
+		strokeWeight(strokeWeight);
+		strokeCap(SQUARE);
+		max = a.length;
+		stroke(p.font);
+		for (int i = 0; i < a.length; i++) {
+			float x1 = map(i, 0, a.length, posX - t.offsetXY, posX - t.offsetXY + w);
+			float y1 = map(a[i], 0, max, posY + t.offsetXY + h, posY + t.offsetXY);
+			float barHeight = map(a[i], 0, max, 0, h);
+			line(x1, y1, x1, y1 + barHeight);
 		}
-		return max;
-	}
-
-	//------------------------------------------------------------------------------------------------
-	void render2(int[] a, int[] c) {
-		strokeWeight(1);
-		stroke(0);
-		array = a;
-		colours = c;
-		max = getMax();
-		barWidth = w/array.length;
-		for (int i = 0; i < array.length; i++) {
-			if(c[i] == 0) {
-				fill(255);
-			}
-			else if (c[i] == 1) {
-				fill(255, 0, 0);
-			}
-			else {
-				fill(0, 255, 0);
-			}
-			float x1 = map(i, 0, array.length, 0, w) + border;
-			float y1 = map(array[i], 0, max, h+border, border);
-			float barHeight = map(array[i], 0, max, 0, h);
-			rect(x1, y1, barWidth, barHeight);
-		}
+		strokeCap(ROUND);
 	}
 }
-
-

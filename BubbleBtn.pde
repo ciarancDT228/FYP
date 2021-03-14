@@ -11,10 +11,10 @@ class BubbleBtn extends Thumbnail {
 		this.label = "Bubble";
 	}
 
-	void mouseUp() {
-		if (correctLocation() && depressed) {
-			super.mouseUp(this);
-		}
-	}
+	// void mouseUp() {
+	// 	if (correctLocation() && depressed) {
+	// 		super.mouseUp(this);
+	// 	}
+	// }
 
 }

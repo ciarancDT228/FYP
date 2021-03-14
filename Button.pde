@@ -6,21 +6,28 @@ class Button extends Component {
 	boolean depressed;
 	boolean active;
 	boolean offset;
+	int shade;
 
 	public Button(float posX, float posY, float w, float h) {
 		this.posX = posX;
 		this.posY = posY;
 		this.w = w;
 		this.h = h;
+		shade = p.foreground;
 		depressed = false;
 		active = false;
 		offset = false;
-		offsetXY = 4*px;
+		offsetXY = 2*px;
 	}
 
 		void render() {
-		noStroke();
-		fill(255);
+		if (correctLocation()) {
+			strokeWeight(1*px);
+			stroke(p.accent);
+		} else {
+			noStroke();
+		}
+		fill(shade);
 		if(offset) {
 			rect(posX - offsetXY, posY + offsetXY, w, h);
 		} else {
@@ -30,8 +37,13 @@ class Button extends Component {
 
 	void update() {
 		if(correctLocation() && depressed) {
+			shade = p.select;
 			offset = true;
-		} else {
+		} else if (correctLocation()) {
+			shade = p.hover;
+		}
+		else {
+			shade = p.foreground;
 			offset = false;
 		}
 	}
@@ -51,6 +63,7 @@ class Button extends Component {
 				active = true;
 			}
 		}
+		shade = p.foreground;
 		depressed = false;
 		offset = false;
 	}
