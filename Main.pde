@@ -10,17 +10,18 @@ float px;
 float py;
 Palette p;
 Barchart b;
-ArrayGenerator gen;
 
 BubbleSort bubble;
 SelectionSort selection;
 MergeSort mergeSort;
 
-Algorithm algo;
+// Buttons and Sliders
 Play play;
 Reset reset;
 Slider speedSlider;
 Slider sizeSlider;
+
+// Arrays and counters
 int[] array;
 int[] colours;
 int count = 0;
@@ -42,7 +43,8 @@ int minSteps = 1;
 float maxFreq = 700;
 TriOsc triOsc;
 Env env;
-Sound sound;
+MySound sound;
+Sound s;
 Slider soundAttSlider;
 Slider soundSusTSlider;
 Slider soundSusLSlider;
@@ -52,18 +54,16 @@ float sustainTime = 0.004;
 float sustainLevel = 0.3;
 float releaseTime = 0.2;
 
-// Thumbnail mergeBtn;
-// Thumbnail bubbleBtn;
-// Thumbnail selectionBtn;
-// Thumbnail randomBtn;
-AlgMenu algorithmMenu;
+// Menus
+// AlgMenu algorithmMenu;
+Menu menu;
 
 void settings() {
 	// size(1000, 600, OPENGL);
 	// size(1536, 846, P2D);
-	size(800, 200, P2D);
+	// size(800, 600, P2D);
 	// fullScreen(P2D, SPAN);
-	// fullScreen(P2D, 2);
+	fullScreen(P2D, 2);
 	// fullScreen(1);
 	noSmooth();
 }
@@ -78,8 +78,7 @@ void setup()
 	background(0);
 	stroke(0);
 	fill(255);
-	gen = new ArrayGenerator(); //Array Generator
-	b = new Barchart(0*px, 0*py, width, height, 50*px); //Barchart
+	b = new Barchart(20*px, 20*py, width-40*px, height-40*px, 5*px); //Barchart
 	// arrayMax = (int)((b.w/2)); //Max array size
 	arrayMax = width;
 	arrayMin = 10; //Min array size
@@ -110,9 +109,11 @@ void setup()
 	//Sounds
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
-	sound = new Sound(attackTime, sustainTime, sustainLevel, releaseTime, 100, 700);
+	sound = new MySound(attackTime, sustainTime, sustainLevel, releaseTime, 100, 700);
 
-	algorithmMenu = new AlgMenu(150*px, 150*py);
+	// Menus
+	// algorithmMenu = new AlgMenu(150*px, 150*py);
+	menu = new Menu();
 }
 
 void draw() {
@@ -164,7 +165,8 @@ void draw() {
 	soundSusTSlider.render();
 	soundSusLSlider.render();
 	soundRelSlider.render();
-	algorithmMenu.render();
+	// algorithmMenu.render();
+	menu.render();
 }
 
 void update() {
@@ -175,11 +177,8 @@ void update() {
 	reset.update();
 	sizeSlider.update();
 	sound.update();
-	algorithmMenu.update();
-	// soundAttSlider.update();
-	// soundSusTSlider.update();
-	// soundSusLSlider.update();
-	// soundRelSlider.update();
+	// algorithmMenu.update();
+	menu.update();
 }
 
 void mousePressed() {
@@ -192,10 +191,8 @@ void mousePressed() {
 	soundSusLSlider.mouseDown();
 	soundRelSlider.mouseDown();
 	//Update algorithm thumbnails
-	for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
-		Thumbnail t = algorithmMenu.algThumbs.get(i);
-		t.mouseDown();
-	}
+	// algorithmMenu.mouseDown();
+	menu.mouseDown();
 }
 
 void mouseReleased() {
@@ -207,12 +204,9 @@ void mouseReleased() {
 	soundSusTSlider.mouseUp();
 	soundSusLSlider.mouseUp();
 	soundRelSlider.mouseUp();
-	//Update algorithm thumbnails
-	// for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
-	// 	Thumbnail t = algorithmMenu.algThumbs.get(i);
-	// 	t.mouseUp();
-	// }
-	algorithmMenu.mouseUp();
+
+	// algorithmMenu.mouseUp();
+	menu.mouseUp();
 }
 
 //---------------------------------------------------------------------------------------------------

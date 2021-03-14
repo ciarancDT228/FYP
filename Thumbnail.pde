@@ -97,16 +97,6 @@ class Thumbnail {
 			offset = true;
 			offsetXY = 0*px;
 		}
-
-		// if (correctLocation() && depressed) {
-		// 	shade = p.select;
-		// 	offset = true;
-		// } else {
-		// 	offset = false;
-		// }
-		// if (correctLocation() && !depressed) {
-		// 	shade = p.highlight;
-		// }
 	}
 
 	void mouseDown() {
@@ -115,42 +105,10 @@ class Thumbnail {
 		}
 	}
 
-	// void mouseUp(Thumbnail child) {
-	// 	if (correctLocation() && depressed) {
-	// 		//do some thing
-	// 		if(!active) {
-	// 			for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
-	// 				Thumbnail t = algorithmMenu.algThumbs.get(i);
-	// 				if (!(t == child)) {
-	// 					t.active = false;
-	// 				}
-	// 			}
-	// 			active = true;
-	// 		}
-	// 	}
-	// 	depressed = false;
-	// 	offset = false;
-	// }
-
-	// void mouseUp() {
-	// 	for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
-	// 		Thumbnail t = algorithmMenu.algThumbs.get(i);
-	// 		t.mouseUp();
-	// 	}
-	// }
-
 	void mouseUp() {
 		if (correctLocation() && depressed) {
 			//do some thing
-			if(!active) {
-				active = true;
-				for (int i = 0; i < algorithmMenu.algThumbs.size(); i++) {
-					Thumbnail t = algorithmMenu.algThumbs.get(i);
-					if (!(t == this)) {
-						t.active = false;
-					}
-				}
-			}
+			active = true;
 		} else {
 			depressed = false;
 			offset = false;
@@ -167,7 +125,4 @@ class Thumbnail {
 		}
 	}
 
-	// void deactivate() {
-	// 	this.active = false;
-	// }
 }

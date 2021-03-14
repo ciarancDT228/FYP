@@ -1,4 +1,4 @@
-class Sound {
+class MySound {
 
 	float attackTime;
 	float sustainTime;
@@ -7,7 +7,7 @@ class Sound {
 	float minFreq;
 	float maxFreq;
 
-	public Sound(float att, float susT, float susL, float rel, float minFreq, float maxFreq) {
+	public MySound(float att, float susT, float susL, float rel, float minFreq, float maxFreq) {
 		this.attackTime = att;
 		this.sustainTime = susT;
 		this.sustainLevel = susL;

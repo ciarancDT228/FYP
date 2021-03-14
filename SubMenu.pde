@@ -1,13 +1,14 @@
-class AlgMenu {
+class SubMenu {
 
 	ArrayList<Thumbnail> algThumbs;
 	float posX, posY, w, h;
+	boolean buttonClicked;
 	Thumbnail mergeBtn;
 	Thumbnail bubbleBtn;
 	Thumbnail selectionBtn;
 	Thumbnail randomBtn;
 
-	public AlgMenu (float posX, float posY) {
+	public SubMenu (float posX, float posY, float w, float h) {
 		this.posX = posX;
 		this.posY = posY;
 		this.w = 435*px;
@@ -25,6 +26,7 @@ class AlgMenu {
 		algThumbs.add(bubbleBtn);
 		algThumbs.add(selectionBtn);
 		algThumbs.add(randomBtn);
+		buttonClicked  = false;
 	}
 
 	void render() {
@@ -66,7 +68,29 @@ class AlgMenu {
 	void mouseUp() {
 		for (int i = 0; i < algThumbs.size(); i++) {
 			Thumbnail t = algThumbs.get(i);
-			t.mouseUp();
+			if (t.correctLocation() && t.depressed) {
+				buttonClicked = true;
+				break;
+			} else {
+				buttonClicked = false;
+			}
+		}
+		if (buttonClicked) {
+			for (int i = 0; i < algThumbs.size(); i++) {
+				Thumbnail t = algThumbs.get(i);
+				if (buttonClicked) {
+					t.active = false;
+					t.mouseUp();
+				}
+			}
+		}
+
+	}
+
+	void mouseDown() {
+		for (int i = 0; i < algThumbs.size(); i++) {
+			Thumbnail t = algThumbs.get(i);
+			t.mouseDown();
 		}
 	}
 

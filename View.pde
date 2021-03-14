@@ -14,7 +14,7 @@ class View {
 		this.posY = posY;
 		this.w = width;
 		this.h = height;
-		b = new Barchart(this.posX, this.posY, this.w, this.h, 50*px);
+		b = new Barchart(this.posX, this.posY, this.w, this.h, 10*px);
 	}
 
 	void render() {
