@@ -115,10 +115,10 @@ public void setup()
 	
 
 	//Buttons
-	play = new Play(10, 10, 100, 100);
-	reset = new Reset(270, 10, 90, 50);
+	play = new Play(910*px, 960*py, 100*px, 100*py);
+	reset = new Reset(830*px, 975*py, 70*px, 70*py);
 	//Sliders
-	speedSlider = new TickSlider(80*px, 920*py, 1760*px, 80*py, 1, 14); //Speed
+	speedSlider = new TickSlider(80*px, 1000*py, 740*px, 20*py, 1, 14); //Speed
 	sizeSlider = new Slider(370, 30, 150, 20, arrayMin, arrayMax, arraySize); //Size
 	soundAttSlider = new Slider(530, 30, 150, 20, 0.001f, 1.0f, 0.001f); // Sound
 	soundSusTSlider = new Slider(530, 50, 150, 20, 0.001f, 1.0f, 0.004f); // Sound
@@ -145,8 +145,6 @@ public void draw() {
 	// //Bubble sort
 	// if (count % CalcSpeed.getModulus(speed) == 0) {
 	// 	if (!bubble.sorted && play.active) {
-	// 		count2++;
-	// 		println(count2);
 	// 		bubble.steps(CalcSpeed.getNumSteps(speed));
 	// 		sound.play();
 	// 	}
@@ -165,8 +163,8 @@ public void draw() {
 	//Merge sort
 	if (count % CalcSpeed.getModulus(speed) == 0) {
 		if (!mergeSort.sorted && play.active) {
-			count2++;
-			println(count2);
+			// count2++;
+			// println(count2);
 			mergeSort.steps(CalcSpeed.getNumSteps(speed));
 			sound.play();
 	        //  for(int i = 0; i<colours.length-1; i++){
@@ -715,16 +713,32 @@ static class GenerateArray {
 class Menu {
 
 	float posX, posY, w, h;
+	float fontSize;
 	SubMenu algMenu;
 	ShapeMenu shapeMenu;
 
+	Slider sizeSlider;
+
+	Slider soundAttSlider;
+	Slider soundSusTSlider;
+	Slider soundSusLSlider;
+	Slider soundRelSlider;
+
 	public Menu() {
+		this.fontSize = 16*px;
 		this.w = 435*px;
 		this.posX = width - w; //View X + View w - this w
 		this.posY = 0; // View Y 
 		this.h = height; //View h - Taskbar h
-		algMenu = new SubMenu(this.posX, 100*py, w, 114*py);
-		shapeMenu = new ShapeMenu(this.posX, 221*py, 435*px, 221*py);
+		algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
+		shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
+		sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
+
+		soundAttSlider = new Slider(this.posX + 225*px, posY + 554*py, 180*px, 20*py, 0.001f, 1.0f, 0.001f); // Sound
+		soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001f, 1.0f, 0.004f); // Sound
+		soundSusLSlider = new Slider(this.posX + 225*px, posY + 614*py, 180*px, 20*py, 0.001f, 1.0f, 0.3f); // Sound
+		soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001f, 1.0f, 0.2f); // Sound
+			
 	}
 
 	public void render() {
@@ -733,21 +747,55 @@ class Menu {
 		rect(posX, posY, w, h);
 		algMenu.render();
 		shapeMenu.render();
+		sizeSlider.render();
+
+		soundAttSlider.render();
+		soundSusTSlider.render();
+		soundSusLSlider.render();
+		soundRelSlider.render();
+
+		//Text
+		fill(p.font); // Array Size
+		textSize(round(fontSize));
+		textAlign(LEFT, CENTER);
+		text("Array Size", this.posX + 30*px, posY + 414*py);
+
+		// Sound Controls
+		text("Attack", this.posX + 30*px, posY + 554*py);
+		text("Sustain Time", this.posX + 30*px, posY + 584*py);
+		text("Sustain Level", this.posX + 30*px, posY + 614*py);
+		text("Merge", this.posX + 30*px, posY + 644*py);
+
 	}
 
 	public void update() {
 		algMenu.update();
 		shapeMenu.update();
+		sizeSlider.update();
+		soundAttSlider.update();
+		soundSusTSlider.update();
+		soundSusLSlider.update();
+		soundRelSlider.update();
 	}
 
 	public void mouseUp() {
 		algMenu.mouseUp();
 		shapeMenu.mouseUp();
+		sizeSlider.mouseUp();
+		soundAttSlider.mouseUp();
+		soundSusTSlider.mouseUp();
+		soundSusLSlider.mouseUp();
+		soundRelSlider.mouseUp();
 	}
 
 	public void mouseDown() {
 		algMenu.mouseDown();
 		shapeMenu.mouseDown();
+		sizeSlider.mouseDown();
+		soundAttSlider.mouseDown();
+		soundSusTSlider.mouseDown();
+		soundSusLSlider.mouseDown();
+		soundRelSlider.mouseDown();
 	}
 
 }
@@ -1095,7 +1143,8 @@ class Palette {
 	public Palette() {
 		// int[] b = {#03045e,#023e8a,#0077b6,#0096c7,#00b4d8,#48cae4,#90e0ef,#ade8f4,#caf0f8};
 		// int[] g = {#ffffff,#f5f7fa,#e6e9ed,#ccd1d9,#aab2bd,#88909b,#656d78,#434a54,#000000};
-		int[] darkMode = {0xff282828, 0xff535353, 0xff454545, 0xff383838, 0xff646464, 0xffdddddd};
+		// int[] darkMode = {#282828, #535353, #454545, #383838, #646464, #dddddd};
+		int[] darkMode = {0xffcc444b,0xffda5552,0xffdf7373,0xffe39695,0xffe4b1ab,0xff3b1f2b};
 		this.darkMode = darkMode;
 		this.background = darkMode[0];
 		this.foreground = darkMode[1];
@@ -1111,6 +1160,8 @@ class Play extends Button{
 	public Play(float posX, float posY, float w, float h) {
 		super(posX, posY, w, h);
 	}
+
+	
 
 }
 
@@ -1369,8 +1420,8 @@ class ShapeMenu{
 	public ShapeMenu (float posX, float posY, float w, float h) {
 		this.posX = posX;
 		this.posY = posY;
-		this.w = 435*px;
-		this.h = 114*py;
+		this.w = w;
+		this.h = h;
 		this.random = new ShapeBtn(posX + 7*px, posY + 7*py, 100*px, 82*py, "random");
 		this.random.active = true;
 		this.sinWaveBtn = new ShapeBtn(posX + 114*px, posY + 7*py, 100*px, 82*py, "sinWave");
@@ -1395,7 +1446,7 @@ class ShapeMenu{
 	public void render() {
 		noStroke();
 		fill(p.foreground);
-		rect(posX, posY, w, h, 8*px);
+		rect(posX, posY, w, h);
 		for (int i = 0; i < btnThumbs.size(); i++) {
 			ShapeBtn t = btnThumbs.get(i);
 			t.render();
@@ -1472,7 +1523,7 @@ class Slider extends Component{
 	float thumbX, thumbRadius;
 	float w, h;
 	float centreX, centreY;
-	int strokeS, strokeM, strokeL;
+	float strokeS, strokeM, strokeL;
 	float minVal, maxVal;
 	boolean depressed, active;
 
@@ -1489,9 +1540,9 @@ class Slider extends Component{
 		this.minVal = minVal;
 		this.maxVal = maxVal;
 		this.thumbX = map(initVal, minVal, maxVal, posX, posX + w);
-		strokeS = (int)(h/10);
-		strokeM = (int)(h/5);
-		strokeL = (int)(h/3.33f);
+		strokeS = h/10;
+		strokeM = h/5;
+		strokeL = h/3.33f;
 	}
 
 	public Slider(float posX, float posY, float w, float h) {
@@ -1505,9 +1556,9 @@ class Slider extends Component{
 		centreX = posX + (w/2);
 		centreY = posY + (h/2);
 		this.thumbX = centreX;
-		strokeS = (int)(h/10);
-		strokeM = (int)(h/5);
-		strokeL = (int)(h/3.33f);
+		strokeS = h/10;
+		strokeM = h/5;
+		strokeL = h/3.33f;
 	}
 
 	public void update() {
@@ -1527,24 +1578,24 @@ class Slider extends Component{
 	public void render() {
 		//Draw track base
 		strokeWeight(strokeM);
-		stroke(100);
+		stroke(p.accent);
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
 		strokeWeight(strokeL);
-		stroke(255);
+		stroke(p.font);
 		line(posX, centreY, thumbX, centreY);
 		stroke(0);
 		strokeWeight(0);
 		//Draw highlight for hover and depressed
 		if(depressed) {
-			fill(255, 130);
+			fill(p.font, 130);
 			circle(thumbX, centreY, thumbRadius * 2.5f);
 		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
-			fill(255, 40);
+			fill(p.font, 40);
 			circle(thumbX, centreY, thumbRadius * 2.5f);
 		}
 		//Draw Thumb
-		fill(255);
+		fill(p.font);
 		circle(thumbX, centreY, thumbRadius);
 	}
 
@@ -1622,7 +1673,7 @@ class SubMenu {
 	public void render() {
 		noStroke();
 		fill(p.foreground);
-		rect(posX, posY, w, h, 8*px);
+		rect(posX, posY, w, h);
 		for (int i = 0; i < algThumbs.size(); i++) {
 			Thumbnail t = algThumbs.get(i);
 			t.render();
@@ -1758,7 +1809,7 @@ class Thumbnail {
 	}
 
 	public void update() {
-		updatePos();
+		// updatePos();
 		if (!active) {
 			if (correctLocation()) {
 				if (depressed) {

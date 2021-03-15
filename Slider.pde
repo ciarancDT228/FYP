@@ -4,7 +4,7 @@ class Slider extends Component{
 	float thumbX, thumbRadius;
 	float w, h;
 	float centreX, centreY;
-	int strokeS, strokeM, strokeL;
+	float strokeS, strokeM, strokeL;
 	float minVal, maxVal;
 	boolean depressed, active;
 
@@ -21,9 +21,9 @@ class Slider extends Component{
 		this.minVal = minVal;
 		this.maxVal = maxVal;
 		this.thumbX = map(initVal, minVal, maxVal, posX, posX + w);
-		strokeS = (int)(h/10);
-		strokeM = (int)(h/5);
-		strokeL = (int)(h/3.33);
+		strokeS = h/10;
+		strokeM = h/5;
+		strokeL = h/3.33;
 	}
 
 	public Slider(float posX, float posY, float w, float h) {
@@ -37,9 +37,9 @@ class Slider extends Component{
 		centreX = posX + (w/2);
 		centreY = posY + (h/2);
 		this.thumbX = centreX;
-		strokeS = (int)(h/10);
-		strokeM = (int)(h/5);
-		strokeL = (int)(h/3.33);
+		strokeS = h/10;
+		strokeM = h/5;
+		strokeL = h/3.33;
 	}
 
 	void update() {
@@ -59,24 +59,24 @@ class Slider extends Component{
 	void render() {
 		//Draw track base
 		strokeWeight(strokeM);
-		stroke(100);
+		stroke(p.accent);
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
 		strokeWeight(strokeL);
-		stroke(255);
+		stroke(p.font);
 		line(posX, centreY, thumbX, centreY);
 		stroke(0);
 		strokeWeight(0);
 		//Draw highlight for hover and depressed
 		if(depressed) {
-			fill(255, 130);
+			fill(p.font, 130);
 			circle(thumbX, centreY, thumbRadius * 2.5);
 		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
-			fill(255, 40);
+			fill(p.font, 40);
 			circle(thumbX, centreY, thumbRadius * 2.5);
 		}
 		//Draw Thumb
-		fill(255);
+		fill(p.font);
 		circle(thumbX, centreY, thumbRadius);
 	}
 

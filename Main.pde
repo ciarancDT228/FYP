@@ -96,10 +96,10 @@ void setup()
 	
 
 	//Buttons
-	play = new Play(10, 10, 100, 100);
-	reset = new Reset(270, 10, 90, 50);
+	play = new Play(910*px, 960*py, 100*px, 100*py);
+	reset = new Reset(830*px, 975*py, 70*px, 70*py);
 	//Sliders
-	speedSlider = new TickSlider(80*px, 920*py, 1760*px, 80*py, 1, 14); //Speed
+	speedSlider = new TickSlider(80*px, 1000*py, 740*px, 20*py, 1, 14); //Speed
 	sizeSlider = new Slider(370, 30, 150, 20, arrayMin, arrayMax, arraySize); //Size
 	soundAttSlider = new Slider(530, 30, 150, 20, 0.001, 1.0, 0.001); // Sound
 	soundSusTSlider = new Slider(530, 50, 150, 20, 0.001, 1.0, 0.004); // Sound
@@ -126,8 +126,6 @@ void draw() {
 	// //Bubble sort
 	// if (count % CalcSpeed.getModulus(speed) == 0) {
 	// 	if (!bubble.sorted && play.active) {
-	// 		count2++;
-	// 		println(count2);
 	// 		bubble.steps(CalcSpeed.getNumSteps(speed));
 	// 		sound.play();
 	// 	}
@@ -146,8 +144,8 @@ void draw() {
 	//Merge sort
 	if (count % CalcSpeed.getModulus(speed) == 0) {
 		if (!mergeSort.sorted && play.active) {
-			count2++;
-			println(count2);
+			// count2++;
+			// println(count2);
 			mergeSort.steps(CalcSpeed.getNumSteps(speed));
 			sound.play();
 	        //  for(int i = 0; i<colours.length-1; i++){

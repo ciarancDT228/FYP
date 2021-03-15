@@ -15,8 +15,8 @@ class ShapeMenu{
 	public ShapeMenu (float posX, float posY, float w, float h) {
 		this.posX = posX;
 		this.posY = posY;
-		this.w = 435*px;
-		this.h = 114*py;
+		this.w = w;
+		this.h = h;
 		this.random = new ShapeBtn(posX + 7*px, posY + 7*py, 100*px, 82*py, "random");
 		this.random.active = true;
 		this.sinWaveBtn = new ShapeBtn(posX + 114*px, posY + 7*py, 100*px, 82*py, "sinWave");
@@ -41,7 +41,7 @@ class ShapeMenu{
 	void render() {
 		noStroke();
 		fill(p.foreground);
-		rect(posX, posY, w, h, 8*px);
+		rect(posX, posY, w, h);
 		for (int i = 0; i < btnThumbs.size(); i++) {
 			ShapeBtn t = btnThumbs.get(i);
 			t.render();

@@ -30,7 +30,7 @@ class SubMenu {
 	void render() {
 		noStroke();
 		fill(p.foreground);
-		rect(posX, posY, w, h, 8*px);
+		rect(posX, posY, w, h);
 		for (int i = 0; i < algThumbs.size(); i++) {
 			Thumbnail t = algThumbs.get(i);
 			t.render();

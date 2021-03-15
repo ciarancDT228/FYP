@@ -5,4 +5,6 @@ class Play extends Button{
 		super(posX, posY, w, h);
 	}
 
+	
+
 }

@@ -71,7 +71,7 @@ class Thumbnail {
 	}
 
 	void update() {
-		updatePos();
+		// updatePos();
 		if (!active) {
 			if (correctLocation()) {
 				if (depressed) {
