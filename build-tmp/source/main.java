@@ -281,103 +281,6 @@ void bubble(int[] array) {
 	// }
 
 */
-class SubMenu {
-
-	ArrayList<Thumbnail> algThumbs;
-	float posX, posY, w, h;
-	boolean buttonClicked;
-	Thumbnail mergeBtn;
-	Thumbnail bubbleBtn;
-	Thumbnail selectionBtn;
-	Thumbnail randomBtn;
-
-	public SubMenu (float posX, float posY, float w, float h) {
-		this.posX = posX;
-		this.posY = posY;
-		this.w = 435*px;
-		this.h = 114*py;
-		println(100*px);
-		println(px);
-		this.mergeBtn = new MergeBtn(posX + 7*px, posY + 7*py, 100*px, 100*py);
-		this.bubbleBtn = new BubbleBtn(posX + 114*px, posY + 7*py, 100*px, 100*py);
-		// this.bubbleBtn.active = true;
-		this.selectionBtn = new SelectionBtn(posX + 221*px, posY + 7*py, 100*px, 100*py);
-		this.selectionBtn.active = true;
-		this.randomBtn = new BubbleBtn(posX + 328*px, posY + 7*py, 100*px, 100*py);
-		algThumbs = new ArrayList<Thumbnail>();
-		algThumbs.add(mergeBtn);
-		algThumbs.add(bubbleBtn);
-		algThumbs.add(selectionBtn);
-		algThumbs.add(randomBtn);
-		buttonClicked  = false;
-	}
-
-	public void render() {
-		noStroke();
-		fill(p.foreground);
-		rect(posX, posY, w, h, 8*px);
-		for (int i = 0; i < algThumbs.size(); i++) {
-			Thumbnail t = algThumbs.get(i);
-			t.render();
-		}
-	}
-
-	public void updatePos() {
-		this.posX = mouseX;
-		this.posY = mouseY;
-		this.w = 435*px;
-		this.h = 114*py;
-		mergeBtn.posX = mouseX + 7*px;
-		bubbleBtn.posX = mouseX + 114*px;
-		selectionBtn.posX = mouseX + 221*px;
-		randomBtn.posX = mouseX + 328*px;
-		mergeBtn.posY = mouseY + 7*py;
-		bubbleBtn.posY = mouseY + 7*py;
-		selectionBtn.posY = mouseY + 7*py;
-		randomBtn.posY = mouseY + 7*py;
-		mergeBtn.updatePos();
-		bubbleBtn.updatePos();
-		selectionBtn.updatePos();
-		randomBtn.updatePos();
-	}
-
-	public void update() {
-		for (int i = 0; i < algThumbs.size(); i++) {
-			Thumbnail t = algThumbs.get(i);
-			t.update();
-		}
-	}
-
-	public void mouseUp() {
-		for (int i = 0; i < algThumbs.size(); i++) {
-			Thumbnail t = algThumbs.get(i);
-			if (t.correctLocation() && t.depressed) {
-				buttonClicked = true;
-				break;
-			} else {
-				buttonClicked = false;
-			}
-		}
-		if (buttonClicked) {
-			for (int i = 0; i < algThumbs.size(); i++) {
-				Thumbnail t = algThumbs.get(i);
-				if (buttonClicked) {
-					t.active = false;
-					t.mouseUp();
-				}
-			}
-		}
-
-	}
-
-	public void mouseDown() {
-		for (int i = 0; i < algThumbs.size(); i++) {
-			Thumbnail t = algThumbs.get(i);
-			t.mouseDown();
-		}
-	}
-
-}
 class Algorithm {
 
 	// void steps(int x) {
@@ -813,13 +716,15 @@ class Menu {
 
 	float posX, posY, w, h;
 	SubMenu algMenu;
+	ShapeMenu shapeMenu;
 
 	public Menu() {
 		this.w = 435*px;
 		this.posX = width - w; //View X + View w - this w
 		this.posY = 0; // View Y 
 		this.h = height; //View h - Taskbar h
-		algMenu = new SubMenu(this.posX, 100*py, 435*px, 114*py);
+		algMenu = new SubMenu(this.posX, 100*py, w, 114*py);
+		shapeMenu = new ShapeMenu(this.posX, 221*py, 435*px, 221*py);
 	}
 
 	public void render() {
@@ -827,18 +732,22 @@ class Menu {
 		fill(p.foreground);
 		rect(posX, posY, w, h);
 		algMenu.render();
+		shapeMenu.render();
 	}
 
 	public void update() {
 		algMenu.update();
+		shapeMenu.update();
 	}
 
 	public void mouseUp() {
 		algMenu.mouseUp();
+		shapeMenu.mouseUp();
 	}
 
 	public void mouseDown() {
 		algMenu.mouseDown();
+		shapeMenu.mouseDown();
 	}
 
 }
@@ -854,14 +763,6 @@ class MergeBtn extends Thumbnail {
 		crr = GenerateArray.blanks(arrSize);
 		this.label = "Merge";
 	}
-
-	// void mouseUp() {
-	// 	if (correctLocation() && depressed) {
-	// 		// super.mouseUp(this);
-	// 	}
-	// }
-
-
 
 }
 class MergeSort {
@@ -1386,6 +1287,185 @@ class SelectionSort extends Algorithm{
 	}
 
 }
+class ShapeBtn extends Thumbnail {
+
+	String name;
+
+	public ShapeBtn(float posX, float posY, float w, float h, String name) {
+		super(posX, posY, w, h);
+		crr = GenerateArray.blanks(arrSize);
+		if (name.matches("random")) {
+			arr = GenerateArray.random(arrSize);
+			crr = GenerateArray.blanks(arrSize);
+			this.label = "Random";
+		} else if (name.matches("sinWave")) {
+			arr = GenerateArray.sinWave(arrSize, 0.5f);
+			crr = GenerateArray.blanks(arrSize);
+			this.label = "Sin Wave";
+		} else if (name.matches("quadrant")) {
+			arr = GenerateArray.random(arrSize);
+			crr = GenerateArray.blanks(arrSize);
+			this.label = "Exponent";
+		} else if (name.matches("heartbeat")) {
+			arr = GenerateArray.sinWave(arrSize, 1.5f);
+			crr = GenerateArray.blanks(arrSize);
+			this.label = "Heartbeat";
+		} else if (name.matches("squiggle")) {
+			arr = GenerateArray.sinWave(arrSize, 2.5f);
+			crr = GenerateArray.blanks(arrSize);
+			this.label = "Spectrum";
+		} else if (name.matches("parabola")) {
+			arr = GenerateArray.random(arrSize);
+			crr = GenerateArray.blanks(arrSize);
+			this.label = "Parabola";
+		} else if (name.matches("parabolaInv")) {
+			arr = GenerateArray.sinWave(arrSize, 3.5f);
+			crr = GenerateArray.blanks(arrSize);
+			this.label = "Parabola";
+		} else if (name.matches("descending")) {
+			arr = GenerateArray.random(arrSize);
+			crr = GenerateArray.blanks(arrSize);
+			this.label = "descending";
+		}
+	}
+
+	public void render() {
+		if (highlight) {
+			strokeWeight(1*px);
+			stroke(p.accent);
+		} else {
+			noStroke();
+		}
+		fill(shade);
+		rect(posX - offsetXY, posY + offsetXY, 100*px, 74*py, 8*px);
+		b.renderSimple(arr, this);
+		// Overlay
+		noFill();
+		strokeWeight(4*px);
+		stroke(shade);
+		rect(posX - offsetXY + 15*px, posY + offsetXY + 13*py, 70*px, 48*py, 8*px);
+		// Border
+		noFill();
+		strokeWeight(2*px);
+		stroke(p.accent);
+		rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
+	}
+
+}
+class ShapeMenu{
+
+	ArrayList<ShapeBtn> btnThumbs;
+	float posX, posY, w, h;
+	boolean buttonClicked;
+	ShapeBtn random;
+	ShapeBtn sinWaveBtn;
+	ShapeBtn quadrantBtn;
+	ShapeBtn heartbeatBtn;
+	ShapeBtn squiggle;
+	ShapeBtn parabola;
+	ShapeBtn parabolaInv;
+	ShapeBtn descending;
+
+	public ShapeMenu (float posX, float posY, float w, float h) {
+		this.posX = posX;
+		this.posY = posY;
+		this.w = 435*px;
+		this.h = 114*py;
+		this.random = new ShapeBtn(posX + 7*px, posY + 7*py, 100*px, 82*py, "random");
+		this.random.active = true;
+		this.sinWaveBtn = new ShapeBtn(posX + 114*px, posY + 7*py, 100*px, 82*py, "sinWave");
+		this.quadrantBtn = new ShapeBtn(posX + 221*px, posY + 7*py, 100*px, 82*py, "quadrant");
+		this.heartbeatBtn = new ShapeBtn(posX + 328*px, posY + 7*py, 100*px, 82*py, "heartbeat");
+		this.squiggle = new ShapeBtn(posX + 7*px, posY + 89*py, 100*px, 82*py, "squiggle");
+		this.parabola = new ShapeBtn(posX + 114*px, posY + 89*py, 100*px, 82*py, "parabola");
+		this.parabolaInv = new ShapeBtn(posX + 221*px, posY + 89*py, 100*px, 82*py, "parabolaInv");
+		this.descending = new ShapeBtn(posX + 328*px, posY + 89*py, 100*px, 82*py, "descending");
+		btnThumbs = new ArrayList<ShapeBtn>();
+		btnThumbs.add(random);
+		btnThumbs.add(sinWaveBtn);
+		btnThumbs.add(quadrantBtn);
+		btnThumbs.add(heartbeatBtn);
+		btnThumbs.add(squiggle);
+		btnThumbs.add(parabola);
+		btnThumbs.add(parabolaInv);
+		btnThumbs.add(descending);
+		buttonClicked  = false;
+	}
+
+	public void render() {
+		noStroke();
+		fill(p.foreground);
+		rect(posX, posY, w, h, 8*px);
+		for (int i = 0; i < btnThumbs.size(); i++) {
+			ShapeBtn t = btnThumbs.get(i);
+			t.render();
+		}
+	}
+
+	public void updatePos() {
+		this.posX = mouseX;
+		this.posY = mouseY;
+		this.w = 435*px;
+		this.h = 114*py;
+		random.posX = mouseX + 7*px;
+		random.posY = mouseY + 7*py;
+		sinWaveBtn.posX = mouseX + 114*px;
+		sinWaveBtn.posY = mouseY + 7*py;
+		quadrantBtn.posX = mouseX + 221*px;
+		quadrantBtn.posY = mouseY + 7*py;
+		heartbeatBtn.posX = mouseX + 328*px;
+		heartbeatBtn.posY = mouseY + 7*py;
+		squiggle.posX = mouseX + 7*px;
+		squiggle.posY = mouseY + 89*py;
+		parabola.posX = mouseX + 114*px;
+		parabola.posY = mouseY + 89*py;
+		parabolaInv.posX = mouseX + 221*px;
+		parabolaInv.posY = mouseY + 89*py;
+		descending.posX = mouseX + 328*px;
+		descending.posY = mouseY + 89*py;
+		// mergeBtn.updatePos();
+		// bubbleBtn.updatePos();
+		// selectionBtn.updatePos();
+		// randomBtn.updatePos();
+	}
+
+	public void update() {
+		for (int i = 0; i < btnThumbs.size(); i++) {
+			ShapeBtn t = btnThumbs.get(i);
+			t.update();
+		}
+	}
+
+	public void mouseUp() {
+		for (int i = 0; i < btnThumbs.size(); i++) {
+			ShapeBtn t = btnThumbs.get(i);
+			if (t.correctLocation() && t.depressed) {
+				buttonClicked = true;
+				break;
+			} else {
+				buttonClicked = false;
+			}
+		}
+		if (buttonClicked) {
+			for (int i = 0; i < btnThumbs.size(); i++) {
+				ShapeBtn t = btnThumbs.get(i);
+				if (buttonClicked) {
+					t.active = false;
+					t.mouseUp();
+				}
+			}
+		}
+
+	}
+
+	public void mouseDown() {
+		for (int i = 0; i < btnThumbs.size(); i++) {
+			ShapeBtn t = btnThumbs.get(i);
+			t.mouseDown();
+		}
+	}
+
+}
 class Slider extends Component{
 
 	float posX, posY;
@@ -1507,6 +1587,101 @@ class Slider extends Component{
 
 	public float getValFloat() {
 		return(map(thumbX, posX, posX + w, minVal, maxVal));
+	}
+
+}
+class SubMenu {
+
+	ArrayList<Thumbnail> algThumbs;
+	float posX, posY, w, h;
+	boolean buttonClicked;
+	Thumbnail mergeBtn;
+	Thumbnail bubbleBtn;
+	Thumbnail selectionBtn;
+	Thumbnail randomBtn;
+
+	public SubMenu (float posX, float posY, float w, float h) {
+		this.posX = posX;
+		this.posY = posY;
+		this.w = 435*px;
+		this.h = 114*py;
+		this.mergeBtn = new MergeBtn(posX + 7*px, posY + 7*py, 100*px, 100*py);
+		this.bubbleBtn = new BubbleBtn(posX + 114*px, posY + 7*py, 100*px, 100*py);
+		// this.bubbleBtn.active = true;
+		this.selectionBtn = new SelectionBtn(posX + 221*px, posY + 7*py, 100*px, 100*py);
+		this.selectionBtn.active = true;
+		this.randomBtn = new BubbleBtn(posX + 328*px, posY + 7*py, 100*px, 100*py);
+		algThumbs = new ArrayList<Thumbnail>();
+		algThumbs.add(mergeBtn);
+		algThumbs.add(bubbleBtn);
+		algThumbs.add(selectionBtn);
+		algThumbs.add(randomBtn);
+		buttonClicked  = false;
+	}
+
+	public void render() {
+		noStroke();
+		fill(p.foreground);
+		rect(posX, posY, w, h, 8*px);
+		for (int i = 0; i < algThumbs.size(); i++) {
+			Thumbnail t = algThumbs.get(i);
+			t.render();
+		}
+	}
+
+	public void updatePos() {
+		this.posX = mouseX;
+		this.posY = mouseY;
+		this.w = 435*px;
+		this.h = 114*py;
+		mergeBtn.posX = mouseX + 7*px;
+		bubbleBtn.posX = mouseX + 114*px;
+		selectionBtn.posX = mouseX + 221*px;
+		randomBtn.posX = mouseX + 328*px;
+		mergeBtn.posY = mouseY + 7*py;
+		bubbleBtn.posY = mouseY + 7*py;
+		selectionBtn.posY = mouseY + 7*py;
+		randomBtn.posY = mouseY + 7*py;
+		mergeBtn.updatePos();
+		bubbleBtn.updatePos();
+		selectionBtn.updatePos();
+		randomBtn.updatePos();
+	}
+
+	public void update() {
+		for (int i = 0; i < algThumbs.size(); i++) {
+			Thumbnail t = algThumbs.get(i);
+			t.update();
+		}
+	}
+
+	public void mouseUp() {
+		for (int i = 0; i < algThumbs.size(); i++) {
+			Thumbnail t = algThumbs.get(i);
+			if (t.correctLocation() && t.depressed) {
+				buttonClicked = true;
+				break;
+			} else {
+				buttonClicked = false;
+			}
+		}
+		if (buttonClicked) {
+			for (int i = 0; i < algThumbs.size(); i++) {
+				Thumbnail t = algThumbs.get(i);
+				if (buttonClicked) {
+					t.active = false;
+					t.mouseUp();
+				}
+			}
+		}
+
+	}
+
+	public void mouseDown() {
+		for (int i = 0; i < algThumbs.size(); i++) {
+			Thumbnail t = algThumbs.get(i);
+			t.mouseDown();
+		}
 	}
 
 }

@@ -13,8 +13,6 @@ class SubMenu {
 		this.posY = posY;
 		this.w = 435*px;
 		this.h = 114*py;
-		println(100*px);
-		println(px);
 		this.mergeBtn = new MergeBtn(posX + 7*px, posY + 7*py, 100*px, 100*py);
 		this.bubbleBtn = new BubbleBtn(posX + 114*px, posY + 7*py, 100*px, 100*py);
 		// this.bubbleBtn.active = true;

@@ -11,12 +11,4 @@ class MergeBtn extends Thumbnail {
 		this.label = "Merge";
 	}
 
-	// void mouseUp() {
-	// 	if (correctLocation() && depressed) {
-	// 		// super.mouseUp(this);
-	// 	}
-	// }
-
-
-
 }
