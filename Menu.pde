@@ -13,11 +13,11 @@ class Menu {
 	Slider soundRelSlider;
 
 	public Menu() {
-		this.fontSize = 16*px;
 		this.w = 435*px;
 		this.posX = width - w; //View X + View w - this w
 		this.posY = 0; // View Y 
 		this.h = height; //View h - Taskbar h
+		this.fontSize = 16*px;
 		algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
 		shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
 		sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
@@ -26,7 +26,22 @@ class Menu {
 		soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001, 1.0, 0.004); // Sound
 		soundSusLSlider = new Slider(this.posX + 225*px, posY + 614*py, 180*px, 20*py, 0.001, 1.0, 0.3); // Sound
 		soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001, 1.0, 0.2); // Sound
-			
+	}
+
+	public Menu(int x) {
+		this.w = 435*px;
+		this.posX = width - w; //View X + View w - this w
+		this.posY = 0; // View Y 
+		this.h = height; //View h - Taskbar h
+		this.fontSize = 16*px;
+		algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
+		shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
+		sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
+
+		soundAttSlider = new Slider(this.posX + 225*px, posY + 554*py, 180*px, 20*py, 0.001, 1.0, 0.001); // Sound
+		soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001, 1.0, 0.004); // Sound
+		soundSusLSlider = new Slider(this.posX + 225*px, posY + 614*py, 180*px, 20*py, 0.001, 1.0, 0.3); // Sound
+		soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001, 1.0, 0.2); // Sound
 	}
 
 	void render() {
@@ -49,10 +64,10 @@ class Menu {
 		text("Array Size", this.posX + 30*px, posY + 414*py);
 
 		// Sound Controls
-		text("Attack", this.posX + 30*px, posY + 554*py);
-		text("Sustain Time", this.posX + 30*px, posY + 584*py);
-		text("Sustain Level", this.posX + 30*px, posY + 614*py);
-		text("Merge", this.posX + 30*px, posY + 644*py);
+		text("Attack", this.posX + 30*px, posY + 560*py);
+		text("Sustain Time", this.posX + 30*px, posY + 590*py);
+		text("Sustain Level", this.posX + 30*px, posY + 620*py);
+		text("Merge", this.posX + 30*px, posY + 650*py);
 
 	}
 

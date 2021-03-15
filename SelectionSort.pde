@@ -32,7 +32,10 @@ class SelectionSort extends Algorithm{
 		// stop = 0;
 	}
 
-	void steps(int x) {
+	void steps(int x, int[] arr, int[] colours) {
+		this.array = arr;
+		this.colours = colours;
+		
 		for (int i = 0; i < colours.length; i++) {
 			colours[i] = 0;
 		}

@@ -28,7 +28,6 @@ class Barchart{
 	// }
 
 	void update() {
-
 	}
 
 	void render(int[] a, int[] c) {

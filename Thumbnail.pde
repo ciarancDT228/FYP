@@ -10,7 +10,6 @@ class Thumbnail {
 	float fontSize;
 	boolean depressed;
 	boolean active;
-	boolean offset;
 	float offsetXY;
 	boolean highlight;
 	int shade;
@@ -25,12 +24,12 @@ class Thumbnail {
 		shade = p.foreground;
 		depressed = false;
 		active = false;
-		offset = false;
 		offsetXY = 0*px;
 		highlight = false;
 		offsetXY = 2*px;
-		// px = d/100;
 		arrSize = (int)(68*10);
+		arr = GenerateArray.random(arrSize);
+		crr = GenerateArray.blanks(arrSize);
 		b = new Barchart(posX + 16*px, posY + 14*px, 68*px, 46*py, 0);
 	}
 
@@ -77,24 +76,20 @@ class Thumbnail {
 				if (depressed) {
 					shade = p.select;
 					highlight = true;
-					offset = true;
 					offsetXY = 1*px;
 				} else {
 					shade = p.hover;
 					highlight = false;
-					offset = false;
 					offsetXY = -1*px;
 				}
 			} else {
 				shade = p.foreground;
 				highlight = false;
-				offset = false;
 				offsetXY = 0*px;
 			}
 		} else {
 			shade = p.select;
 			highlight = true;
-			offset = true;
 			offsetXY = 0*px;
 		}
 	}
@@ -108,10 +103,12 @@ class Thumbnail {
 	void mouseUp() {
 		if (correctLocation() && depressed) {
 			//do some thing
-			active = true;
+			if(!active) {
+				mergeSort.reset(array, colours);
+				active = true;
+			}
 		} else {
 			depressed = false;
-			offset = false;
 			offsetXY = 0*px;
 		}
 	}

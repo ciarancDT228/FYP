@@ -7,36 +7,36 @@ class ShapeBtn extends Thumbnail {
 		crr = GenerateArray.blanks(arrSize);
 		if (name.matches("random")) {
 			arr = GenerateArray.random(arrSize);
-			crr = GenerateArray.blanks(arrSize);
 			this.label = "Random";
+			this.name = "random";
 		} else if (name.matches("sinWave")) {
-			arr = GenerateArray.sinWave(arrSize, 0.5);
-			crr = GenerateArray.blanks(arrSize);
-			this.label = "Sin Wave";
-		} else if (name.matches("quadrant")) {
-			arr = GenerateArray.random(arrSize);
-			crr = GenerateArray.blanks(arrSize);
-			this.label = "Exponent";
-		} else if (name.matches("heartbeat")) {
 			arr = GenerateArray.sinWave(arrSize, 1.5);
-			crr = GenerateArray.blanks(arrSize);
+			this.label = "Sin Wave";
+			this.name = "sinWave";
+		} else if (name.matches("quadrant")) {
+			arr = GenerateArray.quadrant(arrSize);
+			this.label = "Exponent";
+			this.name = "quadrant";
+		} else if (name.matches("heartbeat")) {
+			arr = GenerateArray.sinWave(arrSize, 7.5);
 			this.label = "Heartbeat";
+			this.name = "heartbeat";
 		} else if (name.matches("squiggle")) {
-			arr = GenerateArray.sinWave(arrSize, 2.5);
-			crr = GenerateArray.blanks(arrSize);
+			arr = GenerateArray.squiggle(arrSize);
 			this.label = "Spectrum";
+			this.name = "squiggle";
 		} else if (name.matches("parabola")) {
-			arr = GenerateArray.random(arrSize);
-			crr = GenerateArray.blanks(arrSize);
+			arr = GenerateArray.parabola(arrSize);
 			this.label = "Parabola";
+			this.name = "parabola";
 		} else if (name.matches("parabolaInv")) {
-			arr = GenerateArray.sinWave(arrSize, 3.5);
-			crr = GenerateArray.blanks(arrSize);
+			arr = GenerateArray.parabolaInv(arrSize);
 			this.label = "Parabola";
+			this.name = "parabolaInv";
 		} else if (name.matches("descending")) {
-			arr = GenerateArray.random(arrSize);
-			crr = GenerateArray.blanks(arrSize);
-			this.label = "descending";
+			arr = GenerateArray.desc(arrSize);
+			this.label = "Descending";
+			this.name = "descending";
 		}
 	}
 

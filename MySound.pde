@@ -17,10 +17,10 @@ class MySound {
 	}
 
 	void update() {
-		soundAttSlider.update();
-		soundSusTSlider.update();
-		soundSusLSlider.update();
-		soundRelSlider.update();
+		// menu.soundAttSlider.update();
+		// menu.soundSusTSlider.update();
+		// menu.soundSusLSlider.update();
+		// menu.soundRelSlider.update();
 	}
 
 	void play() {
@@ -28,10 +28,10 @@ class MySound {
 		int max = 0;
 		int med = 0;
 
-		setAtt(soundAttSlider.getValFloat());
-		setSusL(soundSusTSlider.getValFloat());
-		setSusT(soundSusLSlider.getValFloat());
-		setRel(soundRelSlider.getValFloat());
+		setAtt(menu.soundAttSlider.getValFloat());
+		setSusL(menu.soundSusTSlider.getValFloat());
+		setSusT(menu.soundSusLSlider.getValFloat());
+		setRel(menu.soundRelSlider.getValFloat());
 
 		for(int i = 0; i < colours.length; i++) {
 			if (colours[i] > 0) {
@@ -43,7 +43,7 @@ class MySound {
 				}
 			}
 		}
-		med = (max - min) / 2;
+		med = ((max - min) / 2) + min;
 		triOsc.freq(map(med, 0, array.length, minFreq, maxFreq));
 		env.play(triOsc, attackTime, sustainTime, sustainLevel, releaseTime);
 	}

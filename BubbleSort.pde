@@ -8,7 +8,6 @@ class BubbleSort extends Algorithm {
 	int stop;
 	int[] array;
 	int[] colours;
-	int numsteps;
 
 	public BubbleSort(int[] array, int[] colours) {
 		sorted = false;
@@ -19,7 +18,6 @@ class BubbleSort extends Algorithm {
 		this.colours = colours;
 		counter = array.length;
 		stop = array.length;
-		numsteps = 0;
 	}
 
 	void reset(int[] array, int[] colours) {
@@ -31,11 +29,11 @@ class BubbleSort extends Algorithm {
 		this.colours = colours;
 		counter = array.length;
 		stop = array.length;
-		numsteps = 0;
 	}
 
-	void steps(int x) {
-		numsteps = x;
+	void steps(int x, int[] arr, int[] colours) {
+		this.array = arr;
+		this.colours = colours;
 
 		for (int i = 0; i < colours.length; i++) {
 			colours[i] = 0;

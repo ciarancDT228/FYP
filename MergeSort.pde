@@ -15,7 +15,6 @@ class MergeSort {
 	int[] copy;
 	int[] colours;
 	int[] positions;
-	int numsteps;
 	// int stop;
 
 	public MergeSort(int[] array, int[] colours) {
@@ -38,7 +37,6 @@ class MergeSort {
 		this.array = array;
 		this.copy = array;
 		this.colours = colours;
-		numsteps = 0;
 		// stop = -1;
 	}
 
@@ -62,11 +60,11 @@ class MergeSort {
 		this.array = array;
 		this.copy = array;
 		this.colours = colours;
-		numsteps = 0;
 	}
 
-	void steps(int x) {
-		numsteps = x;
+	void steps(int x, int[] arr, int[] colours) {
+		this.array = arr;
+		this.colours = colours;
 
 		for (int i = 0; i < colours.length; i++) {
 			colours[i] = 0;

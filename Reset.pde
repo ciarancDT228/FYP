@@ -8,8 +8,31 @@ class Reset extends Button{
 	void mouseUp() {
 		if(correctLocation() && depressed) {
 			//do some thing
-			arraySize = sizeSlider.getVal();
-			array = GenerateArray.random(arraySize);
+			arraySize = menu.sizeSlider.getVal();
+
+			for (int i = 0; i < menu.shapeMenu.btnThumbs.size(); i++) {
+				ShapeBtn s = menu.shapeMenu.btnThumbs.get(i);
+				if (s.active) {
+					if (s.name.matches("random")) {
+						array = GenerateArray.random(arraySize);
+					} else if (s.name.matches("sinWave")) {
+						array = GenerateArray.sinWave(arraySize, 1.5);
+					} else if (s.name.matches("quadrant")) {
+						array = GenerateArray.quadrant(arraySize);
+					} else if (s.name.matches("heartbeat")) {
+						array = GenerateArray.sinWave(arraySize, 7.5);
+					} else if (s.name.matches("squiggle")) {
+						array = GenerateArray.squiggle(arraySize);
+					} else if (s.name.matches("parabola")) {
+						array = GenerateArray.parabola(arraySize);
+					} else if (s.name.matches("parabolaInv")) {
+						array = GenerateArray.parabolaInv(arraySize);
+					} else if (s.name.matches("descending")) {
+						array = GenerateArray.desc(arraySize);
+					}
+				}
+			}
+
 			colours = GenerateArray.blanks(arraySize);
 			bubble.reset(array, colours);
 			selection.reset(array, colours);
