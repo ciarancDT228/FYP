@@ -18,13 +18,12 @@ class ShapeMenu{
 		this.w = w;
 		this.h = h;
 		this.random = new ShapeBtn(posX + 7*px, posY + 7*py, 100*px, 82*py, "random");
-		// this.random.active = true;
+		this.random.active = true;
 		this.sinWaveBtn = new ShapeBtn(posX + 114*px, posY + 7*py, 100*px, 82*py, "sinWave");
 		this.quadrantBtn = new ShapeBtn(posX + 221*px, posY + 7*py, 100*px, 82*py, "quadrant");
 		this.heartbeatBtn = new ShapeBtn(posX + 328*px, posY + 7*py, 100*px, 82*py, "heartbeat");
 		this.squiggle = new ShapeBtn(posX + 7*px, posY + 89*py, 100*px, 82*py, "squiggle");
 		this.parabola = new ShapeBtn(posX + 114*px, posY + 89*py, 100*px, 82*py, "parabola");
-		this.parabola.active = true;
 		this.parabolaInv = new ShapeBtn(posX + 221*px, posY + 89*py, 100*px, 82*py, "parabolaInv");
 		this.descending = new ShapeBtn(posX + 328*px, posY + 89*py, 100*px, 82*py, "descending");
 		btnThumbs = new ArrayList<ShapeBtn>();
@@ -39,6 +38,24 @@ class ShapeMenu{
 		buttonClicked  = false;
 	}
 
+	void updatePos(boolean closed, float sw) {
+		if(closed) {
+			// Subtract w
+			this.posX -= sw;
+		} else {
+			// Add w
+			this.posX += sw;
+		}
+		random.updatePos(closed, sw);
+		sinWaveBtn.updatePos(closed, sw);
+		quadrantBtn.updatePos(closed, sw);
+		heartbeatBtn.updatePos(closed, sw);
+		squiggle.updatePos(closed, sw);
+		parabola.updatePos(closed, sw);
+		parabolaInv.updatePos(closed, sw);
+		descending.updatePos(closed, sw);
+	}
+
 	void render() {
 		noStroke();
 		fill(p.foreground);
@@ -47,33 +64,6 @@ class ShapeMenu{
 			ShapeBtn t = btnThumbs.get(i);
 			t.render();
 		}
-	}
-
-	void updatePos() {
-		this.posX = mouseX;
-		this.posY = mouseY;
-		this.w = 435*px;
-		this.h = 114*py;
-		random.posX = mouseX + 7*px;
-		random.posY = mouseY + 7*py;
-		sinWaveBtn.posX = mouseX + 114*px;
-		sinWaveBtn.posY = mouseY + 7*py;
-		quadrantBtn.posX = mouseX + 221*px;
-		quadrantBtn.posY = mouseY + 7*py;
-		heartbeatBtn.posX = mouseX + 328*px;
-		heartbeatBtn.posY = mouseY + 7*py;
-		squiggle.posX = mouseX + 7*px;
-		squiggle.posY = mouseY + 89*py;
-		parabola.posX = mouseX + 114*px;
-		parabola.posY = mouseY + 89*py;
-		parabolaInv.posX = mouseX + 221*px;
-		parabolaInv.posY = mouseY + 89*py;
-		descending.posX = mouseX + 328*px;
-		descending.posY = mouseY + 89*py;
-		// mergeBtn.updatePos();
-		// bubbleBtn.updatePos();
-		// selectionBtn.updatePos();
-		// randomBtn.updatePos();
 	}
 
 	void update() {

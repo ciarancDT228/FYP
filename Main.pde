@@ -18,7 +18,8 @@ MergeSort mergeSort;
 // Buttons and Sliders
 Play play;
 Reset reset;
-Slider speedSlider;
+Settings settings;
+// Slider speedSlider;
 
 // Arrays and counters
 int[] array;
@@ -70,16 +71,13 @@ void settings() {
 
 void setup()
 {
-	// println(PFont.list());
+	// println(sketchPath());
 	px = (width*5.2083333*pow(10, -4));
 	py = (height*9.2592592*pow(10, -4));
 	p = new Palette();
 	// surface.setResizable(true);
-	// noStroke();
-	// background(0);
-	// stroke(0);
-	// fill(255);
-	b = new Barchart(20*px, 20*py, width-40*px, height-40*px, 5*px); //Barchart
+
+	b = new Barchart(0, 0, width, height, 5*px); //Barchart
 	arrayMax = width/3;
 	arrayMin = 10; //Min array size
 	// arraySize = (int)b.w/2; //Initial array size
@@ -98,8 +96,9 @@ void setup()
 	//Buttons
 	play = new Play(910*px, 960*py, 100*px, 100*py);
 	reset = new Reset(830*px, 975*py, 70*px, 70*py);
+	settings = new Settings(1860*px, 1020*py, 50*px, 50*py);
 	//Sliders
-	speedSlider = new TickSlider(80*px, 1000*py, 740*px, 20*py, 1, 14); //Speed
+	// speedSlider = new TickSlider(80*px, 1000*py, 740*px, 20*py, 1, 14); //Speed
 
 	//Sounds
 	triOsc = new TriOsc(this); 
@@ -156,86 +155,38 @@ void draw() {
 		}
 	}
 	b.render(array, colours);
-	
 
-	play.render();
-	speedSlider.render();
-	reset.render();
+	// background(0);
 	menu.render();
-	// //Bubble sort
-	// if (count % CalcSpeed.getModulus(speed) == 0) {
-	// 	if (!bubble.sorted && play.active) {
-	// 		bubble.steps(CalcSpeed.getNumSteps(speed));
-	// 		sound.play();
-	// 	}
-	// }
-	// b.render(bubble.getArray(), bubble.getColours());
-
-	// //Selection sort
-	// if (count % CalcSpeed.getModulus(speed) == 0) {
-	// 	if (!selection.sorted && play.active) {
-	// 		selection.steps(CalcSpeed.getNumSteps(speed));
-	// 		sound.play();
-	// 	}
-	// }
-	// b.render(selection.getArray(), selection.getColours());
-
-	// //Merge sort
-	// if (count % CalcSpeed.getModulus(speed) == 0) {
-	// 	if (!mergeSort.sorted && play.active) {
-	// 		// count2++;
-	// 		// println(count2);
-	// 		mergeSort.steps(CalcSpeed.getNumSteps(speed));
-	// 		sound.play();
-	//         //  for(int i = 0; i<colours.length-1; i++){
-	//         //     print(colours[i] + ", ");
- //        	// }
-	// 	}
-	// }
-	// b.render(mergeSort.getArray(), mergeSort.getColours());
-
-	// soundAttSlider.render();
-	// soundSusTSlider.render();
-	// soundSusLSlider.render();
-	// soundRelSlider.render();
-	// algorithmMenu.render();
+	play.render();
+	reset.render();
+	settings.render();
 }
 
 void update() {
-	px = (width*5.2083333*pow(10, -4));
-	py = (height*9.2592592*pow(10, -4));
+	// px = (width*5.2083333*pow(10, -4));
+	// py = (height*9.2592592*pow(10, -4));
 	play.update();
-	speedSlider.update();
+	// speedSlider.update();
 	reset.update();
-	// sound.update();
-	// algorithmMenu.update();
 	menu.update();
+	settings.update();
 }
 
 void mousePressed() {
 	play.mouseDown();
-	speedSlider.mouseDown();
+	// speedSlider.mouseDown();
 	reset.mouseDown();
-	// soundAttSlider.mouseDown();
-	// soundSusTSlider.mouseDown();
-	// soundSusLSlider.mouseDown();
-	// soundRelSlider.mouseDown();
-	//Update algorithm thumbnails
-	// algorithmMenu.mouseDown();
 	menu.mouseDown();
+	settings.mouseDown();
 }
 
 void mouseReleased() {
 	play.mouseUp();
-	speedSlider.mouseUp();
+	// speedSlider.mouseUp();
 	reset.mouseUp();
-	// soundAttSlider.mouseUp();
-	// soundSusTSlider.mouseUp();
-	// soundSusLSlider.mouseUp();
-	// soundRelSlider.mouseUp();
-
-	// algorithmMenu.mouseUp();
 	menu.mouseUp();
+	settings.mouseUp();
 }
 
 //---------------------------------------------------------------------------------------------------

@@ -1,59 +1,165 @@
 class Menu {
 
 	float posX, posY, w, h;
+	float spacer;
+	float margin;
 	float fontSize;
+	float titleSize;
 	PFont f;
+	PFont t;
 
 	SubMenu algMenu;
 	ShapeMenu shapeMenu;
 
 	Slider sizeSlider;
+	Slider speedSlider;
 
 	Slider soundAttSlider;
 	Slider soundSusTSlider;
 	Slider soundSusLSlider;
 	Slider soundRelSlider;
 
+	boolean toggleMenu;
+	boolean closed;
+
 	public Menu() {
 		this.w = 435*px;
 		this.posX = width - w; //View X + View w - this w
 		this.posY = 0; // View Y 
 		this.h = height; //View h - Taskbar h
-		this.fontSize = 16*px;
-		this.f = createFont("Arial Bold",16*px);
-		algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
-		shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
+		this.fontSize = 16*py;
+		this.titleSize = 20*py;
+		this.f = createFont("OpenSans-Regular.ttf", fontSize);
+		this.t = createFont("OpenSans-Regular.ttf", titleSize);
+		this.spacer = 24*px;
+		this.margin = 14*py;
+		this.toggleMenu = true;
+		this.closed = false;
+		
+		algMenu = new SubMenu(
+			this.posX, 
+			this.posY + (spacer * 2) + (titleSize / 2) + margin, 
+			w, 
+			114*py); // Algorithms
+		
+		shapeMenu = new ShapeMenu(
+			this.posX, 
+			algMenu.posY + algMenu.h + (spacer * 2) + (titleSize / 2) + margin, 
+			w, 
+			169*py); // Shapes
 
-		sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
-		speedSlider = new TickSlider(this.posX + 225*px, posY + 454*py, 180*px, 20*py, 1, 14);
+		sizeSlider = new Slider(
+			this.posX + 225*px, 
+			shapeMenu.posY + shapeMenu.h + (spacer * 2), 
+			180*px, 20*py, 
+			arrayMin, arrayMax, arraySize); // Size
+		
+		speedSlider = new TickSlider(
+			this.posX + 225*px, 
+			sizeSlider.posY + sizeSlider.h + (spacer * 2), 
+			180*px, 20*py, 0, 14); // Speed
+		
+		soundAttSlider = new Slider(
+			this.posX + 225*px, 
+			speedSlider.posY + speedSlider.h + (spacer * 3) + (titleSize / 2) + margin, 
+			180*px, 
+			20*py, 
+			0.001, 1.0, 0.001); // Sound
 
-		soundAttSlider = new Slider(this.posX + 225*px, posY + 554*py, 180*px, 20*py, 0.001, 1.0, 0.001); // Sound
-		soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001, 1.0, 0.004); // Sound
-		soundSusLSlider = new Slider(this.posX + 225*px, posY + 614*py, 180*px, 20*py, 0.001, 1.0, 0.3); // Sound
-		soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001, 1.0, 0.2); // Sound
+		soundSusTSlider = new Slider(
+			this.posX + 225*px, 
+			soundAttSlider.posY + soundAttSlider.h + spacer, 
+			180*px, 
+			20*py, 
+			0.001, 1.0, 0.004); // Sound
+
+		soundSusLSlider = new Slider(
+			this.posX + 225*px, 
+			soundSusTSlider.posY + soundSusTSlider.h + spacer, 
+			180*px, 
+			20*py, 
+			0.001, 1.0, 0.3); // Sound
+
+		soundRelSlider = new Slider(
+			this.posX + 225*px, 
+			soundSusLSlider.posY + soundSusLSlider.h + spacer, 
+			180*px, 
+			20*py, 
+			0.001, 1.0, 0.2); // Sound
 	}
 
-	// public Menu(int x) {
-	// 	this.w = 435*px;
-	// 	this.posX = width - w; //View X + View w - this w
-	// 	this.posY = 0; // View Y 
-	// 	this.h = height; //View h - Taskbar h
-	// 	this.fontSize = 16*px;
-	// 	algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
-	// 	shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
-	// 	sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
-	// 	speedSlider = new TickSlider(this.posX + 225*px, posY + 454*py, 180*px, 20*py, 1, 14);
+	void update() {
+		algMenu.update();
+		shapeMenu.update();
+		sizeSlider.update();
+		soundAttSlider.update();
+		soundSusTSlider.update();
+		soundSusLSlider.update();
+		soundRelSlider.update();
+		speedSlider.update();
+		if (toggleMenu) {
+			updatePos();
+			toggleMenu = false;
+		}
+	}
 
-	// 	soundAttSlider = new Slider(this.posX + 225*px, posY + 554*py, 180*px, 20*py, 0.001, 1.0, 0.001); // Sound
-	// 	soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001, 1.0, 0.004); // Sound
-	// 	soundSusLSlider = new Slider(this.posX + 225*px, posY + 614*py, 180*px, 20*py, 0.001, 1.0, 0.3); // Sound
-	// 	soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001, 1.0, 0.2); // Sound
-	// }
+	void updatePos() {
+		if (closed) {
+			this.posX = width - this.w;
+			algMenu.updatePos(true, this.w);
+			shapeMenu.updatePos(true, this.w);
+			sizeSlider.updatePos(true, this.w);
+			speedSlider.updatePos(true, this.w);
+
+			soundAttSlider.updatePos(true, this.w);
+			soundSusTSlider.updatePos(true, this.w);
+			soundSusLSlider.updatePos(true, this.w);
+			soundRelSlider.updatePos(true, this.w);
+			closed = false;
+		} else {
+			this.posX = width;
+			algMenu.updatePos(false, this.w);
+			shapeMenu.updatePos(false, this.w);
+			sizeSlider.updatePos(false, this.w);
+			speedSlider.updatePos(false, this.w);
+
+			soundAttSlider.updatePos(false, this.w);
+			soundSusTSlider.updatePos(false, this.w);
+			soundSusLSlider.updatePos(false, this.w);
+			soundRelSlider.updatePos(false, this.w);
+			closed = true;
+		}
+
+	}
 
 	void render() {
 		noStroke();
 		fill(p.foreground);
 		rect(posX, posY, w, h);
+
+		strokeWeight(1*py);
+		stroke(p.accent);
+		line(this.posX + margin, // Above Sorting Algorithms
+			this.posY + spacer, 
+			this.posX + this.w - margin, 
+			this.posY + spacer);
+		line(this.posX + margin, // Below Sorting Algorithms
+			algMenu.posY + algMenu.h + spacer, 
+			this.posX + this.w - margin, 
+			algMenu.posY + algMenu.h + spacer);
+		line(this.posX + margin, // Below Shapes
+			shapeMenu.posY + shapeMenu.h + spacer, 
+			this.posX + this.w - margin, 
+			shapeMenu.posY + shapeMenu.h + spacer);
+		line(this.posX + margin, // Below Size & Speed
+			sizeSlider.posY + sizeSlider.h + spacer, 
+			this.posX + this.w - margin, 
+			sizeSlider.posY + sizeSlider.h + spacer);
+		line(this.posX + margin, // Below Sound
+			speedSlider.posY + speedSlider.h + spacer, 
+			this.posX + this.w - margin, 
+			speedSlider.posY + speedSlider.h + spacer);
+
 		algMenu.render();
 		shapeMenu.render();
 		sizeSlider.render();
@@ -66,29 +172,25 @@ class Menu {
 
 		//Text
 		fill(p.font); // Array Size
-		textSize(fontSize);
 		textAlign(LEFT, CENTER);
+		textFont(t);
+		textSize(titleSize);
+		text("Sorting Algorithms", this.posX + spacer, posY + (spacer * 2) + (titleSize / 2));
+		text("Array Shapes", this.posX + spacer, algMenu.posY + algMenu.h + (spacer * 2) + (titleSize / 2));
+		text("Sound Settings", this.posX + spacer, speedSlider.posY + speedSlider.h + (spacer * 2) + (titleSize / 2));
+
+
 		textFont(f);
-		text("Array Size", this.posX + 30*px, posY + 420*py);
-		text("Speed", this.posX + 30*px, posY + 460*py);
+		textSize(fontSize);
+		text("Array Size", this.posX + 30*px, shapeMenu.posY + shapeMenu.h + (spacer * 2) + (fontSize / 2));
+		text("Speed", this.posX + 30*px, sizeSlider.posY + sizeSlider.h + (spacer * 2) + (fontSize / 2));
 
 		// Sound Controls
-		text("Attack", this.posX + 30*px, posY + 560*py);
-		text("Sustain Time", this.posX + 30*px, posY + 590*py);
-		text("Sustain Level", this.posX + 30*px, posY + 620*py);
-		text("Merge", this.posX + 30*px, posY + 650*py);
+		text("Attack", this.posX + 30*px, speedSlider.posY + speedSlider.h + (spacer * 3) + (titleSize / 2) + (fontSize / 2) + margin);
+		text("Sustain Time", this.posX + 30*px, soundAttSlider.posY + soundAttSlider.h + spacer + (fontSize / 2));
+		text("Sustain Level", this.posX + 30*px, soundSusTSlider.posY + soundSusTSlider.h + spacer + (fontSize / 2));
+		text("Merge", this.posX + 30*px, soundSusLSlider.posY + soundSusLSlider.h + spacer + (fontSize / 2));
 
-	}
-
-	void update() {
-		algMenu.update();
-		shapeMenu.update();
-		sizeSlider.update();
-		soundAttSlider.update();
-		soundSusTSlider.update();
-		soundSusLSlider.update();
-		soundRelSlider.update();
-		speedSlider.update();
 	}
 
 	void mouseUp() {

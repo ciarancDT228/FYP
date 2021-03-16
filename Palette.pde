@@ -14,7 +14,8 @@ class Palette {
 
 	public Palette() {
 		// int[] lightMode = {#eeeeee,#dddddd,#cccccc,#bbbbbb,#aaaaaa,#2d3142}; // white
-		int[] lightMode = {#6D769C,#dddddd,#cccccc,#bbbbbb,#A3A3A3,#525252}; // white2
+		// int[] lightMode = {#6D769C,#dddddd,#cccccc,#bbbbbb,#A3A3A3,#525252}; // white2
+		int[] lightMode = {#ffffff,#ffffff,#f1f3f4,#feefc3,#f8f9fa,#aecbfa, #091540}; // white 3
 		
 		// int[] lightMode = {#2d3142,#aaaaaa,#bbbbbb,#cccccc,#dddddd,#eeeeee};
 		this.lightMode = lightMode;
@@ -26,7 +27,7 @@ class Palette {
 		this.darkMode = darkMode;
 
 		dark();
-		light();
+		// light();
 	}
 
 	void dark() {
@@ -46,9 +47,9 @@ class Palette {
 		this.hover = lightMode[2];
 		this.select = lightMode[3];
 		this.accent = lightMode[4];
-		this.font = lightMode[5];
-		this.barF = lightMode[2];
-		this.barB = lightMode[0];
+		this.font = lightMode[6];
+		this.barF = lightMode[0];
+		this.barB = lightMode[5];
 	}
 
 

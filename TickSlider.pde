@@ -32,6 +32,20 @@ class TickSlider extends Slider {
 		setVal();
 	}
 
+	void updatePos(boolean closed, float sw) {
+		if(closed) {
+			// Subtract w
+			this.posX = this.posX - sw;
+			centreX = this.posX + (this.w/2) - sw;
+			this.thumbX -= sw;
+		} else {
+			// Add w
+			this.posX = this.posX + sw;
+			centreX = this.posX + (this.w/2) + sw;
+			this.thumbX += sw;
+		}
+	}
+
 	void render() {
 		float tickmark;
 

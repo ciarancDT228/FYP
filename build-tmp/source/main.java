@@ -37,7 +37,8 @@ MergeSort mergeSort;
 // Buttons and Sliders
 Play play;
 Reset reset;
-Slider speedSlider;
+Settings settings;
+// Slider speedSlider;
 
 // Arrays and counters
 int[] array;
@@ -89,16 +90,13 @@ public void settings() {
 
 public void setup()
 {
-	// println(PFont.list());
+	// println(sketchPath());
 	px = (width*5.2083333f*pow(10, -4));
 	py = (height*9.2592592f*pow(10, -4));
 	p = new Palette();
 	// surface.setResizable(true);
-	// noStroke();
-	// background(0);
-	// stroke(0);
-	// fill(255);
-	b = new Barchart(20*px, 20*py, width-40*px, height-40*px, 5*px); //Barchart
+
+	b = new Barchart(0, 0, width, height, 5*px); //Barchart
 	arrayMax = width/3;
 	arrayMin = 10; //Min array size
 	// arraySize = (int)b.w/2; //Initial array size
@@ -117,8 +115,9 @@ public void setup()
 	//Buttons
 	play = new Play(910*px, 960*py, 100*px, 100*py);
 	reset = new Reset(830*px, 975*py, 70*px, 70*py);
+	settings = new Settings(1860*px, 1020*py, 50*px, 50*py);
 	//Sliders
-	speedSlider = new TickSlider(80*px, 1000*py, 740*px, 20*py, 1, 14); //Speed
+	// speedSlider = new TickSlider(80*px, 1000*py, 740*px, 20*py, 1, 14); //Speed
 
 	//Sounds
 	triOsc = new TriOsc(this); 
@@ -175,86 +174,38 @@ public void draw() {
 		}
 	}
 	b.render(array, colours);
-	
 
-	play.render();
-	speedSlider.render();
-	reset.render();
+	// background(0);
 	menu.render();
-	// //Bubble sort
-	// if (count % CalcSpeed.getModulus(speed) == 0) {
-	// 	if (!bubble.sorted && play.active) {
-	// 		bubble.steps(CalcSpeed.getNumSteps(speed));
-	// 		sound.play();
-	// 	}
-	// }
-	// b.render(bubble.getArray(), bubble.getColours());
-
-	// //Selection sort
-	// if (count % CalcSpeed.getModulus(speed) == 0) {
-	// 	if (!selection.sorted && play.active) {
-	// 		selection.steps(CalcSpeed.getNumSteps(speed));
-	// 		sound.play();
-	// 	}
-	// }
-	// b.render(selection.getArray(), selection.getColours());
-
-	// //Merge sort
-	// if (count % CalcSpeed.getModulus(speed) == 0) {
-	// 	if (!mergeSort.sorted && play.active) {
-	// 		// count2++;
-	// 		// println(count2);
-	// 		mergeSort.steps(CalcSpeed.getNumSteps(speed));
-	// 		sound.play();
-	//         //  for(int i = 0; i<colours.length-1; i++){
-	//         //     print(colours[i] + ", ");
- //        	// }
-	// 	}
-	// }
-	// b.render(mergeSort.getArray(), mergeSort.getColours());
-
-	// soundAttSlider.render();
-	// soundSusTSlider.render();
-	// soundSusLSlider.render();
-	// soundRelSlider.render();
-	// algorithmMenu.render();
+	play.render();
+	reset.render();
+	settings.render();
 }
 
 public void update() {
-	px = (width*5.2083333f*pow(10, -4));
-	py = (height*9.2592592f*pow(10, -4));
+	// px = (width*5.2083333*pow(10, -4));
+	// py = (height*9.2592592*pow(10, -4));
 	play.update();
-	speedSlider.update();
+	// speedSlider.update();
 	reset.update();
-	// sound.update();
-	// algorithmMenu.update();
 	menu.update();
+	settings.update();
 }
 
 public void mousePressed() {
 	play.mouseDown();
-	speedSlider.mouseDown();
+	// speedSlider.mouseDown();
 	reset.mouseDown();
-	// soundAttSlider.mouseDown();
-	// soundSusTSlider.mouseDown();
-	// soundSusLSlider.mouseDown();
-	// soundRelSlider.mouseDown();
-	//Update algorithm thumbnails
-	// algorithmMenu.mouseDown();
 	menu.mouseDown();
+	settings.mouseDown();
 }
 
 public void mouseReleased() {
 	play.mouseUp();
-	speedSlider.mouseUp();
+	// speedSlider.mouseUp();
 	reset.mouseUp();
-	// soundAttSlider.mouseUp();
-	// soundSusTSlider.mouseUp();
-	// soundSusLSlider.mouseUp();
-	// soundRelSlider.mouseUp();
-
-	// algorithmMenu.mouseUp();
 	menu.mouseUp();
+	settings.mouseUp();
 }
 
 //---------------------------------------------------------------------------------------------------
@@ -574,7 +525,7 @@ class Button extends Component {
 	float offsetXY;
 	boolean depressed;
 	boolean active;
-	boolean offset;
+	// boolean offset;
 	int shade;
 
 	public Button(float posX, float posY, float w, float h) {
@@ -585,7 +536,6 @@ class Button extends Component {
 		shade = p.foreground;
 		depressed = false;
 		active = false;
-		offset = false;
 		offsetXY = 2*px;
 	}
 
@@ -597,23 +547,20 @@ class Button extends Component {
 			noStroke();
 		}
 		fill(shade);
-		if(offset) {
-			rect(posX - offsetXY, posY + offsetXY, w, h);
-		} else {
-			rect(posX, posY, w, h);
-		}
+		rect(posX - offsetXY, posY + offsetXY, w, h);
 	}
 
 	public void update() {
 		if(correctLocation() && depressed) {
 			shade = p.select;
-			offset = true;
+			offsetXY = 2*px;
 		} else if (correctLocation()) {
 			shade = p.hover;
+			offsetXY = -2*px;
 		}
 		else {
 			shade = p.foreground;
-			offset = false;
+			offsetXY = 0*px;
 		}
 	}
 
@@ -634,7 +581,7 @@ class Button extends Component {
 		}
 		shade = p.foreground;
 		depressed = false;
-		offset = false;
+		offsetXY = 0*px;
 	}
 
 	public boolean correctLocation() {
@@ -803,59 +750,165 @@ static class GenerateArray {
 class Menu {
 
 	float posX, posY, w, h;
+	float spacer;
+	float margin;
 	float fontSize;
+	float titleSize;
 	PFont f;
+	PFont t;
 
 	SubMenu algMenu;
 	ShapeMenu shapeMenu;
 
 	Slider sizeSlider;
+	Slider speedSlider;
 
 	Slider soundAttSlider;
 	Slider soundSusTSlider;
 	Slider soundSusLSlider;
 	Slider soundRelSlider;
 
+	boolean toggleMenu;
+	boolean closed;
+
 	public Menu() {
 		this.w = 435*px;
 		this.posX = width - w; //View X + View w - this w
 		this.posY = 0; // View Y 
 		this.h = height; //View h - Taskbar h
-		this.fontSize = 16*px;
-		this.f = createFont("Arial Bold",16*px);
-		algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
-		shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
+		this.fontSize = 16*py;
+		this.titleSize = 20*py;
+		this.f = createFont("OpenSans-Regular.ttf", fontSize);
+		this.t = createFont("OpenSans-Regular.ttf", titleSize);
+		this.spacer = 24*px;
+		this.margin = 14*py;
+		this.toggleMenu = true;
+		this.closed = false;
+		
+		algMenu = new SubMenu(
+			this.posX, 
+			this.posY + (spacer * 2) + (titleSize / 2) + margin, 
+			w, 
+			114*py); // Algorithms
+		
+		shapeMenu = new ShapeMenu(
+			this.posX, 
+			algMenu.posY + algMenu.h + (spacer * 2) + (titleSize / 2) + margin, 
+			w, 
+			169*py); // Shapes
 
-		sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
-		speedSlider = new TickSlider(this.posX + 225*px, posY + 454*py, 180*px, 20*py, 1, 14);
+		sizeSlider = new Slider(
+			this.posX + 225*px, 
+			shapeMenu.posY + shapeMenu.h + (spacer * 2), 
+			180*px, 20*py, 
+			arrayMin, arrayMax, arraySize); // Size
+		
+		speedSlider = new TickSlider(
+			this.posX + 225*px, 
+			sizeSlider.posY + sizeSlider.h + (spacer * 2), 
+			180*px, 20*py, 0, 14); // Speed
+		
+		soundAttSlider = new Slider(
+			this.posX + 225*px, 
+			speedSlider.posY + speedSlider.h + (spacer * 3) + (titleSize / 2) + margin, 
+			180*px, 
+			20*py, 
+			0.001f, 1.0f, 0.001f); // Sound
 
-		soundAttSlider = new Slider(this.posX + 225*px, posY + 554*py, 180*px, 20*py, 0.001f, 1.0f, 0.001f); // Sound
-		soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001f, 1.0f, 0.004f); // Sound
-		soundSusLSlider = new Slider(this.posX + 225*px, posY + 614*py, 180*px, 20*py, 0.001f, 1.0f, 0.3f); // Sound
-		soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001f, 1.0f, 0.2f); // Sound
+		soundSusTSlider = new Slider(
+			this.posX + 225*px, 
+			soundAttSlider.posY + soundAttSlider.h + spacer, 
+			180*px, 
+			20*py, 
+			0.001f, 1.0f, 0.004f); // Sound
+
+		soundSusLSlider = new Slider(
+			this.posX + 225*px, 
+			soundSusTSlider.posY + soundSusTSlider.h + spacer, 
+			180*px, 
+			20*py, 
+			0.001f, 1.0f, 0.3f); // Sound
+
+		soundRelSlider = new Slider(
+			this.posX + 225*px, 
+			soundSusLSlider.posY + soundSusLSlider.h + spacer, 
+			180*px, 
+			20*py, 
+			0.001f, 1.0f, 0.2f); // Sound
 	}
 
-	// public Menu(int x) {
-	// 	this.w = 435*px;
-	// 	this.posX = width - w; //View X + View w - this w
-	// 	this.posY = 0; // View Y 
-	// 	this.h = height; //View h - Taskbar h
-	// 	this.fontSize = 16*px;
-	// 	algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
-	// 	shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
-	// 	sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
-	// 	speedSlider = new TickSlider(this.posX + 225*px, posY + 454*py, 180*px, 20*py, 1, 14);
+	public void update() {
+		algMenu.update();
+		shapeMenu.update();
+		sizeSlider.update();
+		soundAttSlider.update();
+		soundSusTSlider.update();
+		soundSusLSlider.update();
+		soundRelSlider.update();
+		speedSlider.update();
+		if (toggleMenu) {
+			updatePos();
+			toggleMenu = false;
+		}
+	}
 
-	// 	soundAttSlider = new Slider(this.posX + 225*px, posY + 554*py, 180*px, 20*py, 0.001, 1.0, 0.001); // Sound
-	// 	soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001, 1.0, 0.004); // Sound
-	// 	soundSusLSlider = new Slider(this.posX + 225*px, posY + 614*py, 180*px, 20*py, 0.001, 1.0, 0.3); // Sound
-	// 	soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001, 1.0, 0.2); // Sound
-	// }
+	public void updatePos() {
+		if (closed) {
+			this.posX = width - this.w;
+			algMenu.updatePos(true, this.w);
+			shapeMenu.updatePos(true, this.w);
+			sizeSlider.updatePos(true, this.w);
+			speedSlider.updatePos(true, this.w);
+
+			soundAttSlider.updatePos(true, this.w);
+			soundSusTSlider.updatePos(true, this.w);
+			soundSusLSlider.updatePos(true, this.w);
+			soundRelSlider.updatePos(true, this.w);
+			closed = false;
+		} else {
+			this.posX = width;
+			algMenu.updatePos(false, this.w);
+			shapeMenu.updatePos(false, this.w);
+			sizeSlider.updatePos(false, this.w);
+			speedSlider.updatePos(false, this.w);
+
+			soundAttSlider.updatePos(false, this.w);
+			soundSusTSlider.updatePos(false, this.w);
+			soundSusLSlider.updatePos(false, this.w);
+			soundRelSlider.updatePos(false, this.w);
+			closed = true;
+		}
+
+	}
 
 	public void render() {
 		noStroke();
 		fill(p.foreground);
 		rect(posX, posY, w, h);
+
+		strokeWeight(1*py);
+		stroke(p.accent);
+		line(this.posX + margin, // Above Sorting Algorithms
+			this.posY + spacer, 
+			this.posX + this.w - margin, 
+			this.posY + spacer);
+		line(this.posX + margin, // Below Sorting Algorithms
+			algMenu.posY + algMenu.h + spacer, 
+			this.posX + this.w - margin, 
+			algMenu.posY + algMenu.h + spacer);
+		line(this.posX + margin, // Below Shapes
+			shapeMenu.posY + shapeMenu.h + spacer, 
+			this.posX + this.w - margin, 
+			shapeMenu.posY + shapeMenu.h + spacer);
+		line(this.posX + margin, // Below Size & Speed
+			sizeSlider.posY + sizeSlider.h + spacer, 
+			this.posX + this.w - margin, 
+			sizeSlider.posY + sizeSlider.h + spacer);
+		line(this.posX + margin, // Below Sound
+			speedSlider.posY + speedSlider.h + spacer, 
+			this.posX + this.w - margin, 
+			speedSlider.posY + speedSlider.h + spacer);
+
 		algMenu.render();
 		shapeMenu.render();
 		sizeSlider.render();
@@ -868,29 +921,25 @@ class Menu {
 
 		//Text
 		fill(p.font); // Array Size
-		textSize(fontSize);
 		textAlign(LEFT, CENTER);
+		textFont(t);
+		textSize(titleSize);
+		text("Sorting Algorithms", this.posX + spacer, posY + (spacer * 2) + (titleSize / 2));
+		text("Array Shapes", this.posX + spacer, algMenu.posY + algMenu.h + (spacer * 2) + (titleSize / 2));
+		text("Sound Settings", this.posX + spacer, speedSlider.posY + speedSlider.h + (spacer * 2) + (titleSize / 2));
+
+
 		textFont(f);
-		text("Array Size", this.posX + 30*px, posY + 420*py);
-		text("Speed", this.posX + 30*px, posY + 460*py);
+		textSize(fontSize);
+		text("Array Size", this.posX + 30*px, shapeMenu.posY + shapeMenu.h + (spacer * 2) + (fontSize / 2));
+		text("Speed", this.posX + 30*px, sizeSlider.posY + sizeSlider.h + (spacer * 2) + (fontSize / 2));
 
 		// Sound Controls
-		text("Attack", this.posX + 30*px, posY + 560*py);
-		text("Sustain Time", this.posX + 30*px, posY + 590*py);
-		text("Sustain Level", this.posX + 30*px, posY + 620*py);
-		text("Merge", this.posX + 30*px, posY + 650*py);
+		text("Attack", this.posX + 30*px, speedSlider.posY + speedSlider.h + (spacer * 3) + (titleSize / 2) + (fontSize / 2) + margin);
+		text("Sustain Time", this.posX + 30*px, soundAttSlider.posY + soundAttSlider.h + spacer + (fontSize / 2));
+		text("Sustain Level", this.posX + 30*px, soundSusTSlider.posY + soundSusTSlider.h + spacer + (fontSize / 2));
+		text("Merge", this.posX + 30*px, soundSusLSlider.posY + soundSusLSlider.h + spacer + (fontSize / 2));
 
-	}
-
-	public void update() {
-		algMenu.update();
-		shapeMenu.update();
-		sizeSlider.update();
-		soundAttSlider.update();
-		soundSusTSlider.update();
-		soundSusLSlider.update();
-		soundRelSlider.update();
-		speedSlider.update();
 	}
 
 	public void mouseUp() {
@@ -1192,136 +1241,49 @@ class MergeSort {
 	}
 
 }
-// /* Used operator precedence (universal to Java) to simplify the equations
-// * hopefully it doesn't screw with the actual calculations...
-// */
+class MyClass {
+	// Example 18-1: User input
 
-// public class MyClass {
-//     public static void main(String args[]) {
-      
-//       int len = 10;
-//       int p = 2;
-      
-//       printArr(sin(len, p), "Sine  ");
-//       printArr(cos(len, p), "Cosine");
-//       printArr(circle(len), "Circle");
-//       printArr(parabola(len), "Parabola");
-//       printArr(reverseParabola(len), "R parabola");
-//       printArr(squiggle(len), "Squiggle");
-      
-//     }
-    
-//     /* Generates an array of int values representing
-//      * a sine curve
-//      * @param: length of array, number of periods
-//     */
-//     public static int[] sin(int length, int p){
-        
-//         int[] arr = new int[length];
-        
-//         for(int i = 0; i<length; i++){
-//             arr[i] = (int)(Math.round((double)length/2*Math.sin(2*Math.PI*p*i/(double)length)+((double)length/2))) + 1;
-//         }
-        
-//         return arr;
-//     }
-    
-//     /* Generates an array of int values representing
-//      * a cosine curve
-//      * @param: length of array, number of periods
-//     */
-//     public static int[] cos(int length, int p){
-        
-//         int[] arr = new int[length];
-        
-//         for(int i = 0; i<length; i++){
-//             arr[i] = (int)(Math.round((double)length/2*Math.cos(2*Math.PI*p*i/(double)length)+((double)length/2))) + 1;
-//         }
-        
-//         return arr;
-//     }
-    
-    
-//     /* Generates an array of int values representing
-//      * the upper right hand quarter of a circle
-//      * @param: length of array
-//     */
-//     public static int[] circle(int length){
-        
-//         int[] arr = new int[length];
-        
-//         for(int i = 0; i<length; i++){
-//             arr[i] = (int)(Math.round(length*Math.sqrt(1-Math.pow(((double)i/(double)length),2))))+1;
-//         }
-        
-//         return arr;
-//     }
-    
-    
-//      /* Generates an array of int values representing
-//      * a positive parabola
-//      * @param: length of array
-//     */
-//     public static int[] parabola(int length){
-        
-//         int[] arr = new int[length];
-        
-//         for(int i = 0; i<length; i++){
-//             arr[i] = (int)Math.round((4/(double)length)*(Math.pow((i-((double)length/2)),2)))+1;
-//         }
-//         return arr;
-//     }
-    
-    
-//      /* Generates an array of int values representing
-//      * a negative parabola
-//      * @param: length of array
-//     */
-//     public static int[] reverseParabola(int length){
-        
-//         int[] arr = new int[length];
-        
-//         for(int i = 0; i<length; i++){
-//             arr[i] = (int)Math.round((-4/(double)length)*(Math.pow((i-((double)length/2)),2)))+length+1;
-//         }
-        
-//         return arr;
-//     }
-    
-    
-//      /* Generates an array of int values representing
-//      * a sine wave that increases frequency
-//      * @param: length of array
-//     */
-//     public static int[] squiggle(int length){
-        
-//         int[] arr = new int[length];
-        
-//        // for(int i = 0; i<length; i++){
-//           //  arr[i] = (int)Math.round(length*(Math.pow((Math.sin(Math.PI+(Math.pow(2,((4*i)/length))))),2)))+1;
-//        // }
-        
-//         int period = 0;
-//         for(int i = 0; i<length; i++){
-//             arr[i] = (int)Math.round(length*(Math.pow((Math.sin(Math.PI+(Math.pow(2,((4*period)/length))))),2)))+1;
-//             period += Math.PI;
-//         }
-        
-//         return arr;
-//     }
-    
+	PFont f;
 
+	// Variable to store text currently being typed
+	String typing = "";
 
-    
-//     /* Print array values */
-//     public static void printArr(int[] arr, String arrayName){
-//         System.out.print(arrayName + ": \t\t");
-//          for(int i = 0; i<arr.length; i++){
-//             System.out.print(arr[i] + "\t");
-//         }
-//         System.out.println();
-//     }
-// }
+	// Variable to store saved text when return is hit
+	String saved = "";
+
+	public void setup() {
+	  size(480, 270);
+	  f = createFont("Arial",16);
+	}
+
+	public void draw() {
+	  background(255);
+	  int indent = 0;
+	  
+	  // Set the font and fill for text
+	  textFont(f);
+	  fill(0);
+	  
+	  // Display everything
+	  text("Click in this window and type. \nHit enter to save. ", indent, 40);
+	  text("Input: " + typing,indent,190);
+	  text("Saved text: " + saved,indent,230);
+	}
+
+	public void keyPressed() {
+	  // If the return key is pressed, save the String and clear it
+	  if (key == '\n' ) {
+	    saved = typing;
+	    // A String can be cleared by setting it equal to ""
+	    typing = ""; 
+	  } else {
+	    // Otherwise, concatenate the String
+	    // Each character typed by the user is added to the end of the String variable.
+	    typing = typing + key; 
+	  }
+	}
+}
 class MySound {
 
 	float attackTime;
@@ -1405,7 +1367,8 @@ class Palette {
 
 	public Palette() {
 		// int[] lightMode = {#eeeeee,#dddddd,#cccccc,#bbbbbb,#aaaaaa,#2d3142}; // white
-		int[] lightMode = {0xff6D769C,0xffdddddd,0xffcccccc,0xffbbbbbb,0xffA3A3A3,0xff525252}; // white2
+		// int[] lightMode = {#6D769C,#dddddd,#cccccc,#bbbbbb,#A3A3A3,#525252}; // white2
+		int[] lightMode = {0xffffffff,0xffffffff,0xfff1f3f4,0xfffeefc3,0xfff8f9fa,0xffaecbfa, 0xff091540}; // white 3
 		
 		// int[] lightMode = {#2d3142,#aaaaaa,#bbbbbb,#cccccc,#dddddd,#eeeeee};
 		this.lightMode = lightMode;
@@ -1417,7 +1380,7 @@ class Palette {
 		this.darkMode = darkMode;
 
 		dark();
-		light();
+		// light();
 	}
 
 	public void dark() {
@@ -1437,9 +1400,9 @@ class Palette {
 		this.hover = lightMode[2];
 		this.select = lightMode[3];
 		this.accent = lightMode[4];
-		this.font = lightMode[5];
-		this.barF = lightMode[2];
-		this.barB = lightMode[0];
+		this.font = lightMode[6];
+		this.barF = lightMode[0];
+		this.barB = lightMode[5];
 	}
 
 
@@ -1450,9 +1413,7 @@ class Play extends Button{
 	public Play(float posX, float posY, float w, float h) {
 		super(posX, posY, w, h);
 	}
-
 	
-
 }
 
 class Reset extends Button{
@@ -1494,10 +1455,9 @@ class Reset extends Button{
 			selection.reset(array, colours);
 			mergeSort.reset(array, colours);
 			play.active = false;
-			println(arraySize);
 		}
 		depressed = false;
-		offset = false;
+		offsetXY = 0*px;
 	}
 
 }
@@ -1661,6 +1621,25 @@ class SelectionSort extends Algorithm{
 	}
 
 }
+class Settings extends Button{
+
+	public Settings(float posX, float posY, float w, float h) {
+		super(posX, posY, w, h);
+	}
+
+	public void mouseUp() {
+		if(correctLocation() && depressed) {
+			menu.toggleMenu = true;
+			if (b.w + (b.border * 2) == width) {
+				b.w -= menu.w;
+			} else {
+				b.w += menu.w;
+			}
+		}
+		depressed = false;
+		offsetXY = 0*px;
+	}
+}
 class ShapeBtn extends Thumbnail {
 
 	String name;
@@ -1746,13 +1725,12 @@ class ShapeMenu{
 		this.w = w;
 		this.h = h;
 		this.random = new ShapeBtn(posX + 7*px, posY + 7*py, 100*px, 82*py, "random");
-		// this.random.active = true;
+		this.random.active = true;
 		this.sinWaveBtn = new ShapeBtn(posX + 114*px, posY + 7*py, 100*px, 82*py, "sinWave");
 		this.quadrantBtn = new ShapeBtn(posX + 221*px, posY + 7*py, 100*px, 82*py, "quadrant");
 		this.heartbeatBtn = new ShapeBtn(posX + 328*px, posY + 7*py, 100*px, 82*py, "heartbeat");
 		this.squiggle = new ShapeBtn(posX + 7*px, posY + 89*py, 100*px, 82*py, "squiggle");
 		this.parabola = new ShapeBtn(posX + 114*px, posY + 89*py, 100*px, 82*py, "parabola");
-		this.parabola.active = true;
 		this.parabolaInv = new ShapeBtn(posX + 221*px, posY + 89*py, 100*px, 82*py, "parabolaInv");
 		this.descending = new ShapeBtn(posX + 328*px, posY + 89*py, 100*px, 82*py, "descending");
 		btnThumbs = new ArrayList<ShapeBtn>();
@@ -1767,6 +1745,24 @@ class ShapeMenu{
 		buttonClicked  = false;
 	}
 
+	public void updatePos(boolean closed, float sw) {
+		if(closed) {
+			// Subtract w
+			this.posX -= sw;
+		} else {
+			// Add w
+			this.posX += sw;
+		}
+		random.updatePos(closed, sw);
+		sinWaveBtn.updatePos(closed, sw);
+		quadrantBtn.updatePos(closed, sw);
+		heartbeatBtn.updatePos(closed, sw);
+		squiggle.updatePos(closed, sw);
+		parabola.updatePos(closed, sw);
+		parabolaInv.updatePos(closed, sw);
+		descending.updatePos(closed, sw);
+	}
+
 	public void render() {
 		noStroke();
 		fill(p.foreground);
@@ -1775,33 +1771,6 @@ class ShapeMenu{
 			ShapeBtn t = btnThumbs.get(i);
 			t.render();
 		}
-	}
-
-	public void updatePos() {
-		this.posX = mouseX;
-		this.posY = mouseY;
-		this.w = 435*px;
-		this.h = 114*py;
-		random.posX = mouseX + 7*px;
-		random.posY = mouseY + 7*py;
-		sinWaveBtn.posX = mouseX + 114*px;
-		sinWaveBtn.posY = mouseY + 7*py;
-		quadrantBtn.posX = mouseX + 221*px;
-		quadrantBtn.posY = mouseY + 7*py;
-		heartbeatBtn.posX = mouseX + 328*px;
-		heartbeatBtn.posY = mouseY + 7*py;
-		squiggle.posX = mouseX + 7*px;
-		squiggle.posY = mouseY + 89*py;
-		parabola.posX = mouseX + 114*px;
-		parabola.posY = mouseY + 89*py;
-		parabolaInv.posX = mouseX + 221*px;
-		parabolaInv.posY = mouseY + 89*py;
-		descending.posX = mouseX + 328*px;
-		descending.posY = mouseY + 89*py;
-		// mergeBtn.updatePos();
-		// bubbleBtn.updatePos();
-		// selectionBtn.updatePos();
-		// randomBtn.updatePos();
 	}
 
 	public void update() {
@@ -1899,6 +1868,20 @@ class Slider extends Component{
 		}
 	}
 
+	public void updatePos(boolean closed, float sw) {
+		if(closed) {
+			// Subtract w
+			this.posX = this.posX - sw;
+			centreX = this.posX + (this.w/2) - sw;
+			this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) - sw;
+		} else {
+			// Add w
+			this.posX = this.posX + sw;
+			centreX = this.posX + (this.w/2) + sw;
+			this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) + sw;
+		}
+	}
+
 	public void render() {
 		//Draw track base
 		strokeWeight(strokeM);
@@ -1979,17 +1962,22 @@ class SubMenu {
 		this.posY = posY;
 		this.w = 435*px;
 		this.h = 114*py;
-		this.mergeBtn = new MergeBtn(posX + 7*px, posY + 7*py, 100*px, 100*py);
+		this.randomBtn = new BubbleBtn(posX + 7*px, posY + 7*py, 100*px, 100*py);
+		this.randomBtn.active = true;
 		this.bubbleBtn = new BubbleBtn(posX + 114*px, posY + 7*py, 100*px, 100*py);
 		this.selectionBtn = new SelectionBtn(posX + 221*px, posY + 7*py, 100*px, 100*py);
-		this.selectionBtn.active = true;
-		this.randomBtn = new BubbleBtn(posX + 328*px, posY + 7*py, 100*px, 100*py);
+		this.mergeBtn = new MergeBtn(posX + 328*px, posY + 7*py, 100*px, 100*py);
 		algThumbs = new ArrayList<Thumbnail>();
 		algThumbs.add(mergeBtn);
 		algThumbs.add(bubbleBtn);
 		algThumbs.add(selectionBtn);
 		algThumbs.add(randomBtn);
 		buttonClicked  = false;
+
+
+		// this.randomBtn = new BubbleBtn(posX + 7*px, posY + 7*py, 100*px, 100*py);
+		// this.mergeBtn = new MergeBtn(posX + 328*px, posY + 7*py, 100*px, 100*py);
+
 	}
 
 	public void render() {
@@ -2002,24 +1990,39 @@ class SubMenu {
 		}
 	}
 
-	public void updatePos() {
-		this.posX = mouseX;
-		this.posY = mouseY;
-		this.w = 435*px;
-		this.h = 114*py;
-		mergeBtn.posX = mouseX + 7*px;
-		bubbleBtn.posX = mouseX + 114*px;
-		selectionBtn.posX = mouseX + 221*px;
-		randomBtn.posX = mouseX + 328*px;
-		mergeBtn.posY = mouseY + 7*py;
-		bubbleBtn.posY = mouseY + 7*py;
-		selectionBtn.posY = mouseY + 7*py;
-		randomBtn.posY = mouseY + 7*py;
-		mergeBtn.updatePos();
-		bubbleBtn.updatePos();
-		selectionBtn.updatePos();
-		randomBtn.updatePos();
+	public void updatePos(boolean closed, float sw) {
+		if(closed) {
+			// Subtract w
+			this.posX -= sw;
+		} else {
+			// Add w
+			this.posX += w;
+		}
+		mergeBtn.updatePos(closed, sw);
+		bubbleBtn.updatePos(closed, sw);
+		selectionBtn.updatePos(closed, sw);
+		randomBtn.updatePos(closed, sw);
 	}
+
+	// void updatePos() {
+	// 	this.posX = mouseX;
+	// 	this.posY = mouseY;
+	// 	this.w = 435*px;
+	// 	this.h = 114*py;
+	// 	mergeBtn.posX = mouseX + 7*px;
+	// 	bubbleBtn.posX = mouseX + 114*px;
+	// 	selectionBtn.posX = mouseX + 221*px;
+	// 	randomBtn.posX = mouseX + 328*px;
+	// 	mergeBtn.posY = mouseY + 7*py;
+	// 	bubbleBtn.posY = mouseY + 7*py;
+	// 	selectionBtn.posY = mouseY + 7*py;
+	// 	randomBtn.posY = mouseY + 7*py;
+	// 	mergeBtn.updatePos();
+	// 	bubbleBtn.updatePos();
+	// 	selectionBtn.updatePos();
+	// 	randomBtn.updatePos();
+	// }
+
 
 	public void update() {
 		for (int i = 0; i < algThumbs.size(); i++) {
@@ -2121,12 +2124,24 @@ class Thumbnail {
 		text(label, posX - offsetXY + 50*px, posY + offsetXY + 86*py);
 	}
 
-	public void updatePos() {
-		b.posX = this.posX + 16*px;
-		b.posY = this.posY + 14*py;
-		b.w = 68*px;
-		b.h = 46*py;
-		fontSize = 16*px;
+	// void updatePos() {
+	// 	b.posX = this.posX + 16*px;
+	// 	b.posY = this.posY + 14*py;
+	// 	b.w = 68*px;
+	// 	b.h = 46*py;
+	// 	fontSize = 16*px;
+	// }
+
+	public void updatePos(boolean closed, float sw) {
+		if(closed) {
+			// Subtract w
+			this.posX -= sw;
+			b.posX -= sw;
+		} else {
+			// Add w
+			this.posX += sw;
+			b.posX += sw;
+		}
 	}
 
 	public void update() {
@@ -2214,6 +2229,20 @@ class TickSlider extends Slider {
 			}
 		}
 		setVal();
+	}
+
+	public void updatePos(boolean closed, float sw) {
+		if(closed) {
+			// Subtract w
+			this.posX = this.posX - sw;
+			centreX = this.posX + (this.w/2) - sw;
+			this.thumbX -= sw;
+		} else {
+			// Add w
+			this.posX = this.posX + sw;
+			centreX = this.posX + (this.w/2) + sw;
+			this.thumbX += sw;
+		}
 	}
 
 	public void render() {

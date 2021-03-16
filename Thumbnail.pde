@@ -61,12 +61,24 @@ class Thumbnail {
 		text(label, posX - offsetXY + 50*px, posY + offsetXY + 86*py);
 	}
 
-	void updatePos() {
-		b.posX = this.posX + 16*px;
-		b.posY = this.posY + 14*py;
-		b.w = 68*px;
-		b.h = 46*py;
-		fontSize = 16*px;
+	// void updatePos() {
+	// 	b.posX = this.posX + 16*px;
+	// 	b.posY = this.posY + 14*py;
+	// 	b.w = 68*px;
+	// 	b.h = 46*py;
+	// 	fontSize = 16*px;
+	// }
+
+	void updatePos(boolean closed, float sw) {
+		if(closed) {
+			// Subtract w
+			this.posX -= sw;
+			b.posX -= sw;
+		} else {
+			// Add w
+			this.posX += sw;
+			b.posX += sw;
+		}
 	}
 
 	void update() {

@@ -38,10 +38,9 @@ class Reset extends Button{
 			selection.reset(array, colours);
 			mergeSort.reset(array, colours);
 			play.active = false;
-			println(arraySize);
 		}
 		depressed = false;
-		offset = false;
+		offsetXY = 0*px;
 	}
 
 }
