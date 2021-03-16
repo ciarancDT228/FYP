@@ -70,6 +70,7 @@ void settings() {
 
 void setup()
 {
+	// println(PFont.list());
 	px = (width*5.2083333*pow(10, -4));
 	py = (height*9.2592592*pow(10, -4));
 	p = new Palette();
@@ -79,7 +80,7 @@ void setup()
 	// stroke(0);
 	// fill(255);
 	b = new Barchart(20*px, 20*py, width-40*px, height-40*px, 5*px); //Barchart
-	arrayMax = width;
+	arrayMax = width/3;
 	arrayMin = 10; //Min array size
 	// arraySize = (int)b.w/2; //Initial array size
 	arraySize = 10;

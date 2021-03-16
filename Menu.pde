@@ -2,6 +2,8 @@ class Menu {
 
 	float posX, posY, w, h;
 	float fontSize;
+	PFont f;
+
 	SubMenu algMenu;
 	ShapeMenu shapeMenu;
 
@@ -18,9 +20,12 @@ class Menu {
 		this.posY = 0; // View Y 
 		this.h = height; //View h - Taskbar h
 		this.fontSize = 16*px;
+		this.f = createFont("Arial Bold",16*px);
 		algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
 		shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
+
 		sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
+		speedSlider = new TickSlider(this.posX + 225*px, posY + 454*py, 180*px, 20*py, 1, 14);
 
 		soundAttSlider = new Slider(this.posX + 225*px, posY + 554*py, 180*px, 20*py, 0.001, 1.0, 0.001); // Sound
 		soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001, 1.0, 0.004); // Sound
@@ -28,21 +33,22 @@ class Menu {
 		soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001, 1.0, 0.2); // Sound
 	}
 
-	public Menu(int x) {
-		this.w = 435*px;
-		this.posX = width - w; //View X + View w - this w
-		this.posY = 0; // View Y 
-		this.h = height; //View h - Taskbar h
-		this.fontSize = 16*px;
-		algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
-		shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
-		sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
+	// public Menu(int x) {
+	// 	this.w = 435*px;
+	// 	this.posX = width - w; //View X + View w - this w
+	// 	this.posY = 0; // View Y 
+	// 	this.h = height; //View h - Taskbar h
+	// 	this.fontSize = 16*px;
+	// 	algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
+	// 	shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
+	// 	sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
+	// 	speedSlider = new TickSlider(this.posX + 225*px, posY + 454*py, 180*px, 20*py, 1, 14);
 
-		soundAttSlider = new Slider(this.posX + 225*px, posY + 554*py, 180*px, 20*py, 0.001, 1.0, 0.001); // Sound
-		soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001, 1.0, 0.004); // Sound
-		soundSusLSlider = new Slider(this.posX + 225*px, posY + 614*py, 180*px, 20*py, 0.001, 1.0, 0.3); // Sound
-		soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001, 1.0, 0.2); // Sound
-	}
+	// 	soundAttSlider = new Slider(this.posX + 225*px, posY + 554*py, 180*px, 20*py, 0.001, 1.0, 0.001); // Sound
+	// 	soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001, 1.0, 0.004); // Sound
+	// 	soundSusLSlider = new Slider(this.posX + 225*px, posY + 614*py, 180*px, 20*py, 0.001, 1.0, 0.3); // Sound
+	// 	soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001, 1.0, 0.2); // Sound
+	// }
 
 	void render() {
 		noStroke();
@@ -51,6 +57,7 @@ class Menu {
 		algMenu.render();
 		shapeMenu.render();
 		sizeSlider.render();
+		speedSlider.render();
 
 		soundAttSlider.render();
 		soundSusTSlider.render();
@@ -59,9 +66,11 @@ class Menu {
 
 		//Text
 		fill(p.font); // Array Size
-		textSize(round(fontSize));
+		textSize(fontSize);
 		textAlign(LEFT, CENTER);
-		text("Array Size", this.posX + 30*px, posY + 414*py);
+		textFont(f);
+		text("Array Size", this.posX + 30*px, posY + 420*py);
+		text("Speed", this.posX + 30*px, posY + 460*py);
 
 		// Sound Controls
 		text("Attack", this.posX + 30*px, posY + 560*py);
@@ -79,6 +88,7 @@ class Menu {
 		soundSusTSlider.update();
 		soundSusLSlider.update();
 		soundRelSlider.update();
+		speedSlider.update();
 	}
 
 	void mouseUp() {
@@ -89,6 +99,7 @@ class Menu {
 		soundSusTSlider.mouseUp();
 		soundSusLSlider.mouseUp();
 		soundRelSlider.mouseUp();
+		speedSlider.mouseUp();
 	}
 
 	void mouseDown() {
@@ -99,6 +110,14 @@ class Menu {
 		soundSusTSlider.mouseDown();
 		soundSusLSlider.mouseDown();
 		soundRelSlider.mouseDown();
+		speedSlider.mouseDown();
+	}
+
+	void keyPressed() {
+	  // If the return key is pressed, save the String and clear it
+	  if (key == '\n' ) {
+	    println("success");
+	  }
 	}
 
 }

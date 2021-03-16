@@ -11,4 +11,17 @@ class MergeBtn extends Thumbnail {
 		this.label = "Merge";
 	}
 
+	void mouseUp() {
+		if (correctLocation() && depressed) {
+			//do some thing
+			if(!active) {
+				mergeSort.reset(array, colours);
+				active = true;
+			}
+		} else {
+			depressed = false;
+			offsetXY = 0*px;
+		}
+	}
+
 }

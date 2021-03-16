@@ -104,7 +104,6 @@ class Thumbnail {
 		if (correctLocation() && depressed) {
 			//do some thing
 			if(!active) {
-				mergeSort.reset(array, colours);
 				active = true;
 			}
 		} else {

@@ -33,33 +33,41 @@ class TickSlider extends Slider {
 	}
 
 	void render() {
+		float tickmark;
+
 		//Draw track base
 		strokeWeight(strokeM);
-		stroke(100);
+		stroke(p.accent);
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
 		strokeWeight(strokeL);
-		stroke(255);
+		stroke(p.font);
 		line(posX, centreY, thumbX, centreY);
+
 		//Draw ticks
 		strokeWeight(strokeS);
-		stroke(180);
 		for(int i = 1; i < numTicks; i++) {
+			tickmark = map(i, 0, numTicks, posX, posX + w);
+			if(tickmark <= thumbX) {
+				stroke(p.accent);
+			} else {
+				stroke(p.font);
+			}
 			point(map(i, 0, numTicks, posX, posX + w), centreY);
 		}
-		stroke(0);
-		strokeWeight(0);
+
+		noStroke();
 		//Draw highlight depressed
 		if(depressed) {
-			fill(255, 130);
+			fill(p.font, 130);
 			circle(thumbX, centreY, thumbRadius * 2.5);
 		//Draw highlight for hover
 		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
-			fill(255, 40);
+			fill(p.font, 40);
 			circle(thumbX, centreY, thumbRadius * 2.5);
 		}
 		//Draw Thumb
-		fill(255);
+		fill(p.font);
 		circle(thumbX, centreY, thumbRadius);
 	}
 

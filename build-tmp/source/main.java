@@ -89,6 +89,7 @@ public void settings() {
 
 public void setup()
 {
+	// println(PFont.list());
 	px = (width*5.2083333f*pow(10, -4));
 	py = (height*9.2592592f*pow(10, -4));
 	p = new Palette();
@@ -98,7 +99,7 @@ public void setup()
 	// stroke(0);
 	// fill(255);
 	b = new Barchart(20*px, 20*py, width-40*px, height-40*px, 5*px); //Barchart
-	arrayMax = width;
+	arrayMax = width/3;
 	arrayMin = 10; //Min array size
 	// arraySize = (int)b.w/2; //Initial array size
 	arraySize = 10;
@@ -377,25 +378,24 @@ class Barchart{
 		noStroke();
 		fill(p.foreground);
 		rect(posX, posY,border*2 + w, border*2 + h);
-		if (a.length > w / 2) {
+		if (a.length > w / 6) {
 			strokeWeight = w / a.length;
+			spacer = strokeWeight / 2;
 		} else {
 			strokeWeight = (w-(a.length-1))/a.length;
-			spacer = strokeWeight/2;
+			spacer = strokeWeight / 2;
 		}
-		fill(p.background);
+		fill(p.barB);
 		noStroke();
 		rect(posX + border, posY + border, w, h);
-		// fill(255);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
-		// stroke(#ade8f4);
 		array = a;
 		colours = c;
 		max = a.length;
 		for (int i = 0; i < a.length; i++) {
 			if(c[i] == 0) {
-				stroke(p.font);
+				stroke(p.barF);
 			}
 			else if (c[i] == 1) {
 				stroke(255, 0, 0);
@@ -418,13 +418,13 @@ class Barchart{
 	// Used for rendering small thumbnail barcharts
 	public void renderSimple(int[] a, Thumbnail t) {
 		strokeWeight = w / a.length;
-		fill(p.background);
+		fill(p.barB);
 		noStroke();
 		rect(posX - t.offsetXY, posY + t.offsetXY, w, h);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
 		max = a.length - 1;
-		stroke(p.font);
+		stroke(p.barF);
 		for (int i = 0; i < a.length; i++) {
 			float x1 = map(i, 0, a.length, posX - t.offsetXY, posX - t.offsetXY + w);
 			float y1 = map(a[i], 0, max, posY + t.offsetXY + h, posY + t.offsetXY);
@@ -447,11 +447,18 @@ class BubbleBtn extends Thumbnail {
 		this.label = "Bubble";
 	}
 
-	// void mouseUp() {
-	// 	if (correctLocation() && depressed) {
-	// 		super.mouseUp(this);
-	// 	}
-	// }
+	public void mouseUp() {
+		if (correctLocation() && depressed) {
+			//do some thing
+			if(!active) {
+				mergeSort.reset(array, colours);
+				active = true;
+			}
+		} else {
+			depressed = false;
+			offsetXY = 0*px;
+		}
+	}
 
 }
 
@@ -704,6 +711,7 @@ static class GenerateArray {
 	public static int[] sinWave(int length, float p){
         int[] arr = new int[length];
 
+        length-=1;
         for(int i = 0; i < length; i++){
             arr[i] = (int)(Math.round((length/2)*sin((2*PI*p*i)/length)+((length/2)*sin(PI/2)))) + 1;
         }
@@ -752,7 +760,8 @@ static class GenerateArray {
 	public static int[] quadrant(int length){
         int[] arr = new int[length];
 
-        for(int i = 0; i < length; i++){
+        length-=1;
+        for(int i = 0; i < arr.length; i++){
             arr[i] = (int)(Math.round(length*Math.sqrt(1-Math.pow(((double)i/(double)length),2))))+1;
         }
         return arr;
@@ -761,7 +770,8 @@ static class GenerateArray {
     public static int[] parabola(int length){
         int[] arr = new int[length];
 
-        for(int i = 0; i < length; i++){
+        length-=1;
+        for(int i = 0; i < arr.length; i++){
             arr[i] = (int)Math.round((4/(double)length)*(Math.pow((i-((double)length/2)),2)))+1;
         }
         return arr;
@@ -770,7 +780,8 @@ static class GenerateArray {
     public static int[] parabolaInv(int length){
         int[] arr = new int[length];
 
-        for(int i = 0; i < length; i++){
+        length-=1;
+        for(int i = 0; i < arr.length; i++){
             arr[i] = (int)Math.round((-4/(double)length)*(Math.pow((i-((double)length/2)),2)))+length+1;
         }
         return arr;
@@ -780,7 +791,8 @@ static class GenerateArray {
     	int period = 0;
         int[] arr = new int[length];
 
-        for(int i = 0; i < length; i++){
+        length-=1;
+        for(int i = 0; i < arr.length; i++){
             arr[i] = (int)Math.round(length*(Math.pow((Math.sin(Math.PI+(Math.pow(2,((4*period)/length))))),2)))+1;
             period += Math.PI;
         }
@@ -792,6 +804,8 @@ class Menu {
 
 	float posX, posY, w, h;
 	float fontSize;
+	PFont f;
+
 	SubMenu algMenu;
 	ShapeMenu shapeMenu;
 
@@ -808,9 +822,12 @@ class Menu {
 		this.posY = 0; // View Y 
 		this.h = height; //View h - Taskbar h
 		this.fontSize = 16*px;
+		this.f = createFont("Arial Bold",16*px);
 		algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
 		shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
+
 		sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
+		speedSlider = new TickSlider(this.posX + 225*px, posY + 454*py, 180*px, 20*py, 1, 14);
 
 		soundAttSlider = new Slider(this.posX + 225*px, posY + 554*py, 180*px, 20*py, 0.001f, 1.0f, 0.001f); // Sound
 		soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001f, 1.0f, 0.004f); // Sound
@@ -818,21 +835,22 @@ class Menu {
 		soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001f, 1.0f, 0.2f); // Sound
 	}
 
-	public Menu(int x) {
-		this.w = 435*px;
-		this.posX = width - w; //View X + View w - this w
-		this.posY = 0; // View Y 
-		this.h = height; //View h - Taskbar h
-		this.fontSize = 16*px;
-		algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
-		shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
-		sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
+	// public Menu(int x) {
+	// 	this.w = 435*px;
+	// 	this.posX = width - w; //View X + View w - this w
+	// 	this.posY = 0; // View Y 
+	// 	this.h = height; //View h - Taskbar h
+	// 	this.fontSize = 16*px;
+	// 	algMenu = new SubMenu(this.posX, this.posY + 100*py, w, 114*py);
+	// 	shapeMenu = new ShapeMenu(this.posX, this.posY + 221*py, w, 169*py);
+	// 	sizeSlider = new Slider(this.posX + 225*px, posY + 414*py, 180*px, 20*py, arrayMin, arrayMax, arraySize);
+	// 	speedSlider = new TickSlider(this.posX + 225*px, posY + 454*py, 180*px, 20*py, 1, 14);
 
-		soundAttSlider = new Slider(this.posX + 225*px, posY + 554*py, 180*px, 20*py, 0.001f, 1.0f, 0.001f); // Sound
-		soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001f, 1.0f, 0.004f); // Sound
-		soundSusLSlider = new Slider(this.posX + 225*px, posY + 614*py, 180*px, 20*py, 0.001f, 1.0f, 0.3f); // Sound
-		soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001f, 1.0f, 0.2f); // Sound
-	}
+	// 	soundAttSlider = new Slider(this.posX + 225*px, posY + 554*py, 180*px, 20*py, 0.001, 1.0, 0.001); // Sound
+	// 	soundSusTSlider = new Slider(this.posX + 225*px, posY + 584*py, 180*px, 20*py, 0.001, 1.0, 0.004); // Sound
+	// 	soundSusLSlider = new Slider(this.posX + 225*px, posY + 614*py, 180*px, 20*py, 0.001, 1.0, 0.3); // Sound
+	// 	soundRelSlider = new Slider(this.posX + 225*px, posY + 644*py, 180*px, 20*py, 0.001, 1.0, 0.2); // Sound
+	// }
 
 	public void render() {
 		noStroke();
@@ -841,6 +859,7 @@ class Menu {
 		algMenu.render();
 		shapeMenu.render();
 		sizeSlider.render();
+		speedSlider.render();
 
 		soundAttSlider.render();
 		soundSusTSlider.render();
@@ -849,9 +868,11 @@ class Menu {
 
 		//Text
 		fill(p.font); // Array Size
-		textSize(round(fontSize));
+		textSize(fontSize);
 		textAlign(LEFT, CENTER);
-		text("Array Size", this.posX + 30*px, posY + 414*py);
+		textFont(f);
+		text("Array Size", this.posX + 30*px, posY + 420*py);
+		text("Speed", this.posX + 30*px, posY + 460*py);
 
 		// Sound Controls
 		text("Attack", this.posX + 30*px, posY + 560*py);
@@ -869,6 +890,7 @@ class Menu {
 		soundSusTSlider.update();
 		soundSusLSlider.update();
 		soundRelSlider.update();
+		speedSlider.update();
 	}
 
 	public void mouseUp() {
@@ -879,6 +901,7 @@ class Menu {
 		soundSusTSlider.mouseUp();
 		soundSusLSlider.mouseUp();
 		soundRelSlider.mouseUp();
+		speedSlider.mouseUp();
 	}
 
 	public void mouseDown() {
@@ -889,6 +912,14 @@ class Menu {
 		soundSusTSlider.mouseDown();
 		soundSusLSlider.mouseDown();
 		soundRelSlider.mouseDown();
+		speedSlider.mouseDown();
+	}
+
+	public void keyPressed() {
+	  // If the return key is pressed, save the String and clear it
+	  if (key == '\n' ) {
+	    println("success");
+	  }
 	}
 
 }
@@ -903,6 +934,19 @@ class MergeBtn extends Thumbnail {
 		arr = m.getArray();
 		crr = GenerateArray.blanks(arrSize);
 		this.label = "Merge";
+	}
+
+	public void mouseUp() {
+		if (correctLocation() && depressed) {
+			//do some thing
+			if(!active) {
+				mergeSort.reset(array, colours);
+				active = true;
+			}
+		} else {
+			depressed = false;
+			offsetXY = 0*px;
+		}
 	}
 
 }
@@ -1347,30 +1391,58 @@ class MySound {
 }
 class Palette {
 
+	int[] darkMode;
+	int[] lightMode;
+
 	int background;
 	int foreground;
 	int hover;
 	int select;
 	int accent;
 	int font;
-
-	int[] darkMode;
-
+	int barF;
+	int barB;
 
 	public Palette() {
-		// int[] b = {#03045e,#023e8a,#0077b6,#0096c7,#00b4d8,#48cae4,#90e0ef,#ade8f4,#caf0f8};
-		// int[] g = {#ffffff,#f5f7fa,#e6e9ed,#ccd1d9,#aab2bd,#88909b,#656d78,#434a54,#000000};
-		int[] darkMode = {0xff282828, 0xff535353, 0xff454545, 0xff383838, 0xff646464, 0xffdddddd};
-		// int[] darkMode = {#cc444b,#da5552,#df7373,#e39695,#e4b1ab,#3b1f2b}; // red
-		// int[] darkMode = {#eeeeee,#dddddd,#cccccc,#bbbbbb,#aaaaaa,#2d3142}; // white
+		// int[] lightMode = {#eeeeee,#dddddd,#cccccc,#bbbbbb,#aaaaaa,#2d3142}; // white
+		int[] lightMode = {0xff6D769C,0xffdddddd,0xffcccccc,0xffbbbbbb,0xffA3A3A3,0xff525252}; // white2
+		
+		// int[] lightMode = {#2d3142,#aaaaaa,#bbbbbb,#cccccc,#dddddd,#eeeeee};
+		this.lightMode = lightMode;
+		int[] darkMode = {0xff282828, 0xff535353, 0xff454545, 0xff383838, 0xff646464, 0xffdddddd}; // dark
 		this.darkMode = darkMode;
+		// int[] darkMode = {#cc444b,#da5552,#df7373,#e39695,#e4b1ab,#3b1f2b}; // red
+		this.barF = 0xffdddddd;
+		this.barB = 0xff858585;
+		this.darkMode = darkMode;
+
+		dark();
+		light();
+	}
+
+	public void dark() {
 		this.background = darkMode[0];
 		this.foreground = darkMode[1];
 		this.hover = darkMode[2];
 		this.select = darkMode[3];
 		this.accent = darkMode[4];
 		this.font = darkMode[5];
+		this.barF = darkMode[5];
+		this.barB = darkMode[0];
 	}
+
+	public void light() {
+		this.background = lightMode[0];
+		this.foreground = lightMode[1];
+		this.hover = lightMode[2];
+		this.select = lightMode[3];
+		this.accent = lightMode[4];
+		this.font = lightMode[5];
+		this.barF = lightMode[2];
+		this.barB = lightMode[0];
+	}
+
+
 }
 
 class Play extends Button{
@@ -1442,11 +1514,18 @@ class SelectionBtn extends Thumbnail {
 		this.label = "Selection";
 	}
 
-	// void mouseUp() {
-	// 	if (correctLocation() && depressed) {
-	// 		super.mouseUp(this);
-	// 	}
-	// }
+	public void mouseUp() {
+		if (correctLocation() && depressed) {
+			//do some thing
+			if(!active) {
+				mergeSort.reset(array, colours);
+				active = true;
+			}
+		} else {
+			depressed = false;
+			offsetXY = 0*px;
+		}
+	}
 
 }
 class SelectionSort extends Algorithm{
@@ -1829,8 +1908,7 @@ class Slider extends Component{
 		strokeWeight(strokeL);
 		stroke(p.font);
 		line(posX, centreY, thumbX, centreY);
-		stroke(0);
-		strokeWeight(0);
+		noStroke();
 		//Draw highlight for hover and depressed
 		if(depressed) {
 			fill(p.font, 130);
@@ -2086,7 +2164,6 @@ class Thumbnail {
 		if (correctLocation() && depressed) {
 			//do some thing
 			if(!active) {
-				mergeSort.reset(array, colours);
 				active = true;
 			}
 		} else {
@@ -2140,33 +2217,41 @@ class TickSlider extends Slider {
 	}
 
 	public void render() {
+		float tickmark;
+
 		//Draw track base
 		strokeWeight(strokeM);
-		stroke(100);
+		stroke(p.accent);
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
 		strokeWeight(strokeL);
-		stroke(255);
+		stroke(p.font);
 		line(posX, centreY, thumbX, centreY);
+
 		//Draw ticks
 		strokeWeight(strokeS);
-		stroke(180);
 		for(int i = 1; i < numTicks; i++) {
+			tickmark = map(i, 0, numTicks, posX, posX + w);
+			if(tickmark <= thumbX) {
+				stroke(p.accent);
+			} else {
+				stroke(p.font);
+			}
 			point(map(i, 0, numTicks, posX, posX + w), centreY);
 		}
-		stroke(0);
-		strokeWeight(0);
+
+		noStroke();
 		//Draw highlight depressed
 		if(depressed) {
-			fill(255, 130);
+			fill(p.font, 130);
 			circle(thumbX, centreY, thumbRadius * 2.5f);
 		//Draw highlight for hover
 		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
-			fill(255, 40);
+			fill(p.font, 40);
 			circle(thumbX, centreY, thumbRadius * 2.5f);
 		}
 		//Draw Thumb
-		fill(255);
+		fill(p.font);
 		circle(thumbX, centreY, thumbRadius);
 	}
 

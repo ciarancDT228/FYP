@@ -36,25 +36,24 @@ class Barchart{
 		noStroke();
 		fill(p.foreground);
 		rect(posX, posY,border*2 + w, border*2 + h);
-		if (a.length > w / 2) {
+		if (a.length > w / 6) {
 			strokeWeight = w / a.length;
+			spacer = strokeWeight / 2;
 		} else {
 			strokeWeight = (w-(a.length-1))/a.length;
-			spacer = strokeWeight/2;
+			spacer = strokeWeight / 2;
 		}
-		fill(p.background);
+		fill(p.barB);
 		noStroke();
 		rect(posX + border, posY + border, w, h);
-		// fill(255);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
-		// stroke(#ade8f4);
 		array = a;
 		colours = c;
 		max = a.length;
 		for (int i = 0; i < a.length; i++) {
 			if(c[i] == 0) {
-				stroke(p.font);
+				stroke(p.barF);
 			}
 			else if (c[i] == 1) {
 				stroke(255, 0, 0);
@@ -77,13 +76,13 @@ class Barchart{
 	// Used for rendering small thumbnail barcharts
 	void renderSimple(int[] a, Thumbnail t) {
 		strokeWeight = w / a.length;
-		fill(p.background);
+		fill(p.barB);
 		noStroke();
 		rect(posX - t.offsetXY, posY + t.offsetXY, w, h);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
 		max = a.length - 1;
-		stroke(p.font);
+		stroke(p.barF);
 		for (int i = 0; i < a.length; i++) {
 			float x1 = map(i, 0, a.length, posX - t.offsetXY, posX - t.offsetXY + w);
 			float y1 = map(a[i], 0, max, posY + t.offsetXY + h, posY + t.offsetXY);

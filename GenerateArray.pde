@@ -3,6 +3,7 @@ static class GenerateArray {
 	static int[] sinWave(int length, float p){
         int[] arr = new int[length];
 
+        length-=1;
         for(int i = 0; i < length; i++){
             arr[i] = (int)(Math.round((length/2)*sin((2*PI*p*i)/length)+((length/2)*sin(PI/2)))) + 1;
         }
@@ -51,7 +52,8 @@ static class GenerateArray {
 	static int[] quadrant(int length){
         int[] arr = new int[length];
 
-        for(int i = 0; i < length; i++){
+        length-=1;
+        for(int i = 0; i < arr.length; i++){
             arr[i] = (int)(Math.round(length*Math.sqrt(1-Math.pow(((double)i/(double)length),2))))+1;
         }
         return arr;
@@ -60,7 +62,8 @@ static class GenerateArray {
     static int[] parabola(int length){
         int[] arr = new int[length];
 
-        for(int i = 0; i < length; i++){
+        length-=1;
+        for(int i = 0; i < arr.length; i++){
             arr[i] = (int)Math.round((4/(double)length)*(Math.pow((i-((double)length/2)),2)))+1;
         }
         return arr;
@@ -69,7 +72,8 @@ static class GenerateArray {
     static int[] parabolaInv(int length){
         int[] arr = new int[length];
 
-        for(int i = 0; i < length; i++){
+        length-=1;
+        for(int i = 0; i < arr.length; i++){
             arr[i] = (int)Math.round((-4/(double)length)*(Math.pow((i-((double)length/2)),2)))+length+1;
         }
         return arr;
@@ -79,7 +83,8 @@ static class GenerateArray {
     	int period = 0;
         int[] arr = new int[length];
 
-        for(int i = 0; i < length; i++){
+        length-=1;
+        for(int i = 0; i < arr.length; i++){
             arr[i] = (int)Math.round(length*(Math.pow((Math.sin(Math.PI+(Math.pow(2,((4*period)/length))))),2)))+1;
             period += Math.PI;
         }

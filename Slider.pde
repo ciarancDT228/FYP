@@ -65,8 +65,7 @@ class Slider extends Component{
 		strokeWeight(strokeL);
 		stroke(p.font);
 		line(posX, centreY, thumbX, centreY);
-		stroke(0);
-		strokeWeight(0);
+		noStroke();
 		//Draw highlight for hover and depressed
 		if(depressed) {
 			fill(p.font, 130);
