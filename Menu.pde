@@ -13,11 +13,12 @@ class Menu {
 
 	Slider sizeSlider;
 	Slider speedSlider;
-
 	Slider soundAttSlider;
 	Slider soundSusTSlider;
 	Slider soundSusLSlider;
 	Slider soundRelSlider;
+
+	Button mirrorSwitch;
 
 	boolean toggleMenu;
 	boolean closed;
@@ -35,16 +36,17 @@ class Menu {
 		this.margin = 14*py;
 		this.toggleMenu = true;
 		this.closed = false;
+		this.mirrorSwitch = new ToggleSwitch(this.posX + w - (spacer*2) + 1000, this.posY + 500, 40, 20);
 		
 		algMenu = new SubMenu(
 			this.posX, 
-			this.posY + (spacer * 2) + (titleSize / 2) + margin, 
+			this.posY + (spacer * 3) + (titleSize / 2) + margin, 
 			w, 
 			114*py); // Algorithms
 		
 		shapeMenu = new ShapeMenu(
 			this.posX, 
-			algMenu.posY + algMenu.h + (spacer * 2) + (titleSize / 2) + margin, 
+			algMenu.posY + algMenu.h + (spacer * 3) + (titleSize / 2) + margin, 
 			w, 
 			169*py); // Shapes
 
@@ -97,6 +99,7 @@ class Menu {
 		soundSusLSlider.update();
 		soundRelSlider.update();
 		speedSlider.update();
+		mirrorSwitch.update();
 		if (toggleMenu) {
 			updatePos();
 			toggleMenu = false;
@@ -164,11 +167,12 @@ class Menu {
 		shapeMenu.render();
 		sizeSlider.render();
 		speedSlider.render();
-
 		soundAttSlider.render();
 		soundSusTSlider.render();
 		soundSusLSlider.render();
 		soundRelSlider.render();
+
+		mirrorSwitch.render();
 
 		//Text
 		fill(p.font); // Array Size
@@ -202,6 +206,7 @@ class Menu {
 		soundSusLSlider.mouseUp();
 		soundRelSlider.mouseUp();
 		speedSlider.mouseUp();
+		mirrorSwitch.mouseUp();
 	}
 
 	void mouseDown() {
@@ -213,6 +218,7 @@ class Menu {
 		soundSusLSlider.mouseDown();
 		soundRelSlider.mouseDown();
 		speedSlider.mouseDown();
+		mirrorSwitch.mouseDown();
 	}
 
 	void keyPressed() {

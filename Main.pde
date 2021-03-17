@@ -54,8 +54,6 @@ float sustainTime = 0.004;
 float sustainLevel = 0.3;
 float releaseTime = 0.2;
 
-// Menus
-// AlgMenu algorithmMenu;
 Menu menu;
 
 void settings() {
@@ -71,7 +69,6 @@ void settings() {
 
 void setup()
 {
-	// println(sketchPath());
 	px = (width*5.2083333*pow(10, -4));
 	py = (height*9.2592592*pow(10, -4));
 	p = new Palette();
@@ -89,8 +86,6 @@ void setup()
 	bubble = new BubbleSort(array, colours);
 	selection = new SelectionSort(array, colours);
 	mergeSort = new MergeSort(array, colours);
-	// mergeSort.printQueue();
-	// mergeSort.fillQueue(0, 30);
 	
 
 	//Buttons
@@ -98,7 +93,6 @@ void setup()
 	reset = new Reset(830*px, 975*py, 70*px, 70*py);
 	settings = new Settings(1860*px, 1020*py, 50*px, 50*py);
 	//Sliders
-	// speedSlider = new TickSlider(80*px, 1000*py, 740*px, 20*py, 1, 14); //Speed
 
 	//Sounds
 	triOsc = new TriOsc(this); 
@@ -156,7 +150,6 @@ void draw() {
 	}
 	b.render(array, colours);
 
-	// background(0);
 	menu.render();
 	play.render();
 	reset.render();
@@ -167,7 +160,6 @@ void update() {
 	// px = (width*5.2083333*pow(10, -4));
 	// py = (height*9.2592592*pow(10, -4));
 	play.update();
-	// speedSlider.update();
 	reset.update();
 	menu.update();
 	settings.update();
@@ -175,7 +167,6 @@ void update() {
 
 void mousePressed() {
 	play.mouseDown();
-	// speedSlider.mouseDown();
 	reset.mouseDown();
 	menu.mouseDown();
 	settings.mouseDown();
@@ -183,7 +174,6 @@ void mousePressed() {
 
 void mouseReleased() {
 	play.mouseUp();
-	// speedSlider.mouseUp();
 	reset.mouseUp();
 	menu.mouseUp();
 	settings.mouseUp();

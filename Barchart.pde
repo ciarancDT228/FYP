@@ -36,11 +36,11 @@ class Barchart{
 		noStroke();
 		fill(p.foreground);
 		rect(posX, posY,border*2 + w, border*2 + h);
-		if (a.length > w / 6) {
+		if (a.length > w / 2) {
 			strokeWeight = w / a.length;
 			spacer = strokeWeight / 2;
 		} else {
-			strokeWeight = (w-(a.length-1))/a.length;
+			strokeWeight = (w-(a.length+1))/a.length;
 			spacer = strokeWeight / 2;
 		}
 		fill(p.barB);
@@ -56,13 +56,14 @@ class Barchart{
 				stroke(p.barF);
 			}
 			else if (c[i] == 1) {
-				stroke(255, 0, 0);
+				stroke(#aecbfa);
 			}
 			else {
-				stroke(0, 255, 0);
+				stroke(#ccff90);
 			}
 			float x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
 			float y1 = map(a[i], 0, max, posY + h + border, posY + border);
+			// float y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
 			float barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
 		}

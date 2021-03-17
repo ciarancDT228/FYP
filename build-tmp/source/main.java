@@ -73,8 +73,6 @@ float sustainTime = 0.004f;
 float sustainLevel = 0.3f;
 float releaseTime = 0.2f;
 
-// Menus
-// AlgMenu algorithmMenu;
 Menu menu;
 
 public void settings() {
@@ -82,15 +80,14 @@ public void settings() {
 	// size(1536, 846, P2D);
 	// size(1024, 768, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(P2D, 2);
-	// size(800, 500, P2D);
+	// fullScreen(P2D, 2);
+	size(800, 500, P2D);
 	// fullScreen(1);
 	noSmooth();
 }
 
 public void setup()
 {
-	// println(sketchPath());
 	px = (width*5.2083333f*pow(10, -4));
 	py = (height*9.2592592f*pow(10, -4));
 	p = new Palette();
@@ -108,8 +105,6 @@ public void setup()
 	bubble = new BubbleSort(array, colours);
 	selection = new SelectionSort(array, colours);
 	mergeSort = new MergeSort(array, colours);
-	// mergeSort.printQueue();
-	// mergeSort.fillQueue(0, 30);
 	
 
 	//Buttons
@@ -117,7 +112,6 @@ public void setup()
 	reset = new Reset(830*px, 975*py, 70*px, 70*py);
 	settings = new Settings(1860*px, 1020*py, 50*px, 50*py);
 	//Sliders
-	// speedSlider = new TickSlider(80*px, 1000*py, 740*px, 20*py, 1, 14); //Speed
 
 	//Sounds
 	triOsc = new TriOsc(this); 
@@ -175,7 +169,6 @@ public void draw() {
 	}
 	b.render(array, colours);
 
-	// background(0);
 	menu.render();
 	play.render();
 	reset.render();
@@ -186,7 +179,6 @@ public void update() {
 	// px = (width*5.2083333*pow(10, -4));
 	// py = (height*9.2592592*pow(10, -4));
 	play.update();
-	// speedSlider.update();
 	reset.update();
 	menu.update();
 	settings.update();
@@ -194,7 +186,6 @@ public void update() {
 
 public void mousePressed() {
 	play.mouseDown();
-	// speedSlider.mouseDown();
 	reset.mouseDown();
 	menu.mouseDown();
 	settings.mouseDown();
@@ -202,7 +193,6 @@ public void mousePressed() {
 
 public void mouseReleased() {
 	play.mouseUp();
-	// speedSlider.mouseUp();
 	reset.mouseUp();
 	menu.mouseUp();
 	settings.mouseUp();
@@ -329,11 +319,11 @@ class Barchart{
 		noStroke();
 		fill(p.foreground);
 		rect(posX, posY,border*2 + w, border*2 + h);
-		if (a.length > w / 6) {
+		if (a.length > w / 2) {
 			strokeWeight = w / a.length;
 			spacer = strokeWeight / 2;
 		} else {
-			strokeWeight = (w-(a.length-1))/a.length;
+			strokeWeight = (w-(a.length+1))/a.length;
 			spacer = strokeWeight / 2;
 		}
 		fill(p.barB);
@@ -349,13 +339,14 @@ class Barchart{
 				stroke(p.barF);
 			}
 			else if (c[i] == 1) {
-				stroke(255, 0, 0);
+				stroke(0xffaecbfa);
 			}
 			else {
-				stroke(0, 255, 0);
+				stroke(0xffccff90);
 			}
 			float x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
 			float y1 = map(a[i], 0, max, posY + h + border, posY + border);
+			// float y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
 			float barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
 		}
@@ -762,11 +753,12 @@ class Menu {
 
 	Slider sizeSlider;
 	Slider speedSlider;
-
 	Slider soundAttSlider;
 	Slider soundSusTSlider;
 	Slider soundSusLSlider;
 	Slider soundRelSlider;
+
+	Button mirrorSwitch;
 
 	boolean toggleMenu;
 	boolean closed;
@@ -784,16 +776,17 @@ class Menu {
 		this.margin = 14*py;
 		this.toggleMenu = true;
 		this.closed = false;
+		this.mirrorSwitch = new ToggleSwitch(this.posX + w - (spacer*2) + 1000, this.posY + 500, 40, 20);
 		
 		algMenu = new SubMenu(
 			this.posX, 
-			this.posY + (spacer * 2) + (titleSize / 2) + margin, 
+			this.posY + (spacer * 3) + (titleSize / 2) + margin, 
 			w, 
 			114*py); // Algorithms
 		
 		shapeMenu = new ShapeMenu(
 			this.posX, 
-			algMenu.posY + algMenu.h + (spacer * 2) + (titleSize / 2) + margin, 
+			algMenu.posY + algMenu.h + (spacer * 3) + (titleSize / 2) + margin, 
 			w, 
 			169*py); // Shapes
 
@@ -846,6 +839,7 @@ class Menu {
 		soundSusLSlider.update();
 		soundRelSlider.update();
 		speedSlider.update();
+		mirrorSwitch.update();
 		if (toggleMenu) {
 			updatePos();
 			toggleMenu = false;
@@ -913,11 +907,12 @@ class Menu {
 		shapeMenu.render();
 		sizeSlider.render();
 		speedSlider.render();
-
 		soundAttSlider.render();
 		soundSusTSlider.render();
 		soundSusLSlider.render();
 		soundRelSlider.render();
+
+		mirrorSwitch.render();
 
 		//Text
 		fill(p.font); // Array Size
@@ -951,6 +946,7 @@ class Menu {
 		soundSusLSlider.mouseUp();
 		soundRelSlider.mouseUp();
 		speedSlider.mouseUp();
+		mirrorSwitch.mouseUp();
 	}
 
 	public void mouseDown() {
@@ -962,6 +958,7 @@ class Menu {
 		soundSusLSlider.mouseDown();
 		soundRelSlider.mouseDown();
 		speedSlider.mouseDown();
+		mirrorSwitch.mouseDown();
 	}
 
 	public void keyPressed() {
@@ -2303,6 +2300,76 @@ class TickSlider extends Slider {
 			speed = (int)Math.pow(2, tick - 3) * 15;
 		}
 	}
+
+}
+class ToggleSwitch extends Button {
+
+	float strokeS, strokeM, strokeL, centreY, thumbX;
+	
+	public ToggleSwitch(float posX, float posY, float w, float h) {
+		super(posX, posY, w, h);
+		centreY = posY + (h/2);
+		strokeS = h/10;
+		strokeM = h/5;
+		strokeL = h/3.33f;
+		thumbX = posX;
+	}
+
+	public void render() {
+		//Draw track base
+		strokeWeight(strokeM);
+		stroke(p.accent);
+		line(posX, centreY, posX + w, centreY);
+		//Draw track highlight
+		strokeWeight(strokeL);
+		stroke(shade);
+		line(posX, centreY, thumbX, centreY);
+		noStroke();
+		//Draw highlight for hover and depressed
+		if(depressed) {
+			fill(shade, 130);
+			circle(thumbX, centreY, h * 2.5f);
+		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
+			fill(p.font, 40);
+			circle(thumbX, centreY, h * 2.5f);
+		}
+		//Draw Thumb
+		fill(p.font);
+		circle(thumbX, centreY, h);
+	}
+
+	public void update() {
+		if(correctLocation() && depressed) {
+			shade = p.select;
+		} else if (correctLocation()) {
+			shade = p.hover;
+		}
+		else {
+			shade = p.foreground;
+		}
+	}
+
+	public float distance(float x1, float y1, float x2, float y2) {
+		return (float)Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+	}
+
+	public void mouseUp() {
+		if(correctLocation() && depressed) {
+			//do some thing
+			if(active) {
+				active = false;
+				thumbX = posX;
+			} else {
+				active = true;
+				thumbX = posX + w;
+			}
+		}
+		shade = p.foreground;
+		depressed = false;
+		offsetXY = 0*px;
+	}
+
+
 
 }
 class View {
