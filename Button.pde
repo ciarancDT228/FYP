@@ -19,7 +19,7 @@ class Button extends Component {
 		offsetXY = 2*px;
 	}
 
-		void render() {
+	void render() {
 		if (correctLocation()) {
 			strokeWeight(1*px);
 			stroke(p.accent);

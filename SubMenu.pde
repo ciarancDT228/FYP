@@ -24,11 +24,6 @@ class SubMenu {
 		algThumbs.add(selectionBtn);
 		algThumbs.add(randomBtn);
 		buttonClicked  = false;
-
-
-		// this.randomBtn = new BubbleBtn(posX + 7*px, posY + 7*py, 100*px, 100*py);
-		// this.mergeBtn = new MergeBtn(posX + 328*px, posY + 7*py, 100*px, 100*py);
-
 	}
 
 	void render() {
@@ -41,19 +36,31 @@ class SubMenu {
 		}
 	}
 
-	void updatePos(boolean closed, float sw) {
-		if(closed) {
-			// Subtract w
-			this.posX -= sw;
-		} else {
-			// Add w
-			this.posX += w;
+	void update() {
+		for (int i = 0; i < algThumbs.size(); i++) {
+			Thumbnail t = algThumbs.get(i);
+			t.update();
 		}
-		mergeBtn.updatePos(closed, sw);
-		bubbleBtn.updatePos(closed, sw);
-		selectionBtn.updatePos(closed, sw);
-		randomBtn.updatePos(closed, sw);
+		this.posX = lerp(this.posX, menu.wTarget, menuLerp);
+		randomBtn.posX = lerp(randomBtn.posX, menu.wTarget + 7*px, menuLerp);
+		bubbleBtn.posX = lerp(bubbleBtn.posX, menu.wTarget + 114*px, menuLerp);
+		selectionBtn.posX = lerp(selectionBtn.posX, menu.wTarget + 221*px, menuLerp);
+		mergeBtn.posX = lerp(mergeBtn.posX, menu.wTarget + 328*px, menuLerp);
 	}
+
+	// void updatePos(boolean closed, float sw) {
+	// 	if(closed) {
+	// 		// Subtract w
+	// 		this.posX -= sw;
+	// 	} else {
+	// 		// Add w
+	// 		this.posX += sw;
+	// 	}
+	// 	mergeBtn.updatePos(closed, sw);
+	// 	bubbleBtn.updatePos(closed, sw);
+	// 	selectionBtn.updatePos(closed, sw);
+	// 	randomBtn.updatePos(closed, sw);
+	// }
 
 	// void updatePos() {
 	// 	this.posX = mouseX;
@@ -74,13 +81,6 @@ class SubMenu {
 	// 	randomBtn.updatePos();
 	// }
 
-
-	void update() {
-		for (int i = 0; i < algThumbs.size(); i++) {
-			Thumbnail t = algThumbs.get(i);
-			t.update();
-		}
-	}
 
 	void mouseUp() {
 		for (int i = 0; i < algThumbs.size(); i++) {

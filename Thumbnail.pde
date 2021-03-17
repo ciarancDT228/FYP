@@ -69,20 +69,20 @@ class Thumbnail {
 	// 	fontSize = 16*px;
 	// }
 
-	void updatePos(boolean closed, float sw) {
-		if(closed) {
-			// Subtract w
-			this.posX -= sw;
-			b.posX -= sw;
-		} else {
-			// Add w
-			this.posX += sw;
-			b.posX += sw;
-		}
-	}
+	// void updatePos(boolean closed, float sw) {
+	// 	if(closed) {
+	// 		// Subtract w
+	// 		this.posX -= sw;
+	// 		b.posX -= sw;
+	// 	} else {
+	// 		// Add w
+	// 		this.posX += sw;
+	// 		b.posX += sw;
+	// 	}
+	// }
 
 	void update() {
-		// updatePos();
+		b.posX = this.posX + 16*px;
 		if (!active) {
 			if (correctLocation()) {
 				if (depressed) {

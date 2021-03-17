@@ -8,6 +8,7 @@ Queue<int[]> queue = new LinkedList<int[]>();
 
 float px;
 float py;
+float menuLerp;
 Palette p;
 Barchart b;
 
@@ -18,7 +19,7 @@ MergeSort mergeSort;
 // Buttons and Sliders
 Play play;
 Reset reset;
-Settings settings;
+SettingsBtn settingsBtn;
 // Slider speedSlider;
 
 // Arrays and counters
@@ -72,6 +73,7 @@ void setup()
 	px = (width*5.2083333*pow(10, -4));
 	py = (height*9.2592592*pow(10, -4));
 	p = new Palette();
+	menuLerp = 0.5;
 	// surface.setResizable(true);
 
 	b = new Barchart(0, 0, width, height, 5*px); //Barchart
@@ -91,7 +93,7 @@ void setup()
 	//Buttons
 	play = new Play(910*px, 960*py, 100*px, 100*py);
 	reset = new Reset(830*px, 975*py, 70*px, 70*py);
-	settings = new Settings(1860*px, 1020*py, 50*px, 50*py);
+	settingsBtn = new SettingsBtn(1860*px, 1020*py, 50*px, 50*py);
 	//Sliders
 
 	//Sounds
@@ -153,7 +155,7 @@ void draw() {
 	menu.render();
 	play.render();
 	reset.render();
-	settings.render();
+	settingsBtn.render();
 }
 
 void update() {
@@ -162,21 +164,21 @@ void update() {
 	play.update();
 	reset.update();
 	menu.update();
-	settings.update();
+	settingsBtn.update();
 }
 
 void mousePressed() {
 	play.mouseDown();
 	reset.mouseDown();
 	menu.mouseDown();
-	settings.mouseDown();
+	settingsBtn.mouseDown();
 }
 
 void mouseReleased() {
 	play.mouseUp();
 	reset.mouseUp();
 	menu.mouseUp();
-	settings.mouseUp();
+	settingsBtn.mouseUp();
 }
 
 //---------------------------------------------------------------------------------------------------

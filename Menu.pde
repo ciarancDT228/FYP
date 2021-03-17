@@ -1,6 +1,7 @@
 class Menu {
 
 	float posX, posY, w, h;
+	float wTarget;
 	float spacer;
 	float margin;
 	float fontSize;
@@ -37,6 +38,7 @@ class Menu {
 		this.toggleMenu = true;
 		this.closed = false;
 		this.mirrorSwitch = new ToggleSwitch(this.posX + w - (spacer*2) + 1000, this.posY + 500, 40, 20);
+		wTarget = width;
 		
 		algMenu = new SubMenu(
 			this.posX, 
@@ -91,49 +93,45 @@ class Menu {
 	}
 
 	void update() {
-		algMenu.update();
-		shapeMenu.update();
-		sizeSlider.update();
-		soundAttSlider.update();
-		soundSusTSlider.update();
-		soundSusLSlider.update();
-		soundRelSlider.update();
-		speedSlider.update();
+		this.posX = lerp(this.posX, wTarget, menuLerp);
+		algMenu.update(); // Done
+		shapeMenu.update(); // Done
+		sizeSlider.update(); // Done
+		soundAttSlider.update(); // Done
+		soundSusTSlider.update(); // Done
+		soundSusLSlider.update(); // Done
+		soundRelSlider.update(); // Done
+		speedSlider.update(); // Done
 		mirrorSwitch.update();
-		if (toggleMenu) {
-			updatePos();
-			toggleMenu = false;
-		}
 	}
 
-	void updatePos() {
-		if (closed) {
-			this.posX = width - this.w;
-			algMenu.updatePos(true, this.w);
-			shapeMenu.updatePos(true, this.w);
-			sizeSlider.updatePos(true, this.w);
-			speedSlider.updatePos(true, this.w);
+	// void updatePos2() {
+	// 	if (closed) {
+	// 		this.posX = width - this.w;
+	// 		algMenu.updatePos(true, this.w);
+	// 		shapeMenu.updatePos(true, this.w);
+	// 		sizeSlider.updatePos(true, this.w);
+	// 		speedSlider.updatePos(true, this.w);
 
-			soundAttSlider.updatePos(true, this.w);
-			soundSusTSlider.updatePos(true, this.w);
-			soundSusLSlider.updatePos(true, this.w);
-			soundRelSlider.updatePos(true, this.w);
-			closed = false;
-		} else {
-			this.posX = width;
-			algMenu.updatePos(false, this.w);
-			shapeMenu.updatePos(false, this.w);
-			sizeSlider.updatePos(false, this.w);
-			speedSlider.updatePos(false, this.w);
+	// 		soundAttSlider.updatePos(true, this.w);
+	// 		soundSusTSlider.updatePos(true, this.w);
+	// 		soundSusLSlider.updatePos(true, this.w);
+	// 		soundRelSlider.updatePos(true, this.w);
+	// 		closed = false;
+	// 	} else {
+	// 		this.posX = width;
+	// 		algMenu.updatePos(false, this.w);
+	// 		shapeMenu.updatePos(false, this.w);
+	// 		sizeSlider.updatePos(false, this.w);
+	// 		speedSlider.updatePos(false, this.w);
 
-			soundAttSlider.updatePos(false, this.w);
-			soundSusTSlider.updatePos(false, this.w);
-			soundSusLSlider.updatePos(false, this.w);
-			soundRelSlider.updatePos(false, this.w);
-			closed = true;
-		}
-
-	}
+	// 		soundAttSlider.updatePos(false, this.w);
+	// 		soundSusTSlider.updatePos(false, this.w);
+	// 		soundSusLSlider.updatePos(false, this.w);
+	// 		soundRelSlider.updatePos(false, this.w);
+	// 		closed = true;
+	// 	}
+	// }
 
 	void render() {
 		noStroke();

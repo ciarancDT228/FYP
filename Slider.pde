@@ -5,7 +5,7 @@ class Slider extends Component{
 	float w, h;
 	float centreX, centreY;
 	float strokeS, strokeM, strokeL;
-	float minVal, maxVal;
+	float minVal, maxVal, currentVal;
 	boolean depressed, active;
 
 	public Slider(float posX, float posY, float w, float h, float minVal, float maxVal, float initVal) {
@@ -24,6 +24,7 @@ class Slider extends Component{
 		strokeS = h/10;
 		strokeM = h/5;
 		strokeL = h/3.33;
+		currentVal = getValFloat();
 	}
 
 	public Slider(float posX, float posY, float w, float h) {
@@ -40,9 +41,12 @@ class Slider extends Component{
 		strokeS = h/10;
 		strokeM = h/5;
 		strokeL = h/3.33;
+		currentVal = getValFloat();
 	}
 
 	void update() {
+		this.posX = lerp(this.posX, menu.wTarget + 225*px, menuLerp);
+		this.thumbX = map(currentVal, minVal, maxVal, posX, posX + w);
 		if(depressed) {
 			if(inRangeX()) {
 				thumbX = mouseX;
@@ -102,6 +106,7 @@ class Slider extends Component{
 	void mouseUp() {
 		if(depressed) {
 			depressed = false;
+			currentVal = getValFloat();
 		}
 	}
 

@@ -2,12 +2,14 @@ class TickSlider extends Slider {
 
 	int tick;
 	int numTicks;
+	int current;
 
 	public TickSlider(float posX, float posY, float w, float h, int tick, int numTicks) {
 		super(posX, posY, w, h);
 		this.thumbX = map(stepsPerSecond, minSteps, maxSteps, posX, posX + w);
 		this.tick = tick;
 		this.numTicks = numTicks;
+		current = getVal();
 	}
 
 	int getTickLocation() {
@@ -16,6 +18,8 @@ class TickSlider extends Slider {
 	}
 
 	void update() {
+		this.posX = lerp(this.posX, menu.wTarget + 225*px, menuLerp);
+		this.thumbX = map(tick, 0, numTicks, posX, posX + w);
 		if(depressed) {
 			if(inRangeX()) {
 				thumbX = getTickLocation();

@@ -38,23 +38,23 @@ class ShapeMenu{
 		buttonClicked  = false;
 	}
 
-	void updatePos(boolean closed, float sw) {
-		if(closed) {
-			// Subtract w
-			this.posX -= sw;
-		} else {
-			// Add w
-			this.posX += sw;
-		}
-		random.updatePos(closed, sw);
-		sinWaveBtn.updatePos(closed, sw);
-		quadrantBtn.updatePos(closed, sw);
-		heartbeatBtn.updatePos(closed, sw);
-		squiggle.updatePos(closed, sw);
-		parabola.updatePos(closed, sw);
-		parabolaInv.updatePos(closed, sw);
-		descending.updatePos(closed, sw);
-	}
+	// void updatePos(boolean closed, float sw) {
+	// 	if(closed) {
+	// 		// Subtract w
+	// 		this.posX -= sw;
+	// 	} else {
+	// 		// Add w
+	// 		this.posX += sw;
+	// 	}
+	// 	random.updatePos(closed, sw);
+	// 	sinWaveBtn.updatePos(closed, sw);
+	// 	quadrantBtn.updatePos(closed, sw);
+	// 	heartbeatBtn.updatePos(closed, sw);
+	// 	squiggle.updatePos(closed, sw);
+	// 	parabola.updatePos(closed, sw);
+	// 	parabolaInv.updatePos(closed, sw);
+	// 	descending.updatePos(closed, sw);
+	// }
 
 	void render() {
 		noStroke();
@@ -71,6 +71,17 @@ class ShapeMenu{
 			ShapeBtn t = btnThumbs.get(i);
 			t.update();
 		}
+
+		this.posX = lerp(this.posX, menu.wTarget, menuLerp);
+		random.posX = lerp(random.posX, menu.wTarget + 7*px, menuLerp);
+		sinWaveBtn.posX = lerp(sinWaveBtn.posX, menu.wTarget + 114*px, menuLerp);
+		quadrantBtn.posX = lerp(quadrantBtn.posX, menu.wTarget + 221*px, menuLerp);
+		heartbeatBtn.posX = lerp(heartbeatBtn.posX, menu.wTarget + 328*px, menuLerp);
+		squiggle.posX = lerp(squiggle.posX, menu.wTarget + 7*px, menuLerp);
+		parabola.posX = lerp(parabola.posX, menu.wTarget + 114*px, menuLerp);
+		parabolaInv.posX = lerp(parabolaInv.posX, menu.wTarget + 221*px, menuLerp);
+		descending.posX = lerp(descending.posX, menu.wTarget + 328*px, menuLerp);
+
 	}
 
 	void mouseUp() {
