@@ -9,6 +9,7 @@ class AudioBtn extends Button{
 		centreX = posX + (w/2);
 		centreY = posY + (h/2);
 		strokeW = w/20;
+		active = true;
 	}
 
 	void render() {
@@ -31,13 +32,31 @@ class AudioBtn extends Button{
 		strokeWeight(strokeW);
 		stroke(p.font);
 		if (active) {
-			line(posX - offsetXY + (w/1.54), posY + offsetXY + (h/2.44), posX - offsetXY + (w/1.2), posY + offsetXY + (h/1.69));
-			line(posX - offsetXY + (w/1.54), posY + offsetXY + (h/1.69), posX - offsetXY + (w/1.2), posY + offsetXY + (h/2.44));
-		} else {
 			arc(centreX - offsetXY, centreY + offsetXY, (w/2.63) - strokeW, (h/2.63) - strokeW, radians(-45), radians(45));
 			arc(centreX - offsetXY, centreY + offsetXY, (w/1.72) - strokeW, (h/1.72) - strokeW, radians(-45), radians(45));
+		} else {
+			line(posX - offsetXY + (w/1.54), posY + offsetXY + (h/2.44), posX - offsetXY + (w/1.2), posY + offsetXY + (h/1.69));
+			line(posX - offsetXY + (w/1.54), posY + offsetXY + (h/1.69), posX - offsetXY + (w/1.2), posY + offsetXY + (h/2.44));
 		}
-		
+	}
+
+	void update() {
+		if(correctLocation() && depressed) {
+			shade = p.select;
+			offsetXY = offset;
+		} else if (correctLocation()) {
+			shade = p.hover;
+			offsetXY = -(offset);
+		}
+		else {
+			shade = p.foreground;
+			offsetXY = 0;
+		}
+		if(active) {
+			s.volume(0.4);
+		} else {
+			s.volume(0.0);
+		}
 
 	}
 

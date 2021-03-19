@@ -42,11 +42,11 @@ int maxSteps = 3840;
 int minSteps = 1;
 
 //Sound stuff
+Sound s;
 float maxFreq = 700;
 TriOsc triOsc;
 Env env;
 MySound sound;
-Sound s;
 Slider soundAttSlider;
 Slider soundSusTSlider;
 Slider soundSusLSlider;
@@ -99,6 +99,7 @@ void setup()
 	//Sliders
 
 	//Sounds
+	s = new Sound(this);
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
 	// Menus

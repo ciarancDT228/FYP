@@ -61,11 +61,11 @@ int maxSteps = 3840;
 int minSteps = 1;
 
 //Sound stuff
+Sound s;
 float maxFreq = 700;
 TriOsc triOsc;
 Env env;
 MySound sound;
-Sound s;
 Slider soundAttSlider;
 Slider soundSusTSlider;
 Slider soundSusLSlider;
@@ -118,6 +118,7 @@ public void setup()
 	//Sliders
 
 	//Sounds
+	s = new Sound(this);
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
 	// Menus
@@ -316,6 +317,7 @@ class AudioBtn extends Button{
 		centreX = posX + (w/2);
 		centreY = posY + (h/2);
 		strokeW = w/20;
+		active = true;
 	}
 
 	public void render() {
@@ -338,13 +340,31 @@ class AudioBtn extends Button{
 		strokeWeight(strokeW);
 		stroke(p.font);
 		if (active) {
-			line(posX - offsetXY + (w/1.54f), posY + offsetXY + (h/2.44f), posX - offsetXY + (w/1.2f), posY + offsetXY + (h/1.69f));
-			line(posX - offsetXY + (w/1.54f), posY + offsetXY + (h/1.69f), posX - offsetXY + (w/1.2f), posY + offsetXY + (h/2.44f));
-		} else {
 			arc(centreX - offsetXY, centreY + offsetXY, (w/2.63f) - strokeW, (h/2.63f) - strokeW, radians(-45), radians(45));
 			arc(centreX - offsetXY, centreY + offsetXY, (w/1.72f) - strokeW, (h/1.72f) - strokeW, radians(-45), radians(45));
+		} else {
+			line(posX - offsetXY + (w/1.54f), posY + offsetXY + (h/2.44f), posX - offsetXY + (w/1.2f), posY + offsetXY + (h/1.69f));
+			line(posX - offsetXY + (w/1.54f), posY + offsetXY + (h/1.69f), posX - offsetXY + (w/1.2f), posY + offsetXY + (h/2.44f));
 		}
-		
+	}
+
+	public void update() {
+		if(correctLocation() && depressed) {
+			shade = p.select;
+			offsetXY = offset;
+		} else if (correctLocation()) {
+			shade = p.hover;
+			offsetXY = -(offset);
+		}
+		else {
+			shade = p.foreground;
+			offsetXY = 0;
+		}
+		if(active) {
+			s.volume(0.4f);
+		} else {
+			s.volume(0.0f);
+		}
 
 	}
 
@@ -391,7 +411,7 @@ class Barchart{
 		noStroke();
 		fill(p.foreground);
 		rect(posX, posY,border*2 + w, border*2 + h);
-		if (a.length > w / 2) {
+		if (a.length > w / 3) {
 			strokeWeight = w / a.length;
 			spacer = strokeWeight / 2;
 		} else {
@@ -426,14 +446,14 @@ class Barchart{
 		//Draw numbers
 		if (a.length <= 100) {
 			fill(p.background);
-			fontSize = (w/a.length)*px*0.5f;
+			fontSize = (w/a.length/2);
 			f = createFont("OpenSans-Regular.ttf", fontSize);
 			textFont(f);
 			// textSize(fontSize);
 			textAlign(CENTER, TOP);
 			for (int i = 0; i < a.length; i++) {
 				float x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
-				float y1 = map(a[i], 0, max, posY + h + border, posY + border);
+				float y1 = map(a[i], 0, max, posY + h + border, posY + border) - 2*px;
 				text(a[i], x1, y1);
 			}
 		}
@@ -1025,7 +1045,7 @@ class Menu {
 		text("Attack", this.posX + 30*px, speedSlider.posY + speedSlider.h + (spacer * 3) + (titleSize / 2) + (fontSize / 2) + margin);
 		text("Sustain Time", this.posX + 30*px, soundAttSlider.posY + soundAttSlider.h + spacer + (fontSize / 2));
 		text("Sustain Level", this.posX + 30*px, soundSusTSlider.posY + soundSusTSlider.h + spacer + (fontSize / 2));
-		text("Merge", this.posX + 30*px, soundSusLSlider.posY + soundSusLSlider.h + spacer + (fontSize / 2));
+		text("Release", this.posX + 30*px, soundSusLSlider.posY + soundSusLSlider.h + spacer + (fontSize / 2));
 
 	}
 

@@ -40,7 +40,7 @@ class Barchart{
 		noStroke();
 		fill(p.foreground);
 		rect(posX, posY,border*2 + w, border*2 + h);
-		if (a.length > w / 2) {
+		if (a.length > w / 3) {
 			strokeWeight = w / a.length;
 			spacer = strokeWeight / 2;
 		} else {
@@ -75,14 +75,14 @@ class Barchart{
 		//Draw numbers
 		if (a.length <= 100) {
 			fill(p.background);
-			fontSize = (w/a.length)*px*0.5;
+			fontSize = (w/a.length/2);
 			f = createFont("OpenSans-Regular.ttf", fontSize);
 			textFont(f);
 			// textSize(fontSize);
 			textAlign(CENTER, TOP);
 			for (int i = 0; i < a.length; i++) {
 				float x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
-				float y1 = map(a[i], 0, max, posY + h + border, posY + border);
+				float y1 = map(a[i], 0, max, posY + h + border, posY + border) - 2*px;
 				text(a[i], x1, y1);
 			}
 		}
