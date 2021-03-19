@@ -5,7 +5,7 @@ class SelectionBtn extends Thumbnail {
 	public SelectionBtn(float posX, float posY, float w, float h) {
 		super(posX, posY, w, h);
 		s = new SelectionSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize));
-		s.steps(180000, arr, crr);
+		s.steps(2000, arr, crr);
 		arr = s.getArray();
 		crr = GenerateArray.blanks(arrSize);
 		this.label = "Selection";

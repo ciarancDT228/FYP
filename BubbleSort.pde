@@ -82,6 +82,7 @@ class BubbleSort extends Algorithm {
 		int temp = array[pos0];
 		array[pos0] = array[pos1];
 		array[pos1] = temp;
+		colours[pos1] = 2;
 	}
 
 	void checkSorted() {

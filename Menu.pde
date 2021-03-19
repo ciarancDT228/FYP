@@ -26,14 +26,14 @@ class Menu {
 
 	public Menu() {
 		this.w = 435*px;
-		this.posX = width - w; //View X + View w - this w
+		this.posX = width; //View X + View w - this w
 		this.posY = 0; // View Y 
 		this.h = height; //View h - Taskbar h
 		this.fontSize = 16*py;
 		this.titleSize = 20*py;
 		this.f = createFont("OpenSans-Regular.ttf", fontSize);
 		this.t = createFont("OpenSans-Regular.ttf", titleSize);
-		this.spacer = 24*px;
+		this.spacer = 18*px;
 		this.margin = 14*py;
 		this.toggleMenu = true;
 		this.closed = false;
@@ -61,7 +61,7 @@ class Menu {
 		speedSlider = new TickSlider(
 			this.posX + 225*px, 
 			sizeSlider.posY + sizeSlider.h + (spacer * 2), 
-			180*px, 20*py, 0, 14); // Speed
+			180*px, 20*py, 3, 14); // Speed
 		
 		soundAttSlider = new Slider(
 			this.posX + 225*px, 
@@ -94,6 +94,7 @@ class Menu {
 
 	void update() {
 		this.posX = lerp(this.posX, wTarget, menuLerp);
+		b.w = lerp(b.w - (b.border * 2), wTarget, menuLerp);
 		algMenu.update(); // Done
 		shapeMenu.update(); // Done
 		sizeSlider.update(); // Done
@@ -134,16 +135,17 @@ class Menu {
 	// }
 
 	void render() {
-		noStroke();
+		strokeWeight(1*px);
+		stroke(p.foreground);
 		fill(p.foreground);
 		rect(posX, posY, w, h);
 
 		strokeWeight(1*py);
 		stroke(p.accent);
-		line(this.posX + margin, // Above Sorting Algorithms
-			this.posY + spacer, 
-			this.posX + this.w - margin, 
-			this.posY + spacer);
+		// line(this.posX + margin, // Above Sorting Algorithms
+		// 	this.posY + spacer, 
+		// 	this.posX + this.w - margin, 
+		// 	this.posY + spacer);
 		line(this.posX + margin, // Below Sorting Algorithms
 			algMenu.posY + algMenu.h + spacer, 
 			this.posX + this.w - margin, 

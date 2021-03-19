@@ -20,14 +20,14 @@ class Thumbnail {
 		this.w = w;
 		this.h = h;
 		this.fontSize = 16*px;
-		this.arrSize = 680;
+		this.arrSize = 68;
 		shade = p.foreground;
 		depressed = false;
 		active = false;
 		offsetXY = 0*px;
 		highlight = false;
 		offsetXY = 2*px;
-		arrSize = (int)(68*10);
+		// arrSize = (int)(68*10);
 		arr = GenerateArray.random(arrSize);
 		crr = GenerateArray.blanks(arrSize);
 		b = new Barchart(posX + 16*px, posY + 14*px, 68*px, 46*py, 0);
@@ -82,7 +82,7 @@ class Thumbnail {
 	// }
 
 	void update() {
-		b.posX = this.posX + 16*px;
+		// b.posX = this.posX + 16*px;
 		if (!active) {
 			if (correctLocation()) {
 				if (depressed) {

@@ -73,14 +73,26 @@ class ShapeMenu{
 		}
 
 		this.posX = lerp(this.posX, menu.wTarget, menuLerp);
+
 		random.posX = lerp(random.posX, menu.wTarget + 7*px, menuLerp);
 		sinWaveBtn.posX = lerp(sinWaveBtn.posX, menu.wTarget + 114*px, menuLerp);
 		quadrantBtn.posX = lerp(quadrantBtn.posX, menu.wTarget + 221*px, menuLerp);
 		heartbeatBtn.posX = lerp(heartbeatBtn.posX, menu.wTarget + 328*px, menuLerp);
+
 		squiggle.posX = lerp(squiggle.posX, menu.wTarget + 7*px, menuLerp);
 		parabola.posX = lerp(parabola.posX, menu.wTarget + 114*px, menuLerp);
 		parabolaInv.posX = lerp(parabolaInv.posX, menu.wTarget + 221*px, menuLerp);
 		descending.posX = lerp(descending.posX, menu.wTarget + 328*px, menuLerp);
+
+		random.b.posX = lerp(random.b.posX, menu.wTarget + 23*px, menuLerp);
+		sinWaveBtn.b.posX = lerp(sinWaveBtn.b.posX, menu.wTarget + 130*px, menuLerp);
+		quadrantBtn.b.posX = lerp(quadrantBtn.b.posX, menu.wTarget + 237*px, menuLerp);
+		heartbeatBtn.b.posX = lerp(heartbeatBtn.b.posX, menu.wTarget + 344*px, menuLerp);
+
+		squiggle.b.posX = lerp(squiggle.b.posX, menu.wTarget + 23*px, menuLerp);
+		parabola.b.posX = lerp(parabola.b.posX, menu.wTarget + 130*px, menuLerp);
+		parabolaInv.b.posX = lerp(parabolaInv.b.posX, menu.wTarget + 237*px, menuLerp);
+		descending.b.posX = lerp(descending.b.posX, menu.wTarget + 344*px, menuLerp);
 
 	}
 

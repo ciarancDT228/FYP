@@ -3,6 +3,7 @@ class Button extends Component {
 	float posX, posY;
 	float w, h;
 	float offsetXY;
+	float offset;
 	boolean depressed;
 	boolean active;
 	// boolean offset;
@@ -16,7 +17,8 @@ class Button extends Component {
 		shade = p.foreground;
 		depressed = false;
 		active = false;
-		offsetXY = 2*px;
+		offset = w/100;
+		offsetXY = offset;
 	}
 
 	void render() {
@@ -33,14 +35,14 @@ class Button extends Component {
 	void update() {
 		if(correctLocation() && depressed) {
 			shade = p.select;
-			offsetXY = 2*px;
+			offsetXY = offset;
 		} else if (correctLocation()) {
 			shade = p.hover;
-			offsetXY = -2*px;
+			offsetXY = -(offset);
 		}
 		else {
 			shade = p.foreground;
-			offsetXY = 0*px;
+			offsetXY = 0;
 		}
 	}
 
@@ -61,7 +63,7 @@ class Button extends Component {
 		}
 		shade = p.foreground;
 		depressed = false;
-		offsetXY = 0*px;
+		offsetXY = 0;
 	}
 
 	boolean correctLocation() {

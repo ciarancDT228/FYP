@@ -4,7 +4,7 @@ static class GenerateArray {
         int[] arr = new int[length];
 
         length-=1;
-        for(int i = 0; i < length; i++){
+        for(int i = 0; i <= length; i++){
             arr[i] = (int)(Math.round((length/2)*sin((2*PI*p*i)/length)+((length/2)*sin(PI/2)))) + 1;
         }
         return arr;
@@ -34,8 +34,8 @@ static class GenerateArray {
 	static int[] desc(int length) {
 		int[] arr = new int[length];
 
-		for(int i = 1; i <= arr.length; i++) {
-			arr[i - 1] = arr.length - i;
+		for(int i = 0; i < arr.length; i++) {
+			arr[i] = arr.length - i;
 		}
 		return arr;
 	}

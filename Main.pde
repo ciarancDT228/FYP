@@ -19,6 +19,7 @@ MergeSort mergeSort;
 // Buttons and Sliders
 Play play;
 Reset reset;
+AudioBtn volume;
 SettingsBtn settingsBtn;
 // Slider speedSlider;
 
@@ -60,7 +61,7 @@ Menu menu;
 void settings() {
 	// size(1000, 600, OPENGL);
 	// size(1536, 846, P2D);
-	// size(1024, 768, P2D);
+	// size(800, 500, P2D);
 	// fullScreen(P2D, SPAN);
 	fullScreen(P2D, 2);
 	// size(800, 500, P2D);
@@ -76,11 +77,11 @@ void setup()
 	menuLerp = 0.5;
 	// surface.setResizable(true);
 
-	b = new Barchart(0, 0, width, height, 5*px); //Barchart
-	arrayMax = width/3;
-	arrayMin = 10; //Min array size
+	b = new Barchart(0, 0, width, height - 70*py, 20*px); //Barchart
+	arrayMax = width;
+	arrayMin = 16; //Min array size
 	// arraySize = (int)b.w/2; //Initial array size
-	arraySize = 10;
+	arraySize = width/30;
 	array = GenerateArray.random(arraySize); //Generate
 	colours = GenerateArray.blanks(arraySize);
 
@@ -91,9 +92,10 @@ void setup()
 	
 
 	//Buttons
-	play = new Play(910*px, 960*py, 100*px, 100*py);
-	reset = new Reset(830*px, 975*py, 70*px, 70*py);
-	settingsBtn = new SettingsBtn(1860*px, 1020*py, 50*px, 50*py);
+	play = new Play(910*px, 990*py, 100*px, 100*py);
+	reset = new Reset(840*px, 1015*py, 50*px, 50*py);
+	volume = new AudioBtn(1030*px, 1015*py, 50*px, 50*py);
+	settingsBtn = new SettingsBtn(1825*px, 1000*py, 70*px, 70*py);
 	//Sliders
 
 	//Sounds
@@ -107,9 +109,13 @@ void setup()
 void draw() {
 	update();
 	count++;
+	println(arraySize);
 
 	
 	background(0);
+	noStroke();
+	fill(p.foreground);
+	rect(0, height-70*py, width, 80*py);
 
 	if (count % CalcSpeed.getModulus(speed) == 0) {
 
@@ -155,6 +161,7 @@ void draw() {
 	menu.render();
 	play.render();
 	reset.render();
+	volume.render();
 	settingsBtn.render();
 }
 
@@ -163,6 +170,7 @@ void update() {
 	// py = (height*9.2592592*pow(10, -4));
 	play.update();
 	reset.update();
+	volume.update();
 	menu.update();
 	settingsBtn.update();
 }
@@ -170,6 +178,7 @@ void update() {
 void mousePressed() {
 	play.mouseDown();
 	reset.mouseDown();
+	volume.mouseDown();
 	menu.mouseDown();
 	settingsBtn.mouseDown();
 }
@@ -177,8 +186,21 @@ void mousePressed() {
 void mouseReleased() {
 	play.mouseUp();
 	reset.mouseUp();
+	volume.mouseUp();
 	menu.mouseUp();
 	settingsBtn.mouseUp();
+	if (mouseX < width - menu.w - b.border) {
+		if (!(play.correctLocation() || reset.correctLocation() || volume.correctLocation()) && menu.wTarget == width - 436*px) {
+			menu.toggleMenu = true;
+			if (settingsBtn.rtarget == radians(-90)) {
+				settingsBtn.rtarget = radians(0);
+				menu.wTarget = width;
+			} else {
+				settingsBtn.rtarget = radians(-90);
+				menu.wTarget = width - 436*px;
+			}
+		}
+	}
 }
 
 //---------------------------------------------------------------------------------------------------

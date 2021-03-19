@@ -11,6 +11,8 @@ class Barchart{
 	float barWidth;
 	float max;
 	float thickness;
+	float fontSize;
+	PFont f;
 
 	public Barchart(float posX, float posY, float w, float h, float border) {
 		this.border = border;
@@ -18,6 +20,8 @@ class Barchart{
 		this.posY = posY;
 		this.w = w - (border*2);
 		this.h = h - (border*2);
+		this.fontSize = 90*px/7.5;
+		this.f = createFont("OpenSans-Regular.ttf", fontSize);
 	}
 
 	// void update(float wid, float hei) {
@@ -40,7 +44,7 @@ class Barchart{
 			strokeWeight = w / a.length;
 			spacer = strokeWeight / 2;
 		} else {
-			strokeWeight = (w-(a.length+1))/a.length;
+			strokeWeight = (w-(a.length))/a.length;
 			spacer = strokeWeight / 2;
 		}
 		fill(p.barB);
@@ -67,6 +71,23 @@ class Barchart{
 			float barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
 		}
+
+		//Draw numbers
+		if (a.length <= 100) {
+			fill(p.background);
+			fontSize = (w/a.length)*px*0.5;
+			f = createFont("OpenSans-Regular.ttf", fontSize);
+			textFont(f);
+			// textSize(fontSize);
+			textAlign(CENTER, TOP);
+			for (int i = 0; i < a.length; i++) {
+				float x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
+				float y1 = map(a[i], 0, max, posY + h + border, posY + border);
+				text(a[i], x1, y1);
+			}
+		}
+			
+		// Draw border
 		noFill();
 		strokeWeight(1*px);
 		stroke(p.accent);

@@ -38,6 +38,7 @@ MergeSort mergeSort;
 // Buttons and Sliders
 Play play;
 Reset reset;
+AudioBtn volume;
 SettingsBtn settingsBtn;
 // Slider speedSlider;
 
@@ -79,7 +80,7 @@ Menu menu;
 public void settings() {
 	// size(1000, 600, OPENGL);
 	// size(1536, 846, P2D);
-	// size(1024, 768, P2D);
+	// size(800, 500, P2D);
 	// fullScreen(P2D, SPAN);
 	fullScreen(P2D, 2);
 	// size(800, 500, P2D);
@@ -95,11 +96,11 @@ public void setup()
 	menuLerp = 0.5f;
 	// surface.setResizable(true);
 
-	b = new Barchart(0, 0, width, height, 5*px); //Barchart
-	arrayMax = width/3;
-	arrayMin = 10; //Min array size
+	b = new Barchart(0, 0, width, height - 70*py, 20*px); //Barchart
+	arrayMax = width;
+	arrayMin = 16; //Min array size
 	// arraySize = (int)b.w/2; //Initial array size
-	arraySize = 10;
+	arraySize = width/30;
 	array = GenerateArray.random(arraySize); //Generate
 	colours = GenerateArray.blanks(arraySize);
 
@@ -110,9 +111,10 @@ public void setup()
 	
 
 	//Buttons
-	play = new Play(910*px, 960*py, 100*px, 100*py);
-	reset = new Reset(830*px, 975*py, 70*px, 70*py);
-	settingsBtn = new SettingsBtn(1860*px, 1020*py, 50*px, 50*py);
+	play = new Play(910*px, 990*py, 100*px, 100*py);
+	reset = new Reset(840*px, 1015*py, 50*px, 50*py);
+	volume = new AudioBtn(1030*px, 1015*py, 50*px, 50*py);
+	settingsBtn = new SettingsBtn(1825*px, 1000*py, 70*px, 70*py);
 	//Sliders
 
 	//Sounds
@@ -126,9 +128,13 @@ public void setup()
 public void draw() {
 	update();
 	count++;
+	println(arraySize);
 
 	
 	background(0);
+	noStroke();
+	fill(p.foreground);
+	rect(0, height-70*py, width, 80*py);
 
 	if (count % CalcSpeed.getModulus(speed) == 0) {
 
@@ -174,6 +180,7 @@ public void draw() {
 	menu.render();
 	play.render();
 	reset.render();
+	volume.render();
 	settingsBtn.render();
 }
 
@@ -182,6 +189,7 @@ public void update() {
 	// py = (height*9.2592592*pow(10, -4));
 	play.update();
 	reset.update();
+	volume.update();
 	menu.update();
 	settingsBtn.update();
 }
@@ -189,6 +197,7 @@ public void update() {
 public void mousePressed() {
 	play.mouseDown();
 	reset.mouseDown();
+	volume.mouseDown();
 	menu.mouseDown();
 	settingsBtn.mouseDown();
 }
@@ -196,8 +205,21 @@ public void mousePressed() {
 public void mouseReleased() {
 	play.mouseUp();
 	reset.mouseUp();
+	volume.mouseUp();
 	menu.mouseUp();
 	settingsBtn.mouseUp();
+	if (mouseX < width - menu.w - b.border) {
+		if (!(play.correctLocation() || reset.correctLocation() || volume.correctLocation()) && menu.wTarget == width - 436*px) {
+			menu.toggleMenu = true;
+			if (settingsBtn.rtarget == radians(-90)) {
+				settingsBtn.rtarget = radians(0);
+				menu.wTarget = width;
+			} else {
+				settingsBtn.rtarget = radians(-90);
+				menu.wTarget = width - 436*px;
+			}
+		}
+	}
 }
 
 //---------------------------------------------------------------------------------------------------
@@ -283,6 +305,50 @@ class Algorithm {
 	// }
 
 }
+class AudioBtn extends Button{
+
+	float centreY;
+	float centreX;
+	float strokeW;
+
+	public AudioBtn(float posX, float posY, float w, float h) {
+		super(posX, posY, w, h);
+		centreX = posX + (w/2);
+		centreY = posY + (h/2);
+		strokeW = w/20;
+	}
+
+	public void render() {
+		if (correctLocation()) {
+			strokeWeight(1*px);
+			stroke(p.accent);
+		} else {
+			noStroke();
+		}
+		fill(shade);
+		circle(centreX - offsetXY, centreY + offsetXY, w);
+		noStroke();
+		fill(p.font);
+		rect(posX - offsetXY + (w/6.25f), posY + offsetXY + (h/2.7f), (w/3), (w/3.33f), 5*px);
+		triangle(posX - offsetXY + (w/1.85f), posY + offsetXY + (h/5), 
+			posX - offsetXY + (w/1.85f), posY + offsetXY + h - (h/5), 
+			posX - offsetXY + (h/5.55f), centreY + offsetXY);
+
+		noFill();
+		strokeWeight(strokeW);
+		stroke(p.font);
+		if (active) {
+			line(posX - offsetXY + (w/1.54f), posY + offsetXY + (h/2.44f), posX - offsetXY + (w/1.2f), posY + offsetXY + (h/1.69f));
+			line(posX - offsetXY + (w/1.54f), posY + offsetXY + (h/1.69f), posX - offsetXY + (w/1.2f), posY + offsetXY + (h/2.44f));
+		} else {
+			arc(centreX - offsetXY, centreY + offsetXY, (w/2.63f) - strokeW, (h/2.63f) - strokeW, radians(-45), radians(45));
+			arc(centreX - offsetXY, centreY + offsetXY, (w/1.72f) - strokeW, (h/1.72f) - strokeW, radians(-45), radians(45));
+		}
+		
+
+	}
+
+}
 
 class Barchart{
 
@@ -296,6 +362,8 @@ class Barchart{
 	float barWidth;
 	float max;
 	float thickness;
+	float fontSize;
+	PFont f;
 
 	public Barchart(float posX, float posY, float w, float h, float border) {
 		this.border = border;
@@ -303,6 +371,8 @@ class Barchart{
 		this.posY = posY;
 		this.w = w - (border*2);
 		this.h = h - (border*2);
+		this.fontSize = 90*px/7.5f;
+		this.f = createFont("OpenSans-Regular.ttf", fontSize);
 	}
 
 	// void update(float wid, float hei) {
@@ -325,7 +395,7 @@ class Barchart{
 			strokeWeight = w / a.length;
 			spacer = strokeWeight / 2;
 		} else {
-			strokeWeight = (w-(a.length+1))/a.length;
+			strokeWeight = (w-(a.length))/a.length;
 			spacer = strokeWeight / 2;
 		}
 		fill(p.barB);
@@ -352,6 +422,23 @@ class Barchart{
 			float barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
 		}
+
+		//Draw numbers
+		if (a.length <= 100) {
+			fill(p.background);
+			fontSize = (w/a.length)*px*0.5f;
+			f = createFont("OpenSans-Regular.ttf", fontSize);
+			textFont(f);
+			// textSize(fontSize);
+			textAlign(CENTER, TOP);
+			for (int i = 0; i < a.length; i++) {
+				float x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
+				float y1 = map(a[i], 0, max, posY + h + border, posY + border);
+				text(a[i], x1, y1);
+			}
+		}
+			
+		// Draw border
 		noFill();
 		strokeWeight(1*px);
 		stroke(p.accent);
@@ -385,7 +472,7 @@ class BubbleBtn extends Thumbnail {
 	public BubbleBtn(float posX, float posY, float w, float h) {
 		super(posX, posY, w, h);
 		b = new BubbleSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize));
-		b.steps(200000, arr, crr);
+		b.steps(1750, arr, crr);
 		arr = b.getArray();
 		crr = GenerateArray.blanks(arrSize);
 		this.label = "Bubble";
@@ -489,6 +576,7 @@ class BubbleSort extends Algorithm {
 		int temp = array[pos0];
 		array[pos0] = array[pos1];
 		array[pos1] = temp;
+		colours[pos1] = 2;
 	}
 
 	public void checkSorted() {
@@ -516,6 +604,7 @@ class Button extends Component {
 	float posX, posY;
 	float w, h;
 	float offsetXY;
+	float offset;
 	boolean depressed;
 	boolean active;
 	// boolean offset;
@@ -529,7 +618,8 @@ class Button extends Component {
 		shade = p.foreground;
 		depressed = false;
 		active = false;
-		offsetXY = 2*px;
+		offset = w/100;
+		offsetXY = offset;
 	}
 
 	public void render() {
@@ -546,14 +636,14 @@ class Button extends Component {
 	public void update() {
 		if(correctLocation() && depressed) {
 			shade = p.select;
-			offsetXY = 2*px;
+			offsetXY = offset;
 		} else if (correctLocation()) {
 			shade = p.hover;
-			offsetXY = -2*px;
+			offsetXY = -(offset);
 		}
 		else {
 			shade = p.foreground;
-			offsetXY = 0*px;
+			offsetXY = 0;
 		}
 	}
 
@@ -574,7 +664,7 @@ class Button extends Component {
 		}
 		shade = p.foreground;
 		depressed = false;
-		offsetXY = 0*px;
+		offsetXY = 0;
 	}
 
 	public boolean correctLocation() {
@@ -652,7 +742,7 @@ static class GenerateArray {
         int[] arr = new int[length];
 
         length-=1;
-        for(int i = 0; i < length; i++){
+        for(int i = 0; i <= length; i++){
             arr[i] = (int)(Math.round((length/2)*sin((2*PI*p*i)/length)+((length/2)*sin(PI/2)))) + 1;
         }
         return arr;
@@ -682,8 +772,8 @@ static class GenerateArray {
 	public static int[] desc(int length) {
 		int[] arr = new int[length];
 
-		for(int i = 1; i <= arr.length; i++) {
-			arr[i - 1] = arr.length - i;
+		for(int i = 0; i < arr.length; i++) {
+			arr[i] = arr.length - i;
 		}
 		return arr;
 	}
@@ -768,14 +858,14 @@ class Menu {
 
 	public Menu() {
 		this.w = 435*px;
-		this.posX = width - w; //View X + View w - this w
+		this.posX = width; //View X + View w - this w
 		this.posY = 0; // View Y 
 		this.h = height; //View h - Taskbar h
 		this.fontSize = 16*py;
 		this.titleSize = 20*py;
 		this.f = createFont("OpenSans-Regular.ttf", fontSize);
 		this.t = createFont("OpenSans-Regular.ttf", titleSize);
-		this.spacer = 24*px;
+		this.spacer = 18*px;
 		this.margin = 14*py;
 		this.toggleMenu = true;
 		this.closed = false;
@@ -803,7 +893,7 @@ class Menu {
 		speedSlider = new TickSlider(
 			this.posX + 225*px, 
 			sizeSlider.posY + sizeSlider.h + (spacer * 2), 
-			180*px, 20*py, 0, 14); // Speed
+			180*px, 20*py, 3, 14); // Speed
 		
 		soundAttSlider = new Slider(
 			this.posX + 225*px, 
@@ -836,6 +926,7 @@ class Menu {
 
 	public void update() {
 		this.posX = lerp(this.posX, wTarget, menuLerp);
+		b.w = lerp(b.w - (b.border * 2), wTarget, menuLerp);
 		algMenu.update(); // Done
 		shapeMenu.update(); // Done
 		sizeSlider.update(); // Done
@@ -876,16 +967,17 @@ class Menu {
 	// }
 
 	public void render() {
-		noStroke();
+		strokeWeight(1*px);
+		stroke(p.foreground);
 		fill(p.foreground);
 		rect(posX, posY, w, h);
 
 		strokeWeight(1*py);
 		stroke(p.accent);
-		line(this.posX + margin, // Above Sorting Algorithms
-			this.posY + spacer, 
-			this.posX + this.w - margin, 
-			this.posY + spacer);
+		// line(this.posX + margin, // Above Sorting Algorithms
+		// 	this.posY + spacer, 
+		// 	this.posX + this.w - margin, 
+		// 	this.posY + spacer);
 		line(this.posX + margin, // Below Sorting Algorithms
 			algMenu.posY + algMenu.h + spacer, 
 			this.posX + this.w - margin, 
@@ -976,7 +1068,7 @@ class MergeBtn extends Thumbnail {
 	public MergeBtn(float posX, float posY, float w, float h) {
 		super(posX, posY, w, h);
 		m = new MergeSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize));
-		m.steps(10300, arr, crr);
+		m.steps(590, arr, crr);
 		arr = m.getArray();
 		crr = GenerateArray.blanks(arrSize);
 		this.label = "Merge";
@@ -1407,16 +1499,79 @@ class Palette {
 
 class Play extends Button{
 
+	float centreY;
+	float centreX;
+
 	public Play(float posX, float posY, float w, float h) {
 		super(posX, posY, w, h);
+		centreX = posX + (w/2);
+		centreY = posY + (h/2);
+	}
+
+	public void render() {
+		if (correctLocation()) {
+			strokeWeight(1*px);
+			stroke(p.accent);
+		} else {
+			noStroke();
+		}
+		fill(shade);
+		circle(centreX - offsetXY, centreY + offsetXY, w);
+		fill(p.font);
+		if(active) {
+			rect(posX - offsetXY + (w/3.33f), posY + offsetXY + (h/3.85f), (w/5.55f), (h/2), 2.5f);
+			rect(posX - offsetXY + w - (w/3.33f) - (w/5.55f), posY + offsetXY + (h/3.85f), (w/5.55f), (h/2), 2.5f);
+
+
+			// rect(posX - offsetXY + (w/2.94), posY + offsetXY + (h/3.23), (h/7.69), (h/2.56), 2.5*px);
+			// rect(posX - offsetXY + w - (w/2.94) - (w/7.69), posY + offsetXY + (h/3.23), (h/7.69), (h/2.56), 2.5*px);
+		} else {
+			stroke(p.font);
+			strokeWeight(5);
+			strokeJoin(ROUND);
+			triangle(posX - offsetXY + (w/2.94f), posY + offsetXY + (h/4.16f), 
+			posX - offsetXY + (w/2.94f), posY + offsetXY + h - (h/4.16f), 
+			posX - offsetXY + w - (w/4.5f), centreY + offsetXY);
+		}
+		
 	}
 	
 }
 
 class Reset extends Button{
 
+	float centreX;
+	float centreY;
+	float strokeW;
+
 	public Reset(float posX, float posY, float w, float h) {
 		super(posX, posY, w, h);
+		centreX = posX + w/2;
+		centreY = posY + h/2;
+		strokeW = w/7.7f;
+	}
+
+	public void render() {
+		if (correctLocation()) {
+			strokeWeight(1*px);
+			stroke(p.accent);
+		} else {
+			noStroke();
+		}
+		fill(shade);
+		circle(centreX - offsetXY, centreY + offsetXY, w);
+		strokeWeight(strokeW);
+		stroke(p.font);
+		noFill();
+		strokeCap(SQUARE);
+		arc(centreX - offsetXY, centreY + offsetXY, 
+			w - strokeW - (w/2.94f), h - strokeW - (h/2.94f), 
+			radians(0), radians(270));
+		noStroke();
+		fill(p.font);
+		triangle(centreX - offsetXY, posY + (h/12.5f) + offsetXY, 
+			centreX - offsetXY, posY + (h/2.7f) + offsetXY, 
+			centreX + (w/4.76f) - offsetXY, posY + (h/4.35f) + offsetXY);
 	}
 
 	public void mouseUp() {
@@ -1465,7 +1620,7 @@ class SelectionBtn extends Thumbnail {
 	public SelectionBtn(float posX, float posY, float w, float h) {
 		super(posX, posY, w, h);
 		s = new SelectionSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize));
-		s.steps(180000, arr, crr);
+		s.steps(2000, arr, crr);
 		arr = s.getArray();
 		crr = GenerateArray.blanks(arrSize);
 		this.label = "Selection";
@@ -1632,9 +1787,9 @@ class SettingsBtn extends Button{
 		super(posX, posY, w, h);
 		centreX = w/2;
 		centreY = h/2;
-		strokeW = w/7.6923f*px;
-		marginY = h/4;
-		marginX = w/14.2857f*px;
+		strokeW = w/10;
+		marginY = h/5.26f;
+		marginX = w/5.88f;
 		r = radians(0);
 		rtarget = radians(0);
 	}
@@ -1642,11 +1797,6 @@ class SettingsBtn extends Button{
 	public void mouseUp() {
 		if(correctLocation() && depressed) {
 			menu.toggleMenu = true;
-			if (b.w + (b.border * 2) == width) {
-				b.w -= menu.w;
-			} else {
-				b.w += menu.w;
-			}
 			if (rtarget == radians(-90)) {
 				rtarget = radians(0);
 				menu.wTarget = width;
@@ -1680,9 +1830,11 @@ class SettingsBtn extends Button{
 
 		noStroke();
 		fill(p.foreground);
-		rect(-centreX, -centreY, w, h);
+		// rect(-centreX, -centreY, w, h);
+		circle(0, 0, w);
 		strokeWeight(strokeW);
 		stroke(p.font);
+		strokeCap(ROUND);
 		line(-centreX + marginX + (strokeW/2), -centreY + centreY, w - marginX - centreX - (strokeW/2), -centreY + centreY);
 		line(-centreX + marginX + (strokeW/2), -centreY + centreY + marginY, w - marginX - centreX - (strokeW/2), -centreY + centreY + marginY);
 		line(-centreX + marginX + (strokeW/2), -centreY + centreY - marginY, w - marginX - centreX - (strokeW/2), -centreY + centreY - marginY);
@@ -1829,14 +1981,26 @@ class ShapeMenu{
 		}
 
 		this.posX = lerp(this.posX, menu.wTarget, menuLerp);
+
 		random.posX = lerp(random.posX, menu.wTarget + 7*px, menuLerp);
 		sinWaveBtn.posX = lerp(sinWaveBtn.posX, menu.wTarget + 114*px, menuLerp);
 		quadrantBtn.posX = lerp(quadrantBtn.posX, menu.wTarget + 221*px, menuLerp);
 		heartbeatBtn.posX = lerp(heartbeatBtn.posX, menu.wTarget + 328*px, menuLerp);
+
 		squiggle.posX = lerp(squiggle.posX, menu.wTarget + 7*px, menuLerp);
 		parabola.posX = lerp(parabola.posX, menu.wTarget + 114*px, menuLerp);
 		parabolaInv.posX = lerp(parabolaInv.posX, menu.wTarget + 221*px, menuLerp);
 		descending.posX = lerp(descending.posX, menu.wTarget + 328*px, menuLerp);
+
+		random.b.posX = lerp(random.b.posX, menu.wTarget + 23*px, menuLerp);
+		sinWaveBtn.b.posX = lerp(sinWaveBtn.b.posX, menu.wTarget + 130*px, menuLerp);
+		quadrantBtn.b.posX = lerp(quadrantBtn.b.posX, menu.wTarget + 237*px, menuLerp);
+		heartbeatBtn.b.posX = lerp(heartbeatBtn.b.posX, menu.wTarget + 344*px, menuLerp);
+
+		squiggle.b.posX = lerp(squiggle.b.posX, menu.wTarget + 23*px, menuLerp);
+		parabola.b.posX = lerp(parabola.b.posX, menu.wTarget + 130*px, menuLerp);
+		parabolaInv.b.posX = lerp(parabolaInv.b.posX, menu.wTarget + 237*px, menuLerp);
+		descending.b.posX = lerp(descending.b.posX, menu.wTarget + 344*px, menuLerp);
 
 	}
 
@@ -2056,10 +2220,16 @@ class SubMenu {
 			t.update();
 		}
 		this.posX = lerp(this.posX, menu.wTarget, menuLerp);
+		
 		randomBtn.posX = lerp(randomBtn.posX, menu.wTarget + 7*px, menuLerp);
 		bubbleBtn.posX = lerp(bubbleBtn.posX, menu.wTarget + 114*px, menuLerp);
 		selectionBtn.posX = lerp(selectionBtn.posX, menu.wTarget + 221*px, menuLerp);
 		mergeBtn.posX = lerp(mergeBtn.posX, menu.wTarget + 328*px, menuLerp);
+
+		randomBtn.b.posX = lerp(randomBtn.b.posX, menu.wTarget + 23*px, menuLerp);
+		bubbleBtn.b.posX = lerp(bubbleBtn.b.posX, menu.wTarget + 130*px, menuLerp);
+		selectionBtn.b.posX = lerp(selectionBtn.b.posX, menu.wTarget + 237*px, menuLerp);
+		mergeBtn.b.posX = lerp(mergeBtn.b.posX, menu.wTarget + 344*px, menuLerp);
 	}
 
 	// void updatePos(boolean closed, float sw) {
@@ -2148,14 +2318,14 @@ class Thumbnail {
 		this.w = w;
 		this.h = h;
 		this.fontSize = 16*px;
-		this.arrSize = 680;
+		this.arrSize = 68;
 		shade = p.foreground;
 		depressed = false;
 		active = false;
 		offsetXY = 0*px;
 		highlight = false;
 		offsetXY = 2*px;
-		arrSize = (int)(68*10);
+		// arrSize = (int)(68*10);
 		arr = GenerateArray.random(arrSize);
 		crr = GenerateArray.blanks(arrSize);
 		b = new Barchart(posX + 16*px, posY + 14*px, 68*px, 46*py, 0);
@@ -2210,7 +2380,7 @@ class Thumbnail {
 	// }
 
 	public void update() {
-		b.posX = this.posX + 16*px;
+		// b.posX = this.posX + 16*px;
 		if (!active) {
 			if (correctLocation()) {
 				if (depressed) {

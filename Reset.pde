@@ -1,8 +1,38 @@
 
 class Reset extends Button{
 
+	float centreX;
+	float centreY;
+	float strokeW;
+
 	public Reset(float posX, float posY, float w, float h) {
 		super(posX, posY, w, h);
+		centreX = posX + w/2;
+		centreY = posY + h/2;
+		strokeW = w/7.7;
+	}
+
+	void render() {
+		if (correctLocation()) {
+			strokeWeight(1*px);
+			stroke(p.accent);
+		} else {
+			noStroke();
+		}
+		fill(shade);
+		circle(centreX - offsetXY, centreY + offsetXY, w);
+		strokeWeight(strokeW);
+		stroke(p.font);
+		noFill();
+		strokeCap(SQUARE);
+		arc(centreX - offsetXY, centreY + offsetXY, 
+			w - strokeW - (w/2.94), h - strokeW - (h/2.94), 
+			radians(0), radians(270));
+		noStroke();
+		fill(p.font);
+		triangle(centreX - offsetXY, posY + (h/12.5) + offsetXY, 
+			centreX - offsetXY, posY + (h/2.7) + offsetXY, 
+			centreX + (w/4.76) - offsetXY, posY + (h/4.35) + offsetXY);
 	}
 
 	void mouseUp() {

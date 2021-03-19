@@ -12,9 +12,9 @@ class SettingsBtn extends Button{
 		super(posX, posY, w, h);
 		centreX = w/2;
 		centreY = h/2;
-		strokeW = w/7.6923*px;
-		marginY = h/4;
-		marginX = w/14.2857*px;
+		strokeW = w/10;
+		marginY = h/5.26;
+		marginX = w/5.88;
 		r = radians(0);
 		rtarget = radians(0);
 	}
@@ -22,11 +22,6 @@ class SettingsBtn extends Button{
 	void mouseUp() {
 		if(correctLocation() && depressed) {
 			menu.toggleMenu = true;
-			if (b.w + (b.border * 2) == width) {
-				b.w -= menu.w;
-			} else {
-				b.w += menu.w;
-			}
 			if (rtarget == radians(-90)) {
 				rtarget = radians(0);
 				menu.wTarget = width;
@@ -60,9 +55,11 @@ class SettingsBtn extends Button{
 
 		noStroke();
 		fill(p.foreground);
-		rect(-centreX, -centreY, w, h);
+		// rect(-centreX, -centreY, w, h);
+		circle(0, 0, w);
 		strokeWeight(strokeW);
 		stroke(p.font);
+		strokeCap(ROUND);
 		line(-centreX + marginX + (strokeW/2), -centreY + centreY, w - marginX - centreX - (strokeW/2), -centreY + centreY);
 		line(-centreX + marginX + (strokeW/2), -centreY + centreY + marginY, w - marginX - centreX - (strokeW/2), -centreY + centreY + marginY);
 		line(-centreX + marginX + (strokeW/2), -centreY + centreY - marginY, w - marginX - centreX - (strokeW/2), -centreY + centreY - marginY);
