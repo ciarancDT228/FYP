@@ -13,6 +13,7 @@ class Thumbnail {
 	float offsetXY;
 	boolean highlight;
 	int shade;
+	PFont f;
 
 	public Thumbnail (float posX, float posY, float w, float h) {
 		this.posX = posX;
@@ -20,6 +21,7 @@ class Thumbnail {
 		this.w = w;
 		this.h = h;
 		this.fontSize = 16*px;
+		this.f = createFont("OpenSans-Regular.ttf", fontSize);
 		this.arrSize = 68;
 		shade = p.foreground;
 		depressed = false;
@@ -56,7 +58,8 @@ class Thumbnail {
 		stroke(p.accent);
 		rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
 		fill(p.font);
-		textSize(round(fontSize));
+		textFont(f);
+		textSize(fontSize);
 		textAlign(CENTER);
 		text(label, posX - offsetXY + 50*px, posY + offsetXY + 86*py);
 	}

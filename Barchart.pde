@@ -52,6 +52,7 @@ class Barchart{
 		rect(posX + border, posY + border, w, h);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
+		// strokeCap(ROUND);
 		array = a;
 		colours = c;
 		max = a.length;
