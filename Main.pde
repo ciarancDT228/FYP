@@ -10,6 +10,8 @@ float px;
 float py;
 float menuLerp;
 Palette p;
+PFont pf;
+float fontSize;
 Barchart b;
 
 BubbleSort bubble;
@@ -29,6 +31,8 @@ int[] colours;
 int count = 0;
 int count2 = 0;
 int time = 0;
+int comparisons = 0;
+int assignments = 0;
 
 //Array Size
 int arraySize;
@@ -74,10 +78,13 @@ void setup()
 	px = (width*5.2083333*pow(10, -4));
 	py = (height*9.2592592*pow(10, -4));
 	p = new Palette();
+	fontSize = 16*py;
+	pf = createFont("OpenSans-Regular.ttf", fontSize);
 	menuLerp = 0.5;
 	// surface.setResizable(true);
 
-	b = new Barchart(0, 0, width, height - 70*py, 20*px); //Barchart
+	b = new Barchart(0, 0, width, height - 70*py, 10*px); //Barchart
+	// b = new Barchart(0, 0, width, height, 20*px); //Barchart
 	arrayMax = width;
 	arrayMin = 16; //Min array size
 	// arraySize = (int)b.w/2; //Initial array size
@@ -95,7 +102,15 @@ void setup()
 	play = new Play(910*px, 990*py, 100*px, 100*py);
 	reset = new Reset(840*px, 1015*py, 50*px, 50*py);
 	volume = new AudioBtn(1030*px, 1015*py, 50*px, 50*py);
-	settingsBtn = new SettingsBtn(1825*px, 1000*py, 70*px, 70*py);
+
+	// noStroke();
+	// fill(p.foreground);
+	// play = new Play(910*px, 970*py, 100*px, 100*py);
+	// reset = new Reset(840*px, 995*py, 50*px, 50*py);
+	// volume = new AudioBtn(1030*px, 995*py, 50*px, 50*py);
+
+	// volume = new AudioBtn(500*px, 500*py, 500*px, 500*py);
+	settingsBtn = new SettingsBtn(1850*px, 1005*py, 70*px, 70*py);
 	//Sliders
 
 	//Sounds
@@ -105,24 +120,34 @@ void setup()
 	// Menus
 	menu = new Menu();
 	sound = new MySound(attackTime, sustainTime, sustainLevel, releaseTime, 50, 1200);
+	reset.reset();
 }
 
 void draw() {
 	update();
 	count++;
-	println(arraySize);
+	count2+=500;
 
 	
 	background(0);
+
+	// Statistics
 	noStroke();
 	fill(p.foreground);
 	rect(0, height-70*py, width, 80*py);
+	fill(p.font);
+	textAlign(LEFT, TOP);
+	text("Array comparisons:", 10*px, height - 70*py);
+	text(comparisons, 165*px, height - 70*py);
+	textAlign(LEFT, BOTTOM);
+	text("Array assignments:", 10*px, height - fontSize);
+	text(assignments, 165*px, height - fontSize);
 
-	if (count % CalcSpeed.getModulus(speed) == 0) {
+	if (count % CalcSpeed.getModulus(speed) == 0 && play.active) {
 
 		// Mergesort
 		if(menu.algMenu.mergeBtn.active == true) {
-			if (!mergeSort.sorted && play.active) {
+			if (!mergeSort.sorted) {
 				mergeSort.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
 			}
@@ -131,7 +156,7 @@ void draw() {
 
 		// Bubblesort
 		} else if(menu.algMenu.bubbleBtn.active == true) {
-			if (!bubble.sorted && play.active) {
+			if (!bubble.sorted) {
 				bubble.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
 			}
@@ -140,7 +165,7 @@ void draw() {
 
 		// Selectionsort
 		} else if(menu.algMenu.selectionBtn.active == true) {
-			if (!selection.sorted && play.active) {
+			if (!selection.sorted) {
 				selection.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
 			}
@@ -149,7 +174,7 @@ void draw() {
 
 		// Bubblesort (placeholder)
 		} else if(menu.algMenu.randomBtn.active == true) {
-			if (!bubble.sorted && play.active) {
+			if (!bubble.sorted) {
 				bubble.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
 			}
@@ -158,7 +183,9 @@ void draw() {
 		}
 	}
 	b.render(array, colours);
-
+	// noStroke();
+	// fill(p.foreground);
+	// rect(865*px, 995*py, 190*px, 50*py);
 	menu.render();
 	play.render();
 	reset.render();
@@ -190,6 +217,7 @@ void mouseReleased() {
 	volume.mouseUp();
 	menu.mouseUp();
 	settingsBtn.mouseUp();
+	// Closing Menu if clicked anywhere outside of menu or buttons
 	if (mouseX < width - menu.w - b.border) {
 		if (!(play.correctLocation() || reset.correctLocation() || volume.correctLocation()) && menu.wTarget == width - 436*px) {
 			menu.toggleMenu = true;

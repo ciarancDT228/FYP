@@ -36,6 +36,9 @@ class Barchart{
 
 	void render(int[] a, int[] c) {
 		float spacer = 0;
+		float x1 = 0;
+		float y1 = 0;
+		float barHeight = 0;
 
 		noStroke();
 		fill(p.foreground);
@@ -66,10 +69,13 @@ class Barchart{
 			else {
 				stroke(#ccff90);
 			}
-			float x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
-			float y1 = map(a[i], 0, max, posY + h + border, posY + border);
-			// float y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
-			float barHeight = map(a[i], 0, max, 0, h);
+			x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
+			if (menu.mirrorSwitch.active) {
+				y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
+			} else {
+				y1 = map(a[i], 0, max, posY + h + border, posY + border);
+			}
+			barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
 		}
 
@@ -80,10 +86,16 @@ class Barchart{
 			f = createFont("OpenSans-Regular.ttf", fontSize);
 			textFont(f);
 			// textSize(fontSize);
-			textAlign(CENTER, TOP);
 			for (int i = 0; i < a.length; i++) {
-				float x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
-				float y1 = map(a[i], 0, max, posY + h + border, posY + border) - 2*px;
+				x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
+				if (menu.mirrorSwitch.active) {
+					textAlign(CENTER, CENTER);
+					y1 = posY + (h/2) + border - 2*py;
+				} else {
+					textAlign(CENTER, TOP);
+					y1 = map(a[i], 0, max, posY + h + border, posY + border) - 2*py;
+				}
+				
 				text(a[i], x1, y1);
 			}
 		}
@@ -98,6 +110,11 @@ class Barchart{
 
 	// Used for rendering small thumbnail barcharts
 	void renderSimple(int[] a, Thumbnail t) {
+		float x1 = 0;
+		float y1 = 0;
+		float barHeight = 0;
+
+
 		strokeWeight = w / a.length;
 		fill(p.barB);
 		noStroke();
@@ -107,9 +124,13 @@ class Barchart{
 		max = a.length - 1;
 		stroke(p.barF);
 		for (int i = 0; i < a.length; i++) {
-			float x1 = map(i, 0, a.length, posX - t.offsetXY, posX - t.offsetXY + w);
-			float y1 = map(a[i], 0, max, posY + t.offsetXY + h, posY + t.offsetXY);
-			float barHeight = map(a[i], 0, max, 0, h);
+			x1 = map(i, 0, a.length, posX - t.offsetXY, posX - t.offsetXY + w);
+			if (menu.mirrorSwitch.active) {
+				y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
+			} else {
+				y1 = map(a[i], 0, max, posY + t.offsetXY + h, posY + t.offsetXY);
+			}
+			barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
 		}
 		strokeCap(ROUND);

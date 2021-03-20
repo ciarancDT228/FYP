@@ -7,34 +7,44 @@ class ToggleSwitch extends Button {
 		centreY = posY + (h/2);
 		strokeS = h/10;
 		strokeM = h/5;
-		strokeL = h/3.33;
+		strokeL = h/1.4286;
 		thumbX = posX;
 	}
 
 	void render() {
 		//Draw track base
-		strokeWeight(strokeM);
+		strokeWeight(strokeL);
 		stroke(p.accent);
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
 		strokeWeight(strokeL);
-		stroke(shade);
+		stroke(p.font);
 		line(posX, centreY, thumbX, centreY);
 		noStroke();
 		//Draw highlight for hover and depressed
 		if(depressed) {
 			fill(shade, 130);
 			circle(thumbX, centreY, h * 2.5);
-		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
+		} else if(correctLocation()) {
 			fill(p.font, 40);
 			circle(thumbX, centreY, h * 2.5);
 		}
 		//Draw Thumb
-		fill(p.font);
+		if(active) {
+			fill(p.font);	
+		} else {
+			fill(p.hover);
+		}
 		circle(thumbX, centreY, h);
 	}
 
 	void update() {
+		this.posX = lerp(this.posX, menu.wTarget + menu.w - (menu.spacer*2) - w, menuLerp);
+		if(active) {
+			thumbX = posX + w;
+		} else {
+			thumbX = posX;
+		}
 		if(correctLocation() && depressed) {
 			shade = p.select;
 		} else if (correctLocation()) {
@@ -65,6 +75,13 @@ class ToggleSwitch extends Button {
 		offsetXY = 0*px;
 	}
 
-
+	boolean correctLocation() {
+		if(mouseX > posX - (h/2) && mouseX < posX + w + (h/2)
+			&& mouseY > posY && mouseY < posY + h) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 }

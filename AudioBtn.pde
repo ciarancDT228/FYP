@@ -23,7 +23,7 @@ class AudioBtn extends Button{
 		circle(centreX - offsetXY, centreY + offsetXY, w);
 		noStroke();
 		fill(p.font);
-		rect(posX - offsetXY + (w/6.25), posY + offsetXY + (h/2.7), (w/3), (w/3.33), 5*px);
+		rect(posX - offsetXY + (w/6.25), posY + offsetXY + (h/2.77), (w/3), (h/3.57), 5*px);
 		triangle(posX - offsetXY + (w/1.85), posY + offsetXY + (h/5), 
 			posX - offsetXY + (w/1.85), posY + offsetXY + h - (h/5), 
 			posX - offsetXY + (h/5.55), centreY + offsetXY);

@@ -130,7 +130,8 @@ class MergeSort {
 	void compare() {
 		// println("\nBefore\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
 		// 		"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
-		
+
+		// Colours
 		if (l + counterL < colours.length && l + counterL < m + 1) {
 			colours[l + counterL] = 1;
 		} else {
@@ -141,7 +142,8 @@ class MergeSort {
 		} else {
 			colours[m + 1 + counterR - 1] = 1;
 		}
-		
+
+		// Comparison
 		if (counterL < sizeL && counterR < sizeR) {
 			if (array[l + counterL] <= array[m + 1 + counterR]) {
 				//add value to queue
@@ -152,13 +154,16 @@ class MergeSort {
 				mergeQueue.add(array[m + 1 + counterR]);
 				counterR++;
 			}
+			comparisons++;
 		//get the stragglers
 		} else if (counterL < sizeL) {
 			mergeQueue.add(array[l + counterL]);
 			counterL++;
+			comparisons++;
 		} else if (counterR < sizeR) {
 			mergeQueue.add(array[m + 1 + counterR]);
 			counterR++;
+			comparisons++;
 		} else {
 			//merge flag
 			startMerge = true;
@@ -168,10 +173,11 @@ class MergeSort {
 	}
 
 	void merge() {
+		assignments++;
 		colours[counterA] = 2;
 		array[counterA] = mergeQueue.remove();
-		// println("\nLine 130\ncounterA = " + counterA + "\tmergeQueue removed = " + array[counterA]);
 		counterA++;
+		// println("\nLine 130\ncounterA = " + counterA + "\tmergeQueue removed = " + array[counterA]);
 		// if (mergeQueue.size() == 0) {
 		// 	startMerge = false;
 		// 	endMerge = true;

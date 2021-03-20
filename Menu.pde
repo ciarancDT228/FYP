@@ -1,6 +1,7 @@
 class Menu {
 
 	float posX, posY, w, h;
+	int arrSizeDisplay;
 	float wTarget;
 	float spacer;
 	float margin;
@@ -37,7 +38,6 @@ class Menu {
 		this.margin = 14*py;
 		this.toggleMenu = true;
 		this.closed = false;
-		this.mirrorSwitch = new ToggleSwitch(this.posX + w - (spacer*2) + 1000, this.posY + 500, 40, 20);
 		wTarget = width;
 		
 		algMenu = new SubMenu(
@@ -50,13 +50,14 @@ class Menu {
 			this.posX, 
 			algMenu.posY + algMenu.h + (spacer * 3) + (titleSize / 2) + margin, 
 			w, 
-			169*py); // Shapes
+			221*py); // Shapes
 
 		sizeSlider = new Slider(
 			this.posX + 225*px, 
 			shapeMenu.posY + shapeMenu.h + (spacer * 2), 
 			180*px, 20*py, 
 			arrayMin, arrayMax, arraySize); // Size
+		this.arrSizeDisplay = sizeSlider.getVal();
 		
 		speedSlider = new TickSlider(
 			this.posX + 225*px, 
@@ -90,6 +91,17 @@ class Menu {
 			180*px, 
 			20*py, 
 			0.001, 1.0, 0.2); // Sound
+
+		mirrorSwitch = new ToggleSwitch(
+			this.posX + this.w - spacer - 17*px, 
+			algMenu.posY + algMenu.h + (spacer * 2.5), 
+			17*px, 
+			20*py);
+
+		// mirrorSwitch = new ToggleSwitch(
+		// 	100, 100, 
+		// 	40*px, 
+		// 	20*py);
 	}
 
 	void update() {
@@ -104,35 +116,8 @@ class Menu {
 		soundRelSlider.update(); // Done
 		speedSlider.update(); // Done
 		mirrorSwitch.update();
+		arrSizeDisplay = sizeSlider.getVal();
 	}
-
-	// void updatePos2() {
-	// 	if (closed) {
-	// 		this.posX = width - this.w;
-	// 		algMenu.updatePos(true, this.w);
-	// 		shapeMenu.updatePos(true, this.w);
-	// 		sizeSlider.updatePos(true, this.w);
-	// 		speedSlider.updatePos(true, this.w);
-
-	// 		soundAttSlider.updatePos(true, this.w);
-	// 		soundSusTSlider.updatePos(true, this.w);
-	// 		soundSusLSlider.updatePos(true, this.w);
-	// 		soundRelSlider.updatePos(true, this.w);
-	// 		closed = false;
-	// 	} else {
-	// 		this.posX = width;
-	// 		algMenu.updatePos(false, this.w);
-	// 		shapeMenu.updatePos(false, this.w);
-	// 		sizeSlider.updatePos(false, this.w);
-	// 		speedSlider.updatePos(false, this.w);
-
-	// 		soundAttSlider.updatePos(false, this.w);
-	// 		soundSusTSlider.updatePos(false, this.w);
-	// 		soundSusLSlider.updatePos(false, this.w);
-	// 		soundRelSlider.updatePos(false, this.w);
-	// 		closed = true;
-	// 	}
-	// }
 
 	void render() {
 		strokeWeight(1*px);
@@ -171,7 +156,6 @@ class Menu {
 		soundSusTSlider.render();
 		soundSusLSlider.render();
 		soundRelSlider.render();
-
 		mirrorSwitch.render();
 
 		//Text
@@ -186,7 +170,13 @@ class Menu {
 
 		textFont(f);
 		textSize(fontSize);
+		textAlign(LEFT, TOP);
+		text("Mirror", this.posX + spacer + (w/1.5), algMenu.posY + algMenu.h + (spacer * 2) + (fontSize / 3));
+		textAlign(LEFT, CENTER);
 		text("Array Size", this.posX + 30*px, shapeMenu.posY + shapeMenu.h + (spacer * 2) + (fontSize / 2));
+		textAlign(RIGHT, CENTER);
+		text(arrSizeDisplay, this.posX + 180*px, shapeMenu.posY + shapeMenu.h + (spacer * 2) + (fontSize / 2));
+		textAlign(LEFT, CENTER);
 		text("Speed", this.posX + 30*px, sizeSlider.posY + sizeSlider.h + (spacer * 2) + (fontSize / 2));
 
 		// Sound Controls

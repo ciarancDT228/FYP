@@ -17,15 +17,15 @@ class ShapeMenu{
 		this.posY = posY;
 		this.w = w;
 		this.h = h;
-		this.random = new ShapeBtn(posX + 7*px, posY + 7*py, 100*px, 82*py, "random");
+		this.random = new ShapeBtn(posX + 7*px, posY + 7*py, 100*px, 100*py, "random");
 		this.random.active = true;
-		this.sinWaveBtn = new ShapeBtn(posX + 114*px, posY + 7*py, 100*px, 82*py, "sinWave");
-		this.quadrantBtn = new ShapeBtn(posX + 221*px, posY + 7*py, 100*px, 82*py, "quadrant");
-		this.heartbeatBtn = new ShapeBtn(posX + 328*px, posY + 7*py, 100*px, 82*py, "heartbeat");
-		this.squiggle = new ShapeBtn(posX + 7*px, posY + 89*py, 100*px, 82*py, "squiggle");
-		this.parabola = new ShapeBtn(posX + 114*px, posY + 89*py, 100*px, 82*py, "parabola");
-		this.parabolaInv = new ShapeBtn(posX + 221*px, posY + 89*py, 100*px, 82*py, "parabolaInv");
-		this.descending = new ShapeBtn(posX + 328*px, posY + 89*py, 100*px, 82*py, "descending");
+		this.sinWaveBtn = new ShapeBtn(posX + 114*px, posY + 7*py, 100*px, 100*py, "sinWave");
+		this.quadrantBtn = new ShapeBtn(posX + 221*px, posY + 7*py, 100*px, 100*py, "quadrant");
+		this.heartbeatBtn = new ShapeBtn(posX + 328*px, posY + 7*py, 100*px, 100*py, "heartbeat");
+		this.squiggle = new ShapeBtn(posX + 7*px, posY + 114*py, 100*px, 100*py, "squiggle");
+		this.parabola = new ShapeBtn(posX + 114*px, posY + 114*py, 100*px, 100*py, "parabola");
+		this.parabolaInv = new ShapeBtn(posX + 221*px, posY + 114*py, 100*px, 100*py, "parabolaInv");
+		this.descending = new ShapeBtn(posX + 328*px, posY + 114*py, 100*px, 100*py, "descending");
 		btnThumbs = new ArrayList<ShapeBtn>();
 		btnThumbs.add(random);
 		btnThumbs.add(sinWaveBtn);
@@ -109,10 +109,11 @@ class ShapeMenu{
 		if (buttonClicked) {
 			for (int i = 0; i < btnThumbs.size(); i++) {
 				ShapeBtn t = btnThumbs.get(i);
-				if (buttonClicked) {
-					t.active = false;
-					t.mouseUp();
-				}
+				t.active = false;
+				t.mouseUp();
+			}
+			if (!play.active) {
+				reset.reset();
 			}
 		}
 

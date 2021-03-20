@@ -81,6 +81,7 @@ class SelectionSort extends Algorithm{
 	// }
 
 	void compare() {
+		comparisons++;
 		colours[posMin] = 1;
 		colours[pos1] = 1;
 		if (pos0 > 0) {
@@ -105,6 +106,7 @@ class SelectionSort extends Algorithm{
 	}
 
 	void swap() {
+		assignments++;
 		int temp = array[pos0];
 		array[pos0] = array[posMin];
 		array[posMin] = temp;

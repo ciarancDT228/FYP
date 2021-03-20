@@ -49,14 +49,14 @@ class Thumbnail {
 		b.renderSimple(arr, this);
 		// Overlay
 		noFill();
-		strokeWeight(4*px);
+		strokeWeight(6*px);
 		stroke(shade);
-		rect(posX - offsetXY + 15*px, posY + offsetXY + 13*py, 70*px, 48*py, 8*px);
+		rect(posX - offsetXY + 13*px, posY + offsetXY + 11*py, 74*px, 52*py, 10*px);
 		// Border
-		noFill();
-		strokeWeight(2*px);
-		stroke(p.accent);
-		rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
+		// noFill();
+		// strokeWeight(1*px);
+		// stroke(p.accent);
+		// rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
 		fill(p.font);
 		textFont(f);
 		textSize(fontSize);

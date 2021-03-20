@@ -60,19 +60,19 @@ class Slider extends Component{
 		}
 	}
 
-	void updatePos(boolean closed, float sw) {
-		if(closed) {
-			// Subtract w
-			this.posX = this.posX - sw;
-			centreX = this.posX + (this.w/2) - sw;
-			this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) - sw;
-		} else {
-			// Add w
-			this.posX = this.posX + sw;
-			centreX = this.posX + (this.w/2) + sw;
-			this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) + sw;
-		}
-	}
+	// void updatePos(boolean closed, float sw) {
+	// 	if(closed) {
+	// 		// Subtract w
+	// 		this.posX = this.posX - sw;
+	// 		centreX = this.posX + (this.w/2) - sw;
+	// 		this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) - sw;
+	// 	} else {
+	// 		// Add w
+	// 		this.posX = this.posX + sw;
+	// 		centreX = this.posX + (this.w/2) + sw;
+	// 		this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) + sw;
+	// 	}
+	// }
 
 	void render() {
 		//Draw track base

@@ -29,6 +29,8 @@ float px;
 float py;
 float menuLerp;
 Palette p;
+PFont pf;
+float fontSize;
 Barchart b;
 
 BubbleSort bubble;
@@ -48,6 +50,8 @@ int[] colours;
 int count = 0;
 int count2 = 0;
 int time = 0;
+int comparisons = 0;
+int assignments = 0;
 
 //Array Size
 int arraySize;
@@ -93,10 +97,13 @@ public void setup()
 	px = (width*5.2083333f*pow(10, -4));
 	py = (height*9.2592592f*pow(10, -4));
 	p = new Palette();
+	fontSize = 16*py;
+	pf = createFont("OpenSans-Regular.ttf", fontSize);
 	menuLerp = 0.5f;
 	// surface.setResizable(true);
 
-	b = new Barchart(0, 0, width, height - 70*py, 20*px); //Barchart
+	b = new Barchart(0, 0, width, height - 70*py, 10*px); //Barchart
+	// b = new Barchart(0, 0, width, height, 20*px); //Barchart
 	arrayMax = width;
 	arrayMin = 16; //Min array size
 	// arraySize = (int)b.w/2; //Initial array size
@@ -114,7 +121,15 @@ public void setup()
 	play = new Play(910*px, 990*py, 100*px, 100*py);
 	reset = new Reset(840*px, 1015*py, 50*px, 50*py);
 	volume = new AudioBtn(1030*px, 1015*py, 50*px, 50*py);
-	settingsBtn = new SettingsBtn(1825*px, 1000*py, 70*px, 70*py);
+
+	// noStroke();
+	// fill(p.foreground);
+	// play = new Play(910*px, 970*py, 100*px, 100*py);
+	// reset = new Reset(840*px, 995*py, 50*px, 50*py);
+	// volume = new AudioBtn(1030*px, 995*py, 50*px, 50*py);
+
+	// volume = new AudioBtn(500*px, 500*py, 500*px, 500*py);
+	settingsBtn = new SettingsBtn(1850*px, 1005*py, 70*px, 70*py);
 	//Sliders
 
 	//Sounds
@@ -124,24 +139,34 @@ public void setup()
 	// Menus
 	menu = new Menu();
 	sound = new MySound(attackTime, sustainTime, sustainLevel, releaseTime, 50, 1200);
+	reset.reset();
 }
 
 public void draw() {
 	update();
 	count++;
-	println(arraySize);
+	count2+=500;
 
 	
 	background(0);
+
+	// Statistics
 	noStroke();
 	fill(p.foreground);
 	rect(0, height-70*py, width, 80*py);
+	fill(p.font);
+	textAlign(LEFT, TOP);
+	text("Array comparisons:", 10*px, height - 70*py);
+	text(comparisons, 165*px, height - 70*py);
+	textAlign(LEFT, BOTTOM);
+	text("Array assignments:", 10*px, height - fontSize);
+	text(assignments, 165*px, height - fontSize);
 
-	if (count % CalcSpeed.getModulus(speed) == 0) {
+	if (count % CalcSpeed.getModulus(speed) == 0 && play.active) {
 
 		// Mergesort
 		if(menu.algMenu.mergeBtn.active == true) {
-			if (!mergeSort.sorted && play.active) {
+			if (!mergeSort.sorted) {
 				mergeSort.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
 			}
@@ -150,7 +175,7 @@ public void draw() {
 
 		// Bubblesort
 		} else if(menu.algMenu.bubbleBtn.active == true) {
-			if (!bubble.sorted && play.active) {
+			if (!bubble.sorted) {
 				bubble.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
 			}
@@ -159,7 +184,7 @@ public void draw() {
 
 		// Selectionsort
 		} else if(menu.algMenu.selectionBtn.active == true) {
-			if (!selection.sorted && play.active) {
+			if (!selection.sorted) {
 				selection.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
 			}
@@ -168,7 +193,7 @@ public void draw() {
 
 		// Bubblesort (placeholder)
 		} else if(menu.algMenu.randomBtn.active == true) {
-			if (!bubble.sorted && play.active) {
+			if (!bubble.sorted) {
 				bubble.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
 			}
@@ -177,7 +202,9 @@ public void draw() {
 		}
 	}
 	b.render(array, colours);
-
+	// noStroke();
+	// fill(p.foreground);
+	// rect(865*px, 995*py, 190*px, 50*py);
 	menu.render();
 	play.render();
 	reset.render();
@@ -209,6 +236,7 @@ public void mouseReleased() {
 	volume.mouseUp();
 	menu.mouseUp();
 	settingsBtn.mouseUp();
+	// Closing Menu if clicked anywhere outside of menu or buttons
 	if (mouseX < width - menu.w - b.border) {
 		if (!(play.correctLocation() || reset.correctLocation() || volume.correctLocation()) && menu.wTarget == width - 436*px) {
 			menu.toggleMenu = true;
@@ -331,7 +359,7 @@ class AudioBtn extends Button{
 		circle(centreX - offsetXY, centreY + offsetXY, w);
 		noStroke();
 		fill(p.font);
-		rect(posX - offsetXY + (w/6.25f), posY + offsetXY + (h/2.7f), (w/3), (w/3.33f), 5*px);
+		rect(posX - offsetXY + (w/6.25f), posY + offsetXY + (h/2.77f), (w/3), (h/3.57f), 5*px);
 		triangle(posX - offsetXY + (w/1.85f), posY + offsetXY + (h/5), 
 			posX - offsetXY + (w/1.85f), posY + offsetXY + h - (h/5), 
 			posX - offsetXY + (h/5.55f), centreY + offsetXY);
@@ -407,6 +435,9 @@ class Barchart{
 
 	public void render(int[] a, int[] c) {
 		float spacer = 0;
+		float x1 = 0;
+		float y1 = 0;
+		float barHeight = 0;
 
 		noStroke();
 		fill(p.foreground);
@@ -437,10 +468,13 @@ class Barchart{
 			else {
 				stroke(0xffccff90);
 			}
-			float x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
-			float y1 = map(a[i], 0, max, posY + h + border, posY + border);
-			// float y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
-			float barHeight = map(a[i], 0, max, 0, h);
+			x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
+			if (menu.mirrorSwitch.active) {
+				y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
+			} else {
+				y1 = map(a[i], 0, max, posY + h + border, posY + border);
+			}
+			barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
 		}
 
@@ -451,10 +485,16 @@ class Barchart{
 			f = createFont("OpenSans-Regular.ttf", fontSize);
 			textFont(f);
 			// textSize(fontSize);
-			textAlign(CENTER, TOP);
 			for (int i = 0; i < a.length; i++) {
-				float x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
-				float y1 = map(a[i], 0, max, posY + h + border, posY + border) - 2*px;
+				x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
+				if (menu.mirrorSwitch.active) {
+					textAlign(CENTER, CENTER);
+					y1 = posY + (h/2) + border - 2*py;
+				} else {
+					textAlign(CENTER, TOP);
+					y1 = map(a[i], 0, max, posY + h + border, posY + border) - 2*py;
+				}
+				
 				text(a[i], x1, y1);
 			}
 		}
@@ -469,6 +509,11 @@ class Barchart{
 
 	// Used for rendering small thumbnail barcharts
 	public void renderSimple(int[] a, Thumbnail t) {
+		float x1 = 0;
+		float y1 = 0;
+		float barHeight = 0;
+
+
 		strokeWeight = w / a.length;
 		fill(p.barB);
 		noStroke();
@@ -478,9 +523,13 @@ class Barchart{
 		max = a.length - 1;
 		stroke(p.barF);
 		for (int i = 0; i < a.length; i++) {
-			float x1 = map(i, 0, a.length, posX - t.offsetXY, posX - t.offsetXY + w);
-			float y1 = map(a[i], 0, max, posY + t.offsetXY + h, posY + t.offsetXY);
-			float barHeight = map(a[i], 0, max, 0, h);
+			x1 = map(i, 0, a.length, posX - t.offsetXY, posX - t.offsetXY + w);
+			if (menu.mirrorSwitch.active) {
+				y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
+			} else {
+				y1 = map(a[i], 0, max, posY + t.offsetXY + h, posY + t.offsetXY);
+			}
+			barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
 		}
 		strokeCap(ROUND);
@@ -557,6 +606,7 @@ class BubbleSort extends Algorithm {
 			if (!sorted) {
 				stepThrough();
 			} else {
+				play.active = false;
 				break;
 			}
 		}
@@ -577,6 +627,7 @@ class BubbleSort extends Algorithm {
 	}
 
 	public void compare() {
+		comparisons++;
 		colours[pos1] = 1;
 		colours[pos0] = 1;
 		if (array[pos1] < array[pos0]) {
@@ -594,6 +645,7 @@ class BubbleSort extends Algorithm {
 	}
 
 	public void swap() {
+		assignments++;
 		int temp = array[pos0];
 		array[pos0] = array[pos1];
 		array[pos1] = temp;
@@ -854,6 +906,7 @@ static class GenerateArray {
 class Menu {
 
 	float posX, posY, w, h;
+	int arrSizeDisplay;
 	float wTarget;
 	float spacer;
 	float margin;
@@ -890,7 +943,6 @@ class Menu {
 		this.margin = 14*py;
 		this.toggleMenu = true;
 		this.closed = false;
-		this.mirrorSwitch = new ToggleSwitch(this.posX + w - (spacer*2) + 1000, this.posY + 500, 40, 20);
 		wTarget = width;
 		
 		algMenu = new SubMenu(
@@ -903,13 +955,14 @@ class Menu {
 			this.posX, 
 			algMenu.posY + algMenu.h + (spacer * 3) + (titleSize / 2) + margin, 
 			w, 
-			169*py); // Shapes
+			221*py); // Shapes
 
 		sizeSlider = new Slider(
 			this.posX + 225*px, 
 			shapeMenu.posY + shapeMenu.h + (spacer * 2), 
 			180*px, 20*py, 
 			arrayMin, arrayMax, arraySize); // Size
+		this.arrSizeDisplay = sizeSlider.getVal();
 		
 		speedSlider = new TickSlider(
 			this.posX + 225*px, 
@@ -943,6 +996,17 @@ class Menu {
 			180*px, 
 			20*py, 
 			0.001f, 1.0f, 0.2f); // Sound
+
+		mirrorSwitch = new ToggleSwitch(
+			this.posX + this.w - spacer - 17*px, 
+			algMenu.posY + algMenu.h + (spacer * 2.5f), 
+			17*px, 
+			20*py);
+
+		// mirrorSwitch = new ToggleSwitch(
+		// 	100, 100, 
+		// 	40*px, 
+		// 	20*py);
 	}
 
 	public void update() {
@@ -957,35 +1021,8 @@ class Menu {
 		soundRelSlider.update(); // Done
 		speedSlider.update(); // Done
 		mirrorSwitch.update();
+		arrSizeDisplay = sizeSlider.getVal();
 	}
-
-	// void updatePos2() {
-	// 	if (closed) {
-	// 		this.posX = width - this.w;
-	// 		algMenu.updatePos(true, this.w);
-	// 		shapeMenu.updatePos(true, this.w);
-	// 		sizeSlider.updatePos(true, this.w);
-	// 		speedSlider.updatePos(true, this.w);
-
-	// 		soundAttSlider.updatePos(true, this.w);
-	// 		soundSusTSlider.updatePos(true, this.w);
-	// 		soundSusLSlider.updatePos(true, this.w);
-	// 		soundRelSlider.updatePos(true, this.w);
-	// 		closed = false;
-	// 	} else {
-	// 		this.posX = width;
-	// 		algMenu.updatePos(false, this.w);
-	// 		shapeMenu.updatePos(false, this.w);
-	// 		sizeSlider.updatePos(false, this.w);
-	// 		speedSlider.updatePos(false, this.w);
-
-	// 		soundAttSlider.updatePos(false, this.w);
-	// 		soundSusTSlider.updatePos(false, this.w);
-	// 		soundSusLSlider.updatePos(false, this.w);
-	// 		soundRelSlider.updatePos(false, this.w);
-	// 		closed = true;
-	// 	}
-	// }
 
 	public void render() {
 		strokeWeight(1*px);
@@ -1024,7 +1061,6 @@ class Menu {
 		soundSusTSlider.render();
 		soundSusLSlider.render();
 		soundRelSlider.render();
-
 		mirrorSwitch.render();
 
 		//Text
@@ -1039,7 +1075,13 @@ class Menu {
 
 		textFont(f);
 		textSize(fontSize);
+		textAlign(LEFT, TOP);
+		text("Mirror", this.posX + spacer + (w/1.5f), algMenu.posY + algMenu.h + (spacer * 2) + (fontSize / 3));
+		textAlign(LEFT, CENTER);
 		text("Array Size", this.posX + 30*px, shapeMenu.posY + shapeMenu.h + (spacer * 2) + (fontSize / 2));
+		textAlign(RIGHT, CENTER);
+		text(arrSizeDisplay, this.posX + 180*px, shapeMenu.posY + shapeMenu.h + (spacer * 2) + (fontSize / 2));
+		textAlign(LEFT, CENTER);
 		text("Speed", this.posX + 30*px, sizeSlider.posY + sizeSlider.h + (spacer * 2) + (fontSize / 2));
 
 		// Sound Controls
@@ -1241,7 +1283,8 @@ class MergeSort {
 	public void compare() {
 		// println("\nBefore\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
 		// 		"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
-		
+
+		// Colours
 		if (l + counterL < colours.length && l + counterL < m + 1) {
 			colours[l + counterL] = 1;
 		} else {
@@ -1252,7 +1295,8 @@ class MergeSort {
 		} else {
 			colours[m + 1 + counterR - 1] = 1;
 		}
-		
+
+		// Comparison
 		if (counterL < sizeL && counterR < sizeR) {
 			if (array[l + counterL] <= array[m + 1 + counterR]) {
 				//add value to queue
@@ -1263,13 +1307,16 @@ class MergeSort {
 				mergeQueue.add(array[m + 1 + counterR]);
 				counterR++;
 			}
+			comparisons++;
 		//get the stragglers
 		} else if (counterL < sizeL) {
 			mergeQueue.add(array[l + counterL]);
 			counterL++;
+			comparisons++;
 		} else if (counterR < sizeR) {
 			mergeQueue.add(array[m + 1 + counterR]);
 			counterR++;
+			comparisons++;
 		} else {
 			//merge flag
 			startMerge = true;
@@ -1279,10 +1326,11 @@ class MergeSort {
 	}
 
 	public void merge() {
+		assignments++;
 		colours[counterA] = 2;
 		array[counterA] = mergeQueue.remove();
-		// println("\nLine 130\ncounterA = " + counterA + "\tmergeQueue removed = " + array[counterA]);
 		counterA++;
+		// println("\nLine 130\ncounterA = " + counterA + "\tmergeQueue removed = " + array[counterA]);
 		// if (mergeQueue.size() == 0) {
 		// 	startMerge = false;
 		// 	endMerge = true;
@@ -1597,40 +1645,46 @@ class Reset extends Button{
 
 	public void mouseUp() {
 		if(correctLocation() && depressed) {
-			//do some thing
-			arraySize = menu.sizeSlider.getVal();
-
-			for (int i = 0; i < menu.shapeMenu.btnThumbs.size(); i++) {
-				ShapeBtn s = menu.shapeMenu.btnThumbs.get(i);
-				if (s.active) {
-					if (s.name.matches("random")) {
-						array = GenerateArray.random(arraySize);
-					} else if (s.name.matches("sinWave")) {
-						array = GenerateArray.sinWave(arraySize, 1.5f);
-					} else if (s.name.matches("quadrant")) {
-						array = GenerateArray.quadrant(arraySize);
-					} else if (s.name.matches("heartbeat")) {
-						array = GenerateArray.sinWave(arraySize, 7.5f);
-					} else if (s.name.matches("squiggle")) {
-						array = GenerateArray.squiggle(arraySize);
-					} else if (s.name.matches("parabola")) {
-						array = GenerateArray.parabola(arraySize);
-					} else if (s.name.matches("parabolaInv")) {
-						array = GenerateArray.parabolaInv(arraySize);
-					} else if (s.name.matches("descending")) {
-						array = GenerateArray.desc(arraySize);
-					}
-				}
-			}
-
-			colours = GenerateArray.blanks(arraySize);
-			bubble.reset(array, colours);
-			selection.reset(array, colours);
-			mergeSort.reset(array, colours);
-			play.active = false;
+			// Reset
+			reset();
 		}
 		depressed = false;
 		offsetXY = 0*px;
+	}
+
+	public void reset() {
+		arraySize = menu.sizeSlider.getVal();
+
+		for (int i = 0; i < menu.shapeMenu.btnThumbs.size(); i++) {
+			ShapeBtn s = menu.shapeMenu.btnThumbs.get(i);
+			if (s.active) {
+				if (s.name.matches("random")) {
+					array = GenerateArray.random(arraySize);
+				} else if (s.name.matches("sinWave")) {
+					array = GenerateArray.sinWave(arraySize, 1.5f);
+				} else if (s.name.matches("quadrant")) {
+					array = GenerateArray.quadrant(arraySize);
+				} else if (s.name.matches("heartbeat")) {
+					array = GenerateArray.sinWave(arraySize, 7.5f);
+				} else if (s.name.matches("squiggle")) {
+					array = GenerateArray.squiggle(arraySize);
+				} else if (s.name.matches("parabola")) {
+					array = GenerateArray.parabola(arraySize);
+				} else if (s.name.matches("parabolaInv")) {
+					array = GenerateArray.parabolaInv(arraySize);
+				} else if (s.name.matches("descending")) {
+					array = GenerateArray.desc(arraySize);
+				}
+			}
+		}
+
+		colours = GenerateArray.blanks(arraySize);
+		bubble.reset(array, colours);
+		selection.reset(array, colours);
+		mergeSort.reset(array, colours);
+		play.active = false;
+		comparisons = 0;
+		assignments = 0;
 	}
 
 }
@@ -1744,6 +1798,7 @@ class SelectionSort extends Algorithm{
 	// }
 
 	public void compare() {
+		comparisons++;
 		colours[posMin] = 1;
 		colours[pos1] = 1;
 		if (pos0 > 0) {
@@ -1768,6 +1823,7 @@ class SelectionSort extends Algorithm{
 	}
 
 	public void swap() {
+		assignments++;
 		int temp = array[pos0];
 		array[pos0] = array[posMin];
 		array[posMin] = temp;
@@ -1912,18 +1968,24 @@ class ShapeBtn extends Thumbnail {
 			noStroke();
 		}
 		fill(shade);
-		rect(posX - offsetXY, posY + offsetXY, 100*px, 74*py, 8*px);
+		rect(posX - offsetXY, posY + offsetXY, w, h, 8*px);
 		b.renderSimple(arr, this);
 		// Overlay
 		noFill();
-		strokeWeight(4*px);
+		strokeWeight(6*px);
 		stroke(shade);
-		rect(posX - offsetXY + 15*px, posY + offsetXY + 13*py, 70*px, 48*py, 8*px);
+		rect(posX - offsetXY + 13*px, posY + offsetXY + 11*py, 74*px, 52*py, 10*px);
 		// Border
-		noFill();
-		strokeWeight(2*px);
-		stroke(p.accent);
-		rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
+		// noFill();
+		// strokeWeight(2*px);
+		// stroke(p.accent);
+		// rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
+		//Label
+		fill(p.font);
+		textFont(f);
+		textSize(fontSize);
+		textAlign(CENTER);
+		text(label, posX - offsetXY + 50*px, posY + offsetXY + 86*py);
 	}
 
 }
@@ -1946,15 +2008,15 @@ class ShapeMenu{
 		this.posY = posY;
 		this.w = w;
 		this.h = h;
-		this.random = new ShapeBtn(posX + 7*px, posY + 7*py, 100*px, 82*py, "random");
+		this.random = new ShapeBtn(posX + 7*px, posY + 7*py, 100*px, 100*py, "random");
 		this.random.active = true;
-		this.sinWaveBtn = new ShapeBtn(posX + 114*px, posY + 7*py, 100*px, 82*py, "sinWave");
-		this.quadrantBtn = new ShapeBtn(posX + 221*px, posY + 7*py, 100*px, 82*py, "quadrant");
-		this.heartbeatBtn = new ShapeBtn(posX + 328*px, posY + 7*py, 100*px, 82*py, "heartbeat");
-		this.squiggle = new ShapeBtn(posX + 7*px, posY + 89*py, 100*px, 82*py, "squiggle");
-		this.parabola = new ShapeBtn(posX + 114*px, posY + 89*py, 100*px, 82*py, "parabola");
-		this.parabolaInv = new ShapeBtn(posX + 221*px, posY + 89*py, 100*px, 82*py, "parabolaInv");
-		this.descending = new ShapeBtn(posX + 328*px, posY + 89*py, 100*px, 82*py, "descending");
+		this.sinWaveBtn = new ShapeBtn(posX + 114*px, posY + 7*py, 100*px, 100*py, "sinWave");
+		this.quadrantBtn = new ShapeBtn(posX + 221*px, posY + 7*py, 100*px, 100*py, "quadrant");
+		this.heartbeatBtn = new ShapeBtn(posX + 328*px, posY + 7*py, 100*px, 100*py, "heartbeat");
+		this.squiggle = new ShapeBtn(posX + 7*px, posY + 114*py, 100*px, 100*py, "squiggle");
+		this.parabola = new ShapeBtn(posX + 114*px, posY + 114*py, 100*px, 100*py, "parabola");
+		this.parabolaInv = new ShapeBtn(posX + 221*px, posY + 114*py, 100*px, 100*py, "parabolaInv");
+		this.descending = new ShapeBtn(posX + 328*px, posY + 114*py, 100*px, 100*py, "descending");
 		btnThumbs = new ArrayList<ShapeBtn>();
 		btnThumbs.add(random);
 		btnThumbs.add(sinWaveBtn);
@@ -2038,10 +2100,11 @@ class ShapeMenu{
 		if (buttonClicked) {
 			for (int i = 0; i < btnThumbs.size(); i++) {
 				ShapeBtn t = btnThumbs.get(i);
-				if (buttonClicked) {
-					t.active = false;
-					t.mouseUp();
-				}
+				t.active = false;
+				t.mouseUp();
+			}
+			if (!play.active) {
+				reset.reset();
 			}
 		}
 
@@ -2117,19 +2180,19 @@ class Slider extends Component{
 		}
 	}
 
-	public void updatePos(boolean closed, float sw) {
-		if(closed) {
-			// Subtract w
-			this.posX = this.posX - sw;
-			centreX = this.posX + (this.w/2) - sw;
-			this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) - sw;
-		} else {
-			// Add w
-			this.posX = this.posX + sw;
-			centreX = this.posX + (this.w/2) + sw;
-			this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) + sw;
-		}
-	}
+	// void updatePos(boolean closed, float sw) {
+	// 	if(closed) {
+	// 		// Subtract w
+	// 		this.posX = this.posX - sw;
+	// 		centreX = this.posX + (this.w/2) - sw;
+	// 		this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) - sw;
+	// 	} else {
+	// 		// Add w
+	// 		this.posX = this.posX + sw;
+	// 		centreX = this.posX + (this.w/2) + sw;
+	// 		this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) + sw;
+	// 	}
+	// }
 
 	public void render() {
 		//Draw track base
@@ -2368,14 +2431,14 @@ class Thumbnail {
 		b.renderSimple(arr, this);
 		// Overlay
 		noFill();
-		strokeWeight(4*px);
+		strokeWeight(6*px);
 		stroke(shade);
-		rect(posX - offsetXY + 15*px, posY + offsetXY + 13*py, 70*px, 48*py, 8*px);
+		rect(posX - offsetXY + 13*px, posY + offsetXY + 11*py, 74*px, 52*py, 10*px);
 		// Border
-		noFill();
-		strokeWeight(2*px);
-		stroke(p.accent);
-		rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
+		// noFill();
+		// strokeWeight(1*px);
+		// stroke(p.accent);
+		// rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
 		fill(p.font);
 		textFont(f);
 		textSize(fontSize);
@@ -2577,34 +2640,44 @@ class ToggleSwitch extends Button {
 		centreY = posY + (h/2);
 		strokeS = h/10;
 		strokeM = h/5;
-		strokeL = h/3.33f;
+		strokeL = h/1.4286f;
 		thumbX = posX;
 	}
 
 	public void render() {
 		//Draw track base
-		strokeWeight(strokeM);
+		strokeWeight(strokeL);
 		stroke(p.accent);
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
 		strokeWeight(strokeL);
-		stroke(shade);
+		stroke(p.font);
 		line(posX, centreY, thumbX, centreY);
 		noStroke();
 		//Draw highlight for hover and depressed
 		if(depressed) {
 			fill(shade, 130);
 			circle(thumbX, centreY, h * 2.5f);
-		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
+		} else if(correctLocation()) {
 			fill(p.font, 40);
 			circle(thumbX, centreY, h * 2.5f);
 		}
 		//Draw Thumb
-		fill(p.font);
+		if(active) {
+			fill(p.font);	
+		} else {
+			fill(p.hover);
+		}
 		circle(thumbX, centreY, h);
 	}
 
 	public void update() {
+		this.posX = lerp(this.posX, menu.wTarget + menu.w - (menu.spacer*2) - w, menuLerp);
+		if(active) {
+			thumbX = posX + w;
+		} else {
+			thumbX = posX;
+		}
 		if(correctLocation() && depressed) {
 			shade = p.select;
 		} else if (correctLocation()) {
@@ -2635,7 +2708,14 @@ class ToggleSwitch extends Button {
 		offsetXY = 0*px;
 	}
 
-
+	public boolean correctLocation() {
+		if(mouseX > posX - (h/2) && mouseX < posX + w + (h/2)
+			&& mouseY > posY && mouseY < posY + h) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 }
 class View {

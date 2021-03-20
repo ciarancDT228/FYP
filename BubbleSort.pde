@@ -42,6 +42,7 @@ class BubbleSort extends Algorithm {
 			if (!sorted) {
 				stepThrough();
 			} else {
+				play.active = false;
 				break;
 			}
 		}
@@ -62,6 +63,7 @@ class BubbleSort extends Algorithm {
 	}
 
 	void compare() {
+		comparisons++;
 		colours[pos1] = 1;
 		colours[pos0] = 1;
 		if (array[pos1] < array[pos0]) {
@@ -79,6 +81,7 @@ class BubbleSort extends Algorithm {
 	}
 
 	void swap() {
+		assignments++;
 		int temp = array[pos0];
 		array[pos0] = array[pos1];
 		array[pos1] = temp;
