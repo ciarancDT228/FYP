@@ -10,7 +10,7 @@ class Menu {
 	PFont f;
 	PFont t;
 
-	SubMenu algMenu;
+	AlgMenu algMenu;
 	ShapeMenu shapeMenu;
 
 	Slider sizeSlider;
@@ -21,6 +21,7 @@ class Menu {
 	Slider soundRelSlider;
 
 	Button mirrorSwitch;
+	Button descSwitch;
 
 	boolean toggleMenu;
 	boolean closed;
@@ -38,9 +39,15 @@ class Menu {
 		this.margin = 14*py;
 		this.toggleMenu = true;
 		this.closed = false;
-		wTarget = width;
+		this.wTarget = width;
 		
-		algMenu = new SubMenu(
+		descSwitch = new DescSwitch(
+			this.posX + this.w - spacer - 17*px, 
+			this.posY + (spacer * 2.5), 
+			17*px, 
+			20*py);
+
+		algMenu = new AlgMenu(
 			this.posX, 
 			this.posY + (spacer * 3) + (titleSize / 2) + margin, 
 			w, 
@@ -98,6 +105,7 @@ class Menu {
 			17*px, 
 			20*py);
 
+
 		// mirrorSwitch = new ToggleSwitch(
 		// 	100, 100, 
 		// 	40*px, 
@@ -117,6 +125,7 @@ class Menu {
 		speedSlider.update(); // Done
 		mirrorSwitch.update();
 		arrSizeDisplay = sizeSlider.getVal();
+		descSwitch.update();
 	}
 
 	void render() {
@@ -157,6 +166,7 @@ class Menu {
 		soundSusLSlider.render();
 		soundRelSlider.render();
 		mirrorSwitch.render();
+		descSwitch.render();
 
 		//Text
 		fill(p.font); // Array Size
@@ -172,6 +182,7 @@ class Menu {
 		textSize(fontSize);
 		textAlign(LEFT, TOP);
 		text("Mirror", this.posX + spacer + (w/1.5), algMenu.posY + algMenu.h + (spacer * 2) + (fontSize / 3));
+		text("Desc", this.posX + spacer + (w/1.5), posY + (spacer * 2) + (fontSize / 3));
 		textAlign(LEFT, CENTER);
 		text("Array Size", this.posX + 30*px, shapeMenu.posY + shapeMenu.h + (spacer * 2) + (fontSize / 2));
 		textAlign(RIGHT, CENTER);
@@ -197,6 +208,7 @@ class Menu {
 		soundRelSlider.mouseUp();
 		speedSlider.mouseUp();
 		mirrorSwitch.mouseUp();
+		descSwitch.mouseUp();
 	}
 
 	void mouseDown() {
@@ -209,6 +221,7 @@ class Menu {
 		soundRelSlider.mouseDown();
 		speedSlider.mouseDown();
 		mirrorSwitch.mouseDown();
+		descSwitch.mouseDown();
 	}
 
 	void keyPressed() {

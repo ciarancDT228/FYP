@@ -70,6 +70,7 @@ class Reset extends Button{
 			}
 		}
 
+		desc = menu.descSwitch.active;
 		colours = GenerateArray.blanks(arraySize);
 		bubble.reset(array, colours);
 		selection.reset(array, colours);

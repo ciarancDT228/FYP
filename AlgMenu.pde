@@ -1,4 +1,4 @@
-class SubMenu {
+class AlgMenu {
 
 	ArrayList<Thumbnail> algThumbs;
 	float posX, posY, w, h;
@@ -8,7 +8,7 @@ class SubMenu {
 	Thumbnail selectionBtn;
 	Thumbnail randomBtn;
 
-	public SubMenu (float posX, float posY, float w, float h) {
+	public AlgMenu (float posX, float posY, float w, float h) {
 		this.posX = posX;
 		this.posY = posY;
 		this.w = 435*px;

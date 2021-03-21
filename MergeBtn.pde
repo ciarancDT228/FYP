@@ -1,5 +1,6 @@
 class MergeBtn extends Thumbnail {
 
+	Button descSwitch;
 	MergeSort m;
 
 	public MergeBtn(float posX, float posY, float w, float h) {

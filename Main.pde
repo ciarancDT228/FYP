@@ -1,10 +1,18 @@
 
 import java.util.*;
+// import java.io.BufferedWriter;
+// import java.io.File;
+// import java.io.FileOutputStream;
+// import java.io.FileWriter;
+// import java.io.IOException;
+// import java.io.OutputStream;
+// import java.nio.file.Files;
+// import java.nio.file.Paths;
 import processing.sound.*;
 
 ArrayList<Component> components = new ArrayList<Component>();
-
 Queue<int[]> queue = new LinkedList<int[]>();
+PrintWriter output;
 
 float px;
 float py;
@@ -13,6 +21,9 @@ Palette p;
 PFont pf;
 float fontSize;
 Barchart b;
+boolean desc;
+boolean descThumb;
+
 
 BubbleSort bubble;
 SelectionSort selection;
@@ -23,6 +34,7 @@ Play play;
 Reset reset;
 AudioBtn volume;
 SettingsBtn settingsBtn;
+Menu menu;
 // Slider speedSlider;
 
 // Arrays and counters
@@ -60,7 +72,6 @@ float sustainTime = 0.004;
 float sustainLevel = 0.3;
 float releaseTime = 0.2;
 
-Menu menu;
 
 void settings() {
 	// size(1000, 600, OPENGL);
@@ -75,6 +86,7 @@ void settings() {
 
 void setup()
 {
+	output = createWriter("UserData.txt");
 	px = (width*5.2083333*pow(10, -4));
 	py = (height*9.2592592*pow(10, -4));
 	p = new Palette();
@@ -83,6 +95,8 @@ void setup()
 	menuLerp = 0.5;
 	// surface.setResizable(true);
 
+	desc = false;
+	descThumb = false;
 	b = new Barchart(0, 0, width, height - 70*py, 10*px); //Barchart
 	// b = new Barchart(0, 0, width, height, 20*px); //Barchart
 	arrayMax = width;
@@ -91,6 +105,8 @@ void setup()
 	arraySize = width/30;
 	array = GenerateArray.random(arraySize); //Generate
 	colours = GenerateArray.blanks(arraySize);
+
+	menu = new Menu();
 
 	//Algorithms
 	bubble = new BubbleSort(array, colours);
@@ -118,7 +134,6 @@ void setup()
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
 	// Menus
-	menu = new Menu();
 	sound = new MySound(attackTime, sustainTime, sustainLevel, releaseTime, 50, 1200);
 	reset.reset();
 }
@@ -147,10 +162,10 @@ void draw() {
 
 		// Mergesort
 		if(menu.algMenu.mergeBtn.active == true) {
-			if (!mergeSort.sorted) {
+			// if (!mergeSort.sorted) {
 				mergeSort.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
-			}
+			// }
 			array = mergeSort.getArray();
 			colours = mergeSort.getColours();
 
@@ -232,56 +247,8 @@ void mouseReleased() {
 	}
 }
 
-//---------------------------------------------------------------------------------------------------
-/*
-int[] array1;
-int[] array2;
-int[] array3;
-void randomTester() {
-	if(mouseX > 0) {
-		fill(255, 10);
-		float marker = 1;
-		if(count % marker == 0) {
-			array1 = gen.random2(30);
-			array2 = gen.asc(30);
-			array3 = gen.blanks(30);
-			for(int i = 0; i < array1.length; i++) {
-				if(array1[i] == array2[i]) {
-					array3[i] = array1[i];
-					println(array1[i]);
-				}
-			}
-			array3[0] = 30;
-			// b.render(array3);
-		}
-	}
+@ Override void exit() {
+	output.flush();
+	output.close();
+    super.exit();
 }
-
-void bubble(int[] array) {
-	boolean sorted = false;
-	while(!sorted) {
-		sorted = true;
-		for(int i = 1; i < array.length; i++) {
-			if(array[i] < array[i - 1]) {
-				int temp = array[i - 1];
-				array[i - 1] = array[i];
-				array[i] = temp;
-				sorted = false;
-			}
-		}
-	}
-	Barchart b2 = new Barchart(0, 0, width, height);
-	// b2.render(array);
-}
-
-	// sound();
-	// if (count % 60 == 0) {
-	// 	sound();
-	// 	println("Time: " + time + "att: " + soundAttSlider.getValFloat());
-	// 	println("Time: " + time + "susT: " + soundSusTSlider.getValFloat());
-	// 	println("Time: " + time + "susL: " + soundSusLSlider.getValFloat());
-	// 	println("Time: " + time + "rel: " + soundRelSlider.getValFloat());
-	// 	time++;
-	// }
-
-*/

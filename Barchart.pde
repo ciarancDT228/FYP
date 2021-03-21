@@ -124,7 +124,11 @@ class Barchart{
 		max = a.length - 1;
 		stroke(p.barF);
 		for (int i = 0; i < a.length; i++) {
-			x1 = map(i, 0, a.length, posX - t.offsetXY, posX - t.offsetXY + w);
+			if (descThumb && (t.label.matches("Bubble") || t.label.matches("Merge") || t.label.matches("Selection"))) {
+				x1 = map(i, a.length, 0, posX - t.offsetXY, posX - t.offsetXY + w);
+			} else {
+				x1 = map(i, 0, a.length, posX - t.offsetXY, posX - t.offsetXY + w);
+			}
 			if (menu.mirrorSwitch.active) {
 				y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
 			} else {

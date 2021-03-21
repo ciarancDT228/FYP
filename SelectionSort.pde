@@ -43,6 +43,7 @@ class SelectionSort extends Algorithm{
 			if (!sorted) {
 				stepThrough();
 			} else {
+				play.active = false;
 				break;
 			}
 		}
@@ -63,23 +64,6 @@ class SelectionSort extends Algorithm{
 		}
 	}
 
-	// void compare2() {
-	// 	if (!swapping) {
-	// 		colours[posMin] = 1;
-	// 		colours[pos1] = 1;
-	// 		colours[pos0] = 2;
-	// 		if (array[pos1] < array[posMin]) {
-	// 			posMin = pos1;
-	// 		}
-	// 		if (pos1 == array.length - 1) {
-	// 			swapping = true;
-	// 		}
-	// 		pos1++;
-	// 	} else {
-	// 		swap();
-	// 	}
-	// }
-
 	void compare() {
 		comparisons++;
 		colours[posMin] = 1;
@@ -87,8 +71,14 @@ class SelectionSort extends Algorithm{
 		if (pos0 > 0) {
 			colours[pos0 - 1] = 2;
 		}
-		if (array[pos1] < array[posMin]) {
-			posMin = pos1;
+		if (desc) {
+			if (array[pos1] > array[posMin]) {
+				posMin = pos1;
+			}
+		} else {
+			if (array[pos1] < array[posMin]) {
+				posMin = pos1;
+			}
 		}
 		if (pos1 == array.length - 1) {
 			if (swapping) {
@@ -114,11 +104,19 @@ class SelectionSort extends Algorithm{
 
 	void checkSorted() {
 		boolean sorted = true;
-
-		for(int i = 1; i < array.length; i++) {
-			if(array[i] < array[i - 1]) {
-				sorted = false;
-				break;
+		if (desc) {
+			for(int i = 1; i < array.length; i++) {
+				if(array[i] > array[i - 1]) {
+					sorted = false;
+					break;
+				}
+			}
+		} else {
+			for(int i = 1; i < array.length; i++) {
+				if(array[i] < array[i - 1]) {
+					sorted = false;
+					break;
+				}
 			}
 		}
 		this.sorted = sorted;

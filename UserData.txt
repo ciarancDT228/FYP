@@ -1,0 +1,25 @@
+
+Algorithm: Merge Sort
+Speed: 30720
+Array size: 555
+Sound: false
+
+Algorithm: Merge Sort
+Speed: 1920
+Array size: 555
+Sound: true
+
+Algorithm: Merge Sort
+Speed: 1920
+Array size: 206
+Sound: false
+
+Algorithm: Merge Sort
+Speed: 120
+Array size: 206
+Sound: false
+
+Algorithm: Merge Sort
+Speed: 10
+Array size: 16
+Sound: true

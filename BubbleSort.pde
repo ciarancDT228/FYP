@@ -66,12 +66,23 @@ class BubbleSort extends Algorithm {
 		comparisons++;
 		colours[pos1] = 1;
 		colours[pos0] = 1;
-		if (array[pos1] < array[pos0]) {
-			if (swapping) {
-				swap();
-				swapping = false;
-			} else {
-				swapping = true;
+		if (desc) {
+			if (array[pos1] > array[pos0]) {
+				if (swapping) {
+					swap();
+					swapping = false;
+				} else {
+					swapping = true;
+				}
+			}
+		} else {
+			if (array[pos1] < array[pos0]) {
+				if (swapping) {
+					swap();
+					swapping = false;
+				} else {
+					swapping = true;
+				}
 			}
 		}
 		if (!swapping) {
@@ -90,10 +101,19 @@ class BubbleSort extends Algorithm {
 
 	void checkSorted() {
 		boolean sorted = true;
-		for(int i = 1; i < array.length; i++) {
-			if(array[i] < array[i - 1]) {
-				sorted = false;
-				break;
+		if (desc) {
+			for(int i = 1; i < array.length; i++) {
+				if(array[i] > array[i - 1]) {
+					sorted = false;
+					break;
+				}
+			}
+		} else {
+			for(int i = 1; i < array.length; i++) {
+				if(array[i] < array[i - 1]) {
+					sorted = false;
+					break;
+				}
 			}
 		}
 		this.sorted = sorted;

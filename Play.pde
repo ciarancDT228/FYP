@@ -34,8 +34,41 @@ class Play extends Button{
 			triangle(posX - offsetXY + (w/2.94), posY + offsetXY + (h/4.16), 
 			posX - offsetXY + (w/2.94), posY + offsetXY + h - (h/4.16), 
 			posX - offsetXY + w - (w/4.5), centreY + offsetXY);
+		}	
+	}
+
+	void mouseUp() {
+		if(correctLocation() && depressed) {
+			//do some thing
+			if(active) {
+				active = false;
+			} else {
+				if(sorted()) {
+					reset.reset();
+				}
+				active = true;
+			}
 		}
-		
+		shade = p.foreground;
+		depressed = false;
+		offsetXY = 0;
+	}
+
+	boolean sorted() {
+		if (desc) {
+			for(int i = 1; i < array.length; i++) {
+				if(array[i] > array[i - 1]) {
+					return false;
+				}
+			}
+		} else {
+			for(int i = 1; i < array.length; i++) {
+				if(array[i] < array[i - 1]) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 }
