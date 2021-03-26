@@ -1,18 +1,18 @@
 
 import java.util.*;
-// import java.io.BufferedWriter;
-// import java.io.File;
-// import java.io.FileOutputStream;
-// import java.io.FileWriter;
-// import java.io.IOException;
-// import java.io.OutputStream;
-// import java.nio.file.Files;
-// import java.nio.file.Paths;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import processing.sound.*;
 
 ArrayList<Component> components = new ArrayList<Component>();
+
 Queue<int[]> queue = new LinkedList<int[]>();
-PrintWriter output;
 
 float px;
 float py;
@@ -86,7 +86,6 @@ void settings() {
 
 void setup()
 {
-	output = createWriter("UserData.txt");
 	px = (width*5.2083333*pow(10, -4));
 	py = (height*9.2592592*pow(10, -4));
 	p = new Palette();
@@ -111,8 +110,7 @@ void setup()
 	//Algorithms
 	bubble = new BubbleSort(array, colours);
 	selection = new SelectionSort(array, colours);
-	println("main line 114");
-	mergeSort = new MergeSort(array, colours, false);
+	mergeSort = new MergeSort(array, colours);
 	
 
 	//Buttons
@@ -163,41 +161,39 @@ void draw() {
 
 		// Mergesort
 		if(menu.algMenu.mergeBtn.active == true) {
-			// if (!mergeSort.sorted) {
+			if (!mergeSort.sorted) {
 				mergeSort.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
-			// }
+			}
 			array = mergeSort.getArray();
 			colours = mergeSort.getColours();
 
 		// Bubblesort
 		} else if(menu.algMenu.bubbleBtn.active == true) {
-			// if (!bubble.sorted) {
+			if (!bubble.sorted) {
 				bubble.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
-			// }
+			}
 			array = bubble.getArray();
 			colours = bubble.getColours();
 
 		// Selectionsort
 		} else if(menu.algMenu.selectionBtn.active == true) {
-			// if (!selection.sorted) {
+			if (!selection.sorted) {
 				selection.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
-			// }
+			}
 			array = selection.getArray();
 			colours = selection.getColours();
 
 		// Bubblesort (placeholder)
 		} else if(menu.algMenu.randomBtn.active == true) {
-			// if (!bubble.sorted) {
+			if (!bubble.sorted) {
 				bubble.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
-			// }
+			}
 			array = bubble.getArray();
 			colours = bubble.getColours();
-		} else {
-			play.active = false;
 		}
 	}
 	b.render(array, colours);
@@ -251,7 +247,13 @@ void mouseReleased() {
 }
 
 @ Override void exit() {
-	output.flush();
-	output.close();
+	println(sketchPath());
+	println("herp derp");
+	String data = "herp derp";
+	try {
+        Files.write(Paths.get("./data/files.txt"), data.getBytes());
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
     super.exit();
 }

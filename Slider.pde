@@ -7,8 +7,11 @@ class Slider extends Component{
 	float strokeS, strokeM, strokeL;
 	float minVal, maxVal, currentVal;
 	boolean depressed, active;
+	boolean round;
+	float fontSize;
+	PFont f;
 
-	public Slider(float posX, float posY, float w, float h, float minVal, float maxVal, float initVal) {
+	public Slider(float posX, float posY, float w, float h, float minVal, float maxVal, float initVal, boolean round) {
 		this.posX = posX;
 		this.posY = posY;
 		this.w = w;
@@ -25,6 +28,9 @@ class Slider extends Component{
 		strokeM = h/5;
 		strokeL = h/3.33;
 		currentVal = getValFloat();
+		this.round = round;
+		this.fontSize = 16*px;
+		this.f = createFont("OpenSans-Regular.ttf", fontSize);
 	}
 
 	public Slider(float posX, float posY, float w, float h) {
@@ -60,20 +66,6 @@ class Slider extends Component{
 		}
 	}
 
-	// void updatePos(boolean closed, float sw) {
-	// 	if(closed) {
-	// 		// Subtract w
-	// 		this.posX = this.posX - sw;
-	// 		centreX = this.posX + (this.w/2) - sw;
-	// 		this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) - sw;
-	// 	} else {
-	// 		// Add w
-	// 		this.posX = this.posX + sw;
-	// 		centreX = this.posX + (this.w/2) + sw;
-	// 		this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) + sw;
-	// 	}
-	// }
-
 	void render() {
 		//Draw track base
 		strokeWeight(strokeM);
@@ -95,6 +87,46 @@ class Slider extends Component{
 		//Draw Thumb
 		fill(p.font);
 		circle(thumbX, centreY, thumbRadius);
+		// Draw current value
+		textAlign(RIGHT, CENTER);
+		if (round) {
+			text(getVal(), this.posX -20*px, posY + (fontSize / 2) - 1*py);
+		} else {
+			text(getValFloat(), this.posX -20*px, posY + (fontSize / 2) - 1*py);
+		}
+		textAlign(LEFT, CENTER);
+	}
+
+	void render2() {
+		//Draw track base
+		strokeWeight(strokeM);
+		stroke(p.accent);
+		line(posX, centreY, posX + w, centreY);
+		//Draw track highlight
+		strokeWeight(strokeL);
+		stroke(p.font);
+		line(posX, centreY, thumbX, centreY);
+		noStroke();
+		//Draw highlight for hover and depressed
+		if(depressed) {
+			fill(p.font, 130);
+			circle(thumbX, centreY, thumbRadius * 2.5);
+		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
+			fill(p.font, 40);
+			circle(thumbX, centreY, thumbRadius * 2.5);
+		}
+		//Draw Thumb
+		fill(p.font);
+		circle(thumbX, centreY, thumbRadius);
+		// Draw current value
+		textAlign(RIGHT, CENTER);
+		if (round) {
+			text(getVal(), this.posX -20*px, posY + (fontSize / 2) - 1*py);
+		} else {
+			text(getValFloat(), this.posX -20*px, posY + (fontSize / 2) - 1*py);
+		}
+		
+		textAlign(LEFT, CENTER);
 	}
 
 	void mouseDown() {

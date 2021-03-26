@@ -43,6 +43,9 @@ class BubbleSort extends Algorithm {
 				stepThrough();
 			} else {
 				play.active = false;
+				output.println("\nAlgorithm: Bubble Sort\nSpeed: "	+ menu.speedSlider.getVal()
+					 + "\nArray size: " + arr.length + "\nSound: " + volume.active + 
+					 "\n Mirrored: " + menu.mirrorSwitch.active);
 				break;
 			}
 		}

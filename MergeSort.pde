@@ -7,6 +7,7 @@ class MergeSort {
 	boolean startMerge;
 	boolean endMerge;
 	boolean first;
+	boolean thumbnail;
 	// boolean desc;
 	int counterA;
 	int counterL, counterR;
@@ -18,10 +19,11 @@ class MergeSort {
 	int[] positions;
 	// int stop;
 
-	public MergeSort(int[] array, int[] colours) {
+	public MergeSort(int[] array, int[] colours, boolean thumbnail) {
 		this.array = array;
 		this.copy = array;
 		this.colours = colours;
+		this.thumbnail = thumbnail;
 		lrQueue.clear();
 		mergeQueue.clear();
 		fillQueue(0, (array.length-1) * 2);
@@ -40,7 +42,7 @@ class MergeSort {
 		l = 0;
 		m = 0;
 		r = 0;
-		// stop = -1;
+		println("mergeSort line 43");
 	}
 
 	void reset(int[] array, int[] colours) {
@@ -69,7 +71,7 @@ class MergeSort {
 	void steps(int x, int[] arr, int[] colours) {
 		this.array = arr;
 		this.colours = colours;
-
+		checkSorted();
 		for (int i = 0; i < colours.length; i++) {
 			colours[i] = 0;
 		}
@@ -77,9 +79,10 @@ class MergeSort {
 			if (!sorted) {
 				stepThrough();
 			} else {
-				play.active = false;
-				output.println("\nAlgorithm: Merge Sort\nSpeed: "	+ menu.speedSlider.getVal()
-					 + "\nArray size: " + arr.length + "\nSound: " + volume.active);
+				// play.active = false;
+				// output.println("\nAlgorithm: Merge Sort\nSpeed: "	+ menu.speedSlider.getVal()
+				// 	 + "\nArray size: " + arr.length + "\nSound: " + volume.active + 
+				// 	 "\n Mirrored: " + menu.mirrorSwitch.active);
 				break;
 			}
 		}
@@ -136,40 +139,29 @@ class MergeSort {
 	}
 
 	void compare() {
-		// println("\nBefore\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
-		// 		"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
-
-		// Colours
-		if (l + counterL < colours.length && l + counterL < m + 1) {
-			colours[l + counterL] = 1;
-		} else {
-			colours[l + counterL - 1] = 1;
-		}
-		if (m + 1 + counterR < colours.length && m + counterR < r) {
-			colours[m + 1 + counterR] = 1;
-		} else if (!desc){
-			colours[m + 1 + counterR - 1] = 1;
-		}
-
 		// Comparison
 		if (counterL < sizeL && counterR < sizeR) {
 			if (desc) {
 				if (array[l + counterL] >= array[m + 1 + counterR]) {
 					//add value to queue
+					colours[l + counterL] = 1;
 					mergeQueue.add(array[l + counterL]);
 					counterL++;
 				} else {
 					//add value to queue
+					colours[m + 1 + counterR] = 1;
 					mergeQueue.add(array[m + 1 + counterR]);
 					counterR++;
 				}
 			} else {
 				if (array[l + counterL] <= array[m + 1 + counterR]) {
 					//add value to queue
+					colours[l + counterL] = 1;
 					mergeQueue.add(array[l + counterL]);
 					counterL++;
 				} else {
 					//add value to queue
+					colours[m + 1 + counterR] = 1;
 					mergeQueue.add(array[m + 1 + counterR]);
 					counterR++;
 				}
@@ -177,10 +169,12 @@ class MergeSort {
 			comparisons++;
 		//get the stragglers
 		} else if (counterL < sizeL) {
+			colours[l + counterL] = 1;
 			mergeQueue.add(array[l + counterL]);
 			counterL++;
 			comparisons++;
 		} else if (counterR < sizeR) {
+			colours[m + 1 + counterR] = 1;
 			mergeQueue.add(array[m + 1 + counterR]);
 			counterR++;
 			comparisons++;
@@ -188,8 +182,6 @@ class MergeSort {
 			//merge flag
 			startMerge = true;
 		}
-		// println("After\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
-		// 		"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
 	}
 
 	void merge() {
@@ -222,18 +214,36 @@ class MergeSort {
 
 	void checkSorted() {
 		boolean sorted = true;
-		if (desc) {
-			for(int i = 1; i < array.length; i++) {
-				if(array[i] >= array[i - 1]) {
-					sorted = false;
-					break;
+		if(thumbnail) {
+			if (desc) {
+				for(int i = 1; i < array.length; i++) {
+					if(array[i] >= array[i - 1]) {
+						sorted = false;
+						break;
+					}
+				}
+			} else {
+				for(int i = 1; i < array.length; i++) {
+					if(array[i] <= array[i - 1]) {
+						sorted = false;
+						break;
+					}
 				}
 			}
 		} else {
-			for(int i = 1; i < array.length; i++) {
-				if(array[i] <= array[i - 1]) {
-					sorted = false;
-					break;
+			if (desc) {
+				for(int i = 1; i < array.length; i++) {
+					if(array[i] > array[i - 1]) {
+						sorted = false;
+						break;
+					}
+				}
+			} else {
+				for(int i = 1; i < array.length; i++) {
+					if(array[i] < array[i - 1]) {
+						sorted = false;
+						break;
+					}
 				}
 			}
 		}

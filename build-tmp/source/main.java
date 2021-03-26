@@ -130,7 +130,8 @@ public void setup()
 	//Algorithms
 	bubble = new BubbleSort(array, colours);
 	selection = new SelectionSort(array, colours);
-	mergeSort = new MergeSort(array, colours);
+	println("main line 114");
+	mergeSort = new MergeSort(array, colours, false);
 	
 
 	//Buttons
@@ -190,30 +191,32 @@ public void draw() {
 
 		// Bubblesort
 		} else if(menu.algMenu.bubbleBtn.active == true) {
-			if (!bubble.sorted) {
+			// if (!bubble.sorted) {
 				bubble.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
-			}
+			// }
 			array = bubble.getArray();
 			colours = bubble.getColours();
 
 		// Selectionsort
 		} else if(menu.algMenu.selectionBtn.active == true) {
-			if (!selection.sorted) {
+			// if (!selection.sorted) {
 				selection.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
-			}
+			// }
 			array = selection.getArray();
 			colours = selection.getColours();
 
 		// Bubblesort (placeholder)
 		} else if(menu.algMenu.randomBtn.active == true) {
-			if (!bubble.sorted) {
+			// if (!bubble.sorted) {
 				bubble.steps(CalcSpeed.getNumSteps(speed), array, colours);
 				sound.play();
-			}
+			// }
 			array = bubble.getArray();
 			colours = bubble.getColours();
+		} else {
+			play.active = false;
 		}
 	}
 	b.render(array, colours);
@@ -267,15 +270,8 @@ public void mouseReleased() {
 }
 
 public @Override void exit() {
-	println(sketchPath());
-	println("herp derp");
 	output.flush();
 	output.close();
-	// try {
- //        Files.write(Paths.get("files.txt"), data.getBytes());
- //    } catch (IOException e) {
- //        e.printStackTrace();
- //    }
     super.exit();
 }
 class AlgMenu {
@@ -705,6 +701,9 @@ class BubbleSort extends Algorithm {
 				stepThrough();
 			} else {
 				play.active = false;
+				output.println("\nAlgorithm: Bubble Sort\nSpeed: "	+ menu.speedSlider.getVal()
+					 + "\nArray size: " + arr.length + "\nSound: " + volume.active + 
+					 "\n Mirrored: " + menu.mirrorSwitch.active);
 				break;
 			}
 		}
@@ -1053,6 +1052,7 @@ class Menu {
 
 	float posX, posY, w, h;
 	int arrSizeDisplay;
+	int speed;
 	float wTarget;
 	float spacer;
 	float margin;
@@ -1114,7 +1114,7 @@ class Menu {
 			this.posX + 225*px, 
 			shapeMenu.posY + shapeMenu.h + (spacer * 2), 
 			180*px, 20*py, 
-			arrayMin, arrayMax, arraySize); // Size
+			arrayMin, arrayMax, arraySize, true); // Size
 		this.arrSizeDisplay = sizeSlider.getVal();
 		
 		speedSlider = new TickSlider(
@@ -1127,28 +1127,28 @@ class Menu {
 			speedSlider.posY + speedSlider.h + (spacer * 3) + (titleSize / 2) + margin, 
 			180*px, 
 			20*py, 
-			0.001f, 1.0f, 0.001f); // Sound
+			0.001f, 1.0f, 0.001f, false); // Sound
 
 		soundSusTSlider = new Slider(
 			this.posX + 225*px, 
 			soundAttSlider.posY + soundAttSlider.h + spacer, 
 			180*px, 
 			20*py, 
-			0.001f, 1.0f, 0.004f); // Sound
+			0.001f, 1.0f, 0.004f, false); // Sound
 
 		soundSusLSlider = new Slider(
 			this.posX + 225*px, 
 			soundSusTSlider.posY + soundSusTSlider.h + spacer, 
 			180*px, 
 			20*py, 
-			0.001f, 1.0f, 0.3f); // Sound
+			0.001f, 1.0f, 0.3f, false); // Sound
 
 		soundRelSlider = new Slider(
 			this.posX + 225*px, 
 			soundSusLSlider.posY + soundSusLSlider.h + spacer, 
 			180*px, 
 			20*py, 
-			0.001f, 1.0f, 0.2f); // Sound
+			0.001f, 1.0f, 0.2f, false); // Sound
 
 		mirrorSwitch = new ToggleSwitch(
 			this.posX + this.w - spacer - 17*px, 
@@ -1234,11 +1234,10 @@ class Menu {
 		textAlign(LEFT, TOP);
 		text("Mirror", this.posX + spacer + (w/1.5f), algMenu.posY + algMenu.h + (spacer * 2) + (fontSize / 3));
 		text("Desc", this.posX + spacer + (w/1.5f), posY + (spacer * 2) + (fontSize / 3));
+		// text("Speed", this.posX + 30*px, sizeSlider.posY + sizeSlider.h + (spacer * 2) + (fontSize / 2));
+
 		textAlign(LEFT, CENTER);
 		text("Array Size", this.posX + 30*px, shapeMenu.posY + shapeMenu.h + (spacer * 2) + (fontSize / 2));
-		textAlign(RIGHT, CENTER);
-		text(arrSizeDisplay, this.posX + 180*px, shapeMenu.posY + shapeMenu.h + (spacer * 2) + (fontSize / 2));
-		textAlign(LEFT, CENTER);
 		text("Speed", this.posX + 30*px, sizeSlider.posY + sizeSlider.h + (spacer * 2) + (fontSize / 2));
 
 		// Sound Controls
@@ -1290,8 +1289,9 @@ class MergeBtn extends Thumbnail {
 
 	public MergeBtn(float posX, float posY, float w, float h) {
 		super(posX, posY, w, h);
-		m = new MergeSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize));
+		m = new MergeSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize), true);
 		m.steps(590, arr, crr);
+		println("mergeBtn line 10");
 		arr = m.getArray();
 		crr = GenerateArray.blanks(arrSize);
 		this.label = "Merge";
@@ -1320,6 +1320,7 @@ class MergeSort {
 	boolean startMerge;
 	boolean endMerge;
 	boolean first;
+	boolean thumbnail;
 	// boolean desc;
 	int counterA;
 	int counterL, counterR;
@@ -1331,10 +1332,11 @@ class MergeSort {
 	int[] positions;
 	// int stop;
 
-	public MergeSort(int[] array, int[] colours) {
+	public MergeSort(int[] array, int[] colours, boolean thumbnail) {
 		this.array = array;
 		this.copy = array;
 		this.colours = colours;
+		this.thumbnail = thumbnail;
 		lrQueue.clear();
 		mergeQueue.clear();
 		fillQueue(0, (array.length-1) * 2);
@@ -1353,7 +1355,7 @@ class MergeSort {
 		l = 0;
 		m = 0;
 		r = 0;
-		// stop = -1;
+		println("mergeSort line 43");
 	}
 
 	public void reset(int[] array, int[] colours) {
@@ -1382,7 +1384,7 @@ class MergeSort {
 	public void steps(int x, int[] arr, int[] colours) {
 		this.array = arr;
 		this.colours = colours;
-
+		checkSorted();
 		for (int i = 0; i < colours.length; i++) {
 			colours[i] = 0;
 		}
@@ -1390,9 +1392,10 @@ class MergeSort {
 			if (!sorted) {
 				stepThrough();
 			} else {
-				play.active = false;
-				output.println("\nAlgorithm: Merge Sort\nSpeed: "	+ menu.speedSlider.getVal()
-					 + "\nArray size: " + arr.length + "\nSound: " + volume.active);
+				// play.active = false;
+				// output.println("\nAlgorithm: Merge Sort\nSpeed: "	+ menu.speedSlider.getVal()
+				// 	 + "\nArray size: " + arr.length + "\nSound: " + volume.active + 
+				// 	 "\n Mirrored: " + menu.mirrorSwitch.active);
 				break;
 			}
 		}
@@ -1449,40 +1452,29 @@ class MergeSort {
 	}
 
 	public void compare() {
-		// println("\nBefore\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
-		// 		"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
-
-		// Colours
-		if (l + counterL < colours.length && l + counterL < m + 1) {
-			colours[l + counterL] = 1;
-		} else {
-			colours[l + counterL - 1] = 1;
-		}
-		if (m + 1 + counterR < colours.length && m + counterR < r) {
-			colours[m + 1 + counterR] = 1;
-		} else if (!desc){
-			colours[m + 1 + counterR - 1] = 1;
-		}
-
 		// Comparison
 		if (counterL < sizeL && counterR < sizeR) {
 			if (desc) {
 				if (array[l + counterL] >= array[m + 1 + counterR]) {
 					//add value to queue
+					colours[l + counterL] = 1;
 					mergeQueue.add(array[l + counterL]);
 					counterL++;
 				} else {
 					//add value to queue
+					colours[m + 1 + counterR] = 1;
 					mergeQueue.add(array[m + 1 + counterR]);
 					counterR++;
 				}
 			} else {
 				if (array[l + counterL] <= array[m + 1 + counterR]) {
 					//add value to queue
+					colours[l + counterL] = 1;
 					mergeQueue.add(array[l + counterL]);
 					counterL++;
 				} else {
 					//add value to queue
+					colours[m + 1 + counterR] = 1;
 					mergeQueue.add(array[m + 1 + counterR]);
 					counterR++;
 				}
@@ -1490,10 +1482,12 @@ class MergeSort {
 			comparisons++;
 		//get the stragglers
 		} else if (counterL < sizeL) {
+			colours[l + counterL] = 1;
 			mergeQueue.add(array[l + counterL]);
 			counterL++;
 			comparisons++;
 		} else if (counterR < sizeR) {
+			colours[m + 1 + counterR] = 1;
 			mergeQueue.add(array[m + 1 + counterR]);
 			counterR++;
 			comparisons++;
@@ -1501,8 +1495,6 @@ class MergeSort {
 			//merge flag
 			startMerge = true;
 		}
-		// println("After\tcounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + "\tm = " + m + 
-		// 		"\n\t    counterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
 	}
 
 	public void merge() {
@@ -1535,18 +1527,36 @@ class MergeSort {
 
 	public void checkSorted() {
 		boolean sorted = true;
-		if (desc) {
-			for(int i = 1; i < array.length; i++) {
-				if(array[i] >= array[i - 1]) {
-					sorted = false;
-					break;
+		if(thumbnail) {
+			if (desc) {
+				for(int i = 1; i < array.length; i++) {
+					if(array[i] >= array[i - 1]) {
+						sorted = false;
+						break;
+					}
+				}
+			} else {
+				for(int i = 1; i < array.length; i++) {
+					if(array[i] <= array[i - 1]) {
+						sorted = false;
+						break;
+					}
 				}
 			}
 		} else {
-			for(int i = 1; i < array.length; i++) {
-				if(array[i] <= array[i - 1]) {
-					sorted = false;
-					break;
+			if (desc) {
+				for(int i = 1; i < array.length; i++) {
+					if(array[i] > array[i - 1]) {
+						sorted = false;
+						break;
+					}
+				}
+			} else {
+				for(int i = 1; i < array.length; i++) {
+					if(array[i] < array[i - 1]) {
+						sorted = false;
+						break;
+					}
 				}
 			}
 		}
@@ -1958,6 +1968,9 @@ class SelectionSort extends Algorithm{
 				stepThrough();
 			} else {
 				play.active = false;
+				output.println("\nAlgorithm: Selection Sort\nSpeed: "	+ menu.speedSlider.getVal()
+					 + "\nArray size: " + arr.length + "\nSound: " + volume.active + 
+					 "\n Mirrored: " + menu.mirrorSwitch.active);
 				break;
 			}
 		}
@@ -2322,8 +2335,11 @@ class Slider extends Component{
 	float strokeS, strokeM, strokeL;
 	float minVal, maxVal, currentVal;
 	boolean depressed, active;
+	boolean round;
+	float fontSize;
+	PFont f;
 
-	public Slider(float posX, float posY, float w, float h, float minVal, float maxVal, float initVal) {
+	public Slider(float posX, float posY, float w, float h, float minVal, float maxVal, float initVal, boolean round) {
 		this.posX = posX;
 		this.posY = posY;
 		this.w = w;
@@ -2340,6 +2356,9 @@ class Slider extends Component{
 		strokeM = h/5;
 		strokeL = h/3.33f;
 		currentVal = getValFloat();
+		this.round = round;
+		this.fontSize = 16*px;
+		this.f = createFont("OpenSans-Regular.ttf", fontSize);
 	}
 
 	public Slider(float posX, float posY, float w, float h) {
@@ -2375,20 +2394,6 @@ class Slider extends Component{
 		}
 	}
 
-	// void updatePos(boolean closed, float sw) {
-	// 	if(closed) {
-	// 		// Subtract w
-	// 		this.posX = this.posX - sw;
-	// 		centreX = this.posX + (this.w/2) - sw;
-	// 		this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) - sw;
-	// 	} else {
-	// 		// Add w
-	// 		this.posX = this.posX + sw;
-	// 		centreX = this.posX + (this.w/2) + sw;
-	// 		this.thumbX = map(getValFloat(), minVal, maxVal, this.posX, this.posX + this.w) + sw;
-	// 	}
-	// }
-
 	public void render() {
 		//Draw track base
 		strokeWeight(strokeM);
@@ -2410,6 +2415,46 @@ class Slider extends Component{
 		//Draw Thumb
 		fill(p.font);
 		circle(thumbX, centreY, thumbRadius);
+		// Draw current value
+		textAlign(RIGHT, CENTER);
+		if (round) {
+			text(getVal(), this.posX -20*px, posY + (fontSize / 2) - 1*py);
+		} else {
+			text(getValFloat(), this.posX -20*px, posY + (fontSize / 2) - 1*py);
+		}
+		textAlign(LEFT, CENTER);
+	}
+
+	public void render2() {
+		//Draw track base
+		strokeWeight(strokeM);
+		stroke(p.accent);
+		line(posX, centreY, posX + w, centreY);
+		//Draw track highlight
+		strokeWeight(strokeL);
+		stroke(p.font);
+		line(posX, centreY, thumbX, centreY);
+		noStroke();
+		//Draw highlight for hover and depressed
+		if(depressed) {
+			fill(p.font, 130);
+			circle(thumbX, centreY, thumbRadius * 2.5f);
+		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
+			fill(p.font, 40);
+			circle(thumbX, centreY, thumbRadius * 2.5f);
+		}
+		//Draw Thumb
+		fill(p.font);
+		circle(thumbX, centreY, thumbRadius);
+		// Draw current value
+		textAlign(RIGHT, CENTER);
+		if (round) {
+			text(getVal(), this.posX -20*px, posY + (fontSize / 2) - 1*py);
+		} else {
+			text(getValFloat(), this.posX -20*px, posY + (fontSize / 2) - 1*py);
+		}
+		
+		textAlign(LEFT, CENTER);
 	}
 
 	public void mouseDown() {
@@ -2610,19 +2655,19 @@ class TickSlider extends Slider {
 		setVal();
 	}
 
-	public void updatePos(boolean closed, float sw) {
-		if(closed) {
-			// Subtract w
-			this.posX = this.posX - sw;
-			centreX = this.posX + (this.w/2) - sw;
-			this.thumbX -= sw;
-		} else {
-			// Add w
-			this.posX = this.posX + sw;
-			centreX = this.posX + (this.w/2) + sw;
-			this.thumbX += sw;
-		}
-	}
+	// void updatePos(boolean closed, float sw) {
+	// 	if(closed) {
+	// 		// Subtract w
+	// 		this.posX = this.posX - sw;
+	// 		centreX = this.posX + (this.w/2) - sw;
+	// 		this.thumbX -= sw;
+	// 	} else {
+	// 		// Add w
+	// 		this.posX = this.posX + sw;
+	// 		centreX = this.posX + (this.w/2) + sw;
+	// 		this.thumbX += sw;
+	// 	}
+	// }
 
 	public void render() {
 		float tickmark;
@@ -2661,6 +2706,10 @@ class TickSlider extends Slider {
 		//Draw Thumb
 		fill(p.font);
 		circle(thumbX, centreY, thumbRadius);
+		// Draw current value
+		textAlign(RIGHT, CENTER);
+		text(getVal(), this.posX -20*px, posY + (fontSize / 2) + 7*py);
+		textAlign(LEFT, CENTER);
 	}
 
 	public int getVal() {

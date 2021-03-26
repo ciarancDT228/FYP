@@ -2,6 +2,7 @@ class Menu {
 
 	float posX, posY, w, h;
 	int arrSizeDisplay;
+	int speed;
 	float wTarget;
 	float spacer;
 	float margin;
@@ -63,7 +64,7 @@ class Menu {
 			this.posX + 225*px, 
 			shapeMenu.posY + shapeMenu.h + (spacer * 2), 
 			180*px, 20*py, 
-			arrayMin, arrayMax, arraySize); // Size
+			arrayMin, arrayMax, arraySize, true); // Size
 		this.arrSizeDisplay = sizeSlider.getVal();
 		
 		speedSlider = new TickSlider(
@@ -76,28 +77,28 @@ class Menu {
 			speedSlider.posY + speedSlider.h + (spacer * 3) + (titleSize / 2) + margin, 
 			180*px, 
 			20*py, 
-			0.001, 1.0, 0.001); // Sound
+			0.001, 1.0, 0.001, false); // Sound
 
 		soundSusTSlider = new Slider(
 			this.posX + 225*px, 
 			soundAttSlider.posY + soundAttSlider.h + spacer, 
 			180*px, 
 			20*py, 
-			0.001, 1.0, 0.004); // Sound
+			0.001, 1.0, 0.004, false); // Sound
 
 		soundSusLSlider = new Slider(
 			this.posX + 225*px, 
 			soundSusTSlider.posY + soundSusTSlider.h + spacer, 
 			180*px, 
 			20*py, 
-			0.001, 1.0, 0.3); // Sound
+			0.001, 1.0, 0.3, false); // Sound
 
 		soundRelSlider = new Slider(
 			this.posX + 225*px, 
 			soundSusLSlider.posY + soundSusLSlider.h + spacer, 
 			180*px, 
 			20*py, 
-			0.001, 1.0, 0.2); // Sound
+			0.001, 1.0, 0.2, false); // Sound
 
 		mirrorSwitch = new ToggleSwitch(
 			this.posX + this.w - spacer - 17*px, 
@@ -183,11 +184,10 @@ class Menu {
 		textAlign(LEFT, TOP);
 		text("Mirror", this.posX + spacer + (w/1.5), algMenu.posY + algMenu.h + (spacer * 2) + (fontSize / 3));
 		text("Desc", this.posX + spacer + (w/1.5), posY + (spacer * 2) + (fontSize / 3));
+		// text("Speed", this.posX + 30*px, sizeSlider.posY + sizeSlider.h + (spacer * 2) + (fontSize / 2));
+
 		textAlign(LEFT, CENTER);
 		text("Array Size", this.posX + 30*px, shapeMenu.posY + shapeMenu.h + (spacer * 2) + (fontSize / 2));
-		textAlign(RIGHT, CENTER);
-		text(arrSizeDisplay, this.posX + 180*px, shapeMenu.posY + shapeMenu.h + (spacer * 2) + (fontSize / 2));
-		textAlign(LEFT, CENTER);
 		text("Speed", this.posX + 30*px, sizeSlider.posY + sizeSlider.h + (spacer * 2) + (fontSize / 2));
 
 		// Sound Controls

@@ -36,19 +36,19 @@ class TickSlider extends Slider {
 		setVal();
 	}
 
-	void updatePos(boolean closed, float sw) {
-		if(closed) {
-			// Subtract w
-			this.posX = this.posX - sw;
-			centreX = this.posX + (this.w/2) - sw;
-			this.thumbX -= sw;
-		} else {
-			// Add w
-			this.posX = this.posX + sw;
-			centreX = this.posX + (this.w/2) + sw;
-			this.thumbX += sw;
-		}
-	}
+	// void updatePos(boolean closed, float sw) {
+	// 	if(closed) {
+	// 		// Subtract w
+	// 		this.posX = this.posX - sw;
+	// 		centreX = this.posX + (this.w/2) - sw;
+	// 		this.thumbX -= sw;
+	// 	} else {
+	// 		// Add w
+	// 		this.posX = this.posX + sw;
+	// 		centreX = this.posX + (this.w/2) + sw;
+	// 		this.thumbX += sw;
+	// 	}
+	// }
 
 	void render() {
 		float tickmark;
@@ -87,6 +87,10 @@ class TickSlider extends Slider {
 		//Draw Thumb
 		fill(p.font);
 		circle(thumbX, centreY, thumbRadius);
+		// Draw current value
+		textAlign(RIGHT, CENTER);
+		text(getVal(), this.posX -20*px, posY + (fontSize / 2) + 7*py);
+		textAlign(LEFT, CENTER);
 	}
 
 	int getVal() {
