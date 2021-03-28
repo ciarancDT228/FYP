@@ -69,25 +69,26 @@ class Slider extends Component{
 	void render() {
 		//Draw track base
 		strokeWeight(strokeM);
-		stroke(p.accent);
+		stroke(p.sliderTrackEnabled);
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
 		strokeWeight(strokeL);
-		stroke(p.font);
+		stroke(p.sliderHighlightEnabled);
 		line(posX, centreY, thumbX, centreY);
 		noStroke();
 		//Draw highlight for hover and depressed
 		if(depressed) {
-			fill(p.font, 130);
+			fill(p.sliderHighlightEnabled, 130);
 			circle(thumbX, centreY, thumbRadius * 2.5);
 		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
-			fill(p.font, 40);
+			fill(p.sliderHighlightEnabled, 40);
 			circle(thumbX, centreY, thumbRadius * 2.5);
 		}
 		//Draw Thumb
-		fill(p.font);
+		fill(p.sliderHighlightEnabled);
 		circle(thumbX, centreY, thumbRadius);
-		// Draw current value
+		// Draw text current value
+		fill(p.font);
 		textAlign(RIGHT, CENTER);
 		if (round) {
 			text(getVal(), this.posX -20*px, posY + (fontSize / 2) - 1*py);

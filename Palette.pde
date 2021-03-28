@@ -8,14 +8,30 @@ class Palette {
 	int hover;
 	int select;
 	int accent;
-	int font;
 	int barF;
 	int barB;
+
+	int font;
+	int barchartFont;
+	int barchartBg;
+	int barchartFg;
+	int btnHover;
+	int btnSelect;
+	int btnDepress;
+	int sliderTrackEnabled;
+	int sliderTrackDisabled;
+	int sliderHighlightEnabled;
+	int sliderHighlightDisabled;
+	// int sliderHover;
 
 	public Palette() {
 		// int[] lightMode = {#eeeeee,#dddddd,#cccccc,#bbbbbb,#aaaaaa,#2d3142}; // white
 		// int[] lightMode = {#6D769C,#dddddd,#cccccc,#bbbbbb,#A3A3A3,#525252}; // white2
-		int[] lightMode = {#ffffff,#ffffff,#f1f3f4,#feefc3,#f8f9fa,#aecbfa, #091540}; // white 3
+		int[] lightMode = {#ffffff,#e0e0e0,#091540,#091540,#ffffff,#aecbfa,
+		#f1f3f4,#feefc3,#1a73e8,#8db9f4,#ffffff,#bdc1c6}; //white 4
+
+
+		// int[] lightMode = {#ffffff,#ffffff,#f1f3f4,#feefc3,#f8f9fa,#aecbfa, #091540}; // white 3
 		
 		// int[] lightMode = {#2d3142,#aaaaaa,#bbbbbb,#cccccc,#dddddd,#eeeeee};
 		this.lightMode = lightMode;
@@ -26,8 +42,9 @@ class Palette {
 		this.barB = #858585;
 		this.darkMode = darkMode;
 
-		dark();
+		// dark();
 		// light();
+		test();
 	}
 
 	void dark() {
@@ -50,6 +67,22 @@ class Palette {
 		this.font = lightMode[6];
 		this.barF = lightMode[0];
 		this.barB = lightMode[5];
+	}
+
+	void test() {
+		this.foreground = lightMode[0];
+		this.accent = lightMode[1];
+		this.font = lightMode[2];
+		this.barchartFont = lightMode[3];
+		this.barchartFg = lightMode[4];
+		this.barchartBg = lightMode[5];
+		this.btnHover = lightMode[6];
+		this.btnSelect = lightMode[7];
+		this.sliderHighlightEnabled = lightMode[8];
+		this.sliderTrackEnabled = lightMode[9];
+		this.sliderHighlightDisabled = lightMode[10];
+		this.sliderTrackDisabled = lightMode[11];
+		// int sliderHover = lightMode[12];
 	}
 
 

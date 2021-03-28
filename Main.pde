@@ -97,7 +97,7 @@ void setup()
 
 	desc = false;
 	descThumb = false;
-	b = new Barchart(0, 0, width, height - 70*py, 10*px); //Barchart
+	b = new Barchart(0, 0, width, height - 70*py, 80*px); //Barchart
 	// b = new Barchart(0, 0, width, height, 20*px); //Barchart
 	arrayMax = width;
 	arrayMin = 16; //Min array size
@@ -147,18 +147,6 @@ void draw() {
 	
 	background(0);
 
-	// Statistics
-	noStroke();
-	fill(p.foreground);
-	rect(0, height-70*py, width, 80*py);
-	fill(p.font);
-	textAlign(LEFT, TOP);
-	text("Array comparisons:", 10*px, height - 70*py);
-	text(comparisons, 165*px, height - 70*py);
-	textAlign(LEFT, BOTTOM);
-	text("Array assignments:", 10*px, height - fontSize);
-	text(assignments, 165*px, height - fontSize);
-
 	if (count % CalcSpeed.getModulus(speed) == 0 && play.active) {
 
 		// Mergesort
@@ -205,6 +193,19 @@ void draw() {
 	// fill(p.foreground);
 	// rect(865*px, 995*py, 190*px, 50*py);
 	menu.render();
+
+	// Statistics
+	noStroke();
+	fill(p.foreground);
+	rect(0, height-70*py, width, 80*py);
+	fill(p.font);
+	textAlign(LEFT, TOP);
+	text("Array comparisons:", 10*px, height - 70*py);
+	text(comparisons, 165*px, height - 70*py);
+	textAlign(LEFT, BOTTOM);
+	text("Array assignments:", 10*px, height - fontSize);
+	text(assignments, 165*px, height - fontSize);
+	
 	play.render();
 	reset.render();
 	volume.render();

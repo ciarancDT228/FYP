@@ -40,9 +40,11 @@ class Barchart{
 		float y1 = 0;
 		float barHeight = 0;
 
+		// Border
 		noStroke();
 		fill(p.foreground);
-		rect(posX, posY,border*2 + w, border*2 + h);
+		rect(posX, posY, border*2 + w, border*2 + h);
+		// Set strokeWeight
 		if (a.length > w / 3) {
 			strokeWeight = w / a.length;
 			spacer = strokeWeight / 2;
@@ -50,18 +52,20 @@ class Barchart{
 			strokeWeight = (w-(a.length))/a.length;
 			spacer = strokeWeight / 2;
 		}
-		fill(p.barB);
+		// Draw background
+		fill(p.barchartBg);
 		noStroke();
 		rect(posX + border, posY + border, w, h);
+		// Draw bars
 		strokeWeight(strokeWeight);
-		strokeCap(SQUARE);
-		// strokeCap(ROUND);
+		// strokeCap(SQUARE);
+		strokeCap(ROUND);
 		array = a;
 		colours = c;
 		max = a.length;
 		for (int i = 0; i < a.length; i++) {
 			if(c[i] == 0) {
-				stroke(p.barF);
+				stroke(p.barchartFg);
 			}
 			else if (c[i] == 1) {
 				stroke(#aecbfa);
@@ -71,17 +75,18 @@ class Barchart{
 			}
 			x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
 			if (menu.mirrorSwitch.active) {
-				y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
+				y1 = map(a[i], -a.length, max, posY + h + border, posY + border + (strokeWeight / 2));
+				barHeight = map(a[i], 0, max, 0, h - strokeWeight);
 			} else {
-				y1 = map(a[i], 0, max, posY + h + border, posY + border);
+				y1 = map(a[i], 0, max, posY + h + border, posY + border + (strokeWeight / 2) + (3*py));
+				barHeight = map(a[i], 0, max, 0, h - (strokeWeight / 2));
 			}
-			barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
 		}
 
 		//Draw numbers
 		if (a.length <= 100) {
-			fill(p.background);
+			fill(p.barchartFont);
 			fontSize = (w/a.length/2);
 			f = createFont("OpenSans-Regular.ttf", fontSize);
 			textFont(f);
@@ -92,17 +97,20 @@ class Barchart{
 					textAlign(CENTER, CENTER);
 					y1 = posY + (h/2) + border - 2*py;
 				} else {
-					textAlign(CENTER, TOP);
-					y1 = map(a[i], 0, max, posY + h + border, posY + border) - 2*py;
+					textAlign(CENTER, CENTER);
+					y1 = map(a[i], 0, max, posY + h + border, posY + border + (strokeWeight/2));
 				}
 				
 				text(a[i], x1, y1);
 			}
 		}
 			
-		// Draw border
+		// Draw bottom to cover round caps
+		noStroke();
+		fill(p.foreground);
+		rect(posX, posY + h + border, posX + w + (border * 2), posY + h + (border * 2));
 		noFill();
-		strokeWeight(1*px);
+		strokeWeight(3*px);
 		stroke(p.accent);
 		rect(posX + border, posY + border, w, h);
 		strokeCap(ROUND);

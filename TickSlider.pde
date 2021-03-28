@@ -55,11 +55,11 @@ class TickSlider extends Slider {
 
 		//Draw track base
 		strokeWeight(strokeM);
-		stroke(p.accent);
+		stroke(p.sliderTrackEnabled);
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
 		strokeWeight(strokeL);
-		stroke(p.font);
+		stroke(p.sliderHighlightEnabled);
 		line(posX, centreY, thumbX, centreY);
 
 		//Draw ticks
@@ -67,9 +67,9 @@ class TickSlider extends Slider {
 		for(int i = 1; i < numTicks; i++) {
 			tickmark = map(i, 0, numTicks, posX, posX + w);
 			if(tickmark <= thumbX) {
-				stroke(p.accent);
+				stroke(p.sliderTrackEnabled);
 			} else {
-				stroke(p.font);
+				stroke(p.sliderHighlightEnabled);
 			}
 			point(map(i, 0, numTicks, posX, posX + w), centreY);
 		}
@@ -77,17 +77,18 @@ class TickSlider extends Slider {
 		noStroke();
 		//Draw highlight depressed
 		if(depressed) {
-			fill(p.font, 130);
+			fill(p.sliderHighlightEnabled, 130);
 			circle(thumbX, centreY, thumbRadius * 2.5);
 		//Draw highlight for hover
 		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
-			fill(p.font, 40);
+			fill(p.sliderHighlightEnabled, 40);
 			circle(thumbX, centreY, thumbRadius * 2.5);
 		}
 		//Draw Thumb
-		fill(p.font);
+		fill(p.sliderHighlightEnabled);
 		circle(thumbX, centreY, thumbRadius);
-		// Draw current value
+		// Draw text current value
+		fill(p.font);
 		textAlign(RIGHT, CENTER);
 		text(getVal(), this.posX -20*px, posY + (fontSize / 2) + 7*py);
 		textAlign(LEFT, CENTER);

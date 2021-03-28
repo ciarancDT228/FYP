@@ -116,7 +116,7 @@ public void setup()
 
 	desc = false;
 	descThumb = false;
-	b = new Barchart(0, 0, width, height - 70*py, 10*px); //Barchart
+	b = new Barchart(0, 0, width, height - 70*py, 80*px); //Barchart
 	// b = new Barchart(0, 0, width, height, 20*px); //Barchart
 	arrayMax = width;
 	arrayMin = 16; //Min array size
@@ -166,18 +166,6 @@ public void draw() {
 	
 	background(0);
 
-	// Statistics
-	noStroke();
-	fill(p.foreground);
-	rect(0, height-70*py, width, 80*py);
-	fill(p.font);
-	textAlign(LEFT, TOP);
-	text("Array comparisons:", 10*px, height - 70*py);
-	text(comparisons, 165*px, height - 70*py);
-	textAlign(LEFT, BOTTOM);
-	text("Array assignments:", 10*px, height - fontSize);
-	text(assignments, 165*px, height - fontSize);
-
 	if (count % CalcSpeed.getModulus(speed) == 0 && play.active) {
 
 		// Mergesort
@@ -224,6 +212,19 @@ public void draw() {
 	// fill(p.foreground);
 	// rect(865*px, 995*py, 190*px, 50*py);
 	menu.render();
+
+	// Statistics
+	noStroke();
+	fill(p.foreground);
+	rect(0, height-70*py, width, 80*py);
+	fill(p.font);
+	textAlign(LEFT, TOP);
+	text("Array comparisons:", 10*px, height - 70*py);
+	text(comparisons, 165*px, height - 70*py);
+	textAlign(LEFT, BOTTOM);
+	text("Array assignments:", 10*px, height - fontSize);
+	text(assignments, 165*px, height - fontSize);
+	
 	play.render();
 	reset.render();
 	volume.render();
@@ -529,9 +530,11 @@ class Barchart{
 		float y1 = 0;
 		float barHeight = 0;
 
+		// Border
 		noStroke();
 		fill(p.foreground);
-		rect(posX, posY,border*2 + w, border*2 + h);
+		rect(posX, posY, border*2 + w, border*2 + h);
+		// Set strokeWeight
 		if (a.length > w / 3) {
 			strokeWeight = w / a.length;
 			spacer = strokeWeight / 2;
@@ -539,18 +542,20 @@ class Barchart{
 			strokeWeight = (w-(a.length))/a.length;
 			spacer = strokeWeight / 2;
 		}
-		fill(p.barB);
+		// Draw background
+		fill(p.barchartBg);
 		noStroke();
 		rect(posX + border, posY + border, w, h);
+		// Draw bars
 		strokeWeight(strokeWeight);
-		strokeCap(SQUARE);
-		// strokeCap(ROUND);
+		// strokeCap(SQUARE);
+		strokeCap(ROUND);
 		array = a;
 		colours = c;
 		max = a.length;
 		for (int i = 0; i < a.length; i++) {
 			if(c[i] == 0) {
-				stroke(p.barF);
+				stroke(p.barchartFg);
 			}
 			else if (c[i] == 1) {
 				stroke(0xffaecbfa);
@@ -560,17 +565,18 @@ class Barchart{
 			}
 			x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
 			if (menu.mirrorSwitch.active) {
-				y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
+				y1 = map(a[i], -a.length, max, posY + h + border, posY + border + (strokeWeight / 2));
+				barHeight = map(a[i], 0, max, 0, h - strokeWeight);
 			} else {
-				y1 = map(a[i], 0, max, posY + h + border, posY + border);
+				y1 = map(a[i], 0, max, posY + h + border, posY + border + (strokeWeight / 2) + (3*py));
+				barHeight = map(a[i], 0, max, 0, h - (strokeWeight / 2));
 			}
-			barHeight = map(a[i], 0, max, 0, h);
 			line(x1, y1, x1, y1 + barHeight);
 		}
 
 		//Draw numbers
 		if (a.length <= 100) {
-			fill(p.background);
+			fill(p.barchartFont);
 			fontSize = (w/a.length/2);
 			f = createFont("OpenSans-Regular.ttf", fontSize);
 			textFont(f);
@@ -581,17 +587,20 @@ class Barchart{
 					textAlign(CENTER, CENTER);
 					y1 = posY + (h/2) + border - 2*py;
 				} else {
-					textAlign(CENTER, TOP);
-					y1 = map(a[i], 0, max, posY + h + border, posY + border) - 2*py;
+					textAlign(CENTER, CENTER);
+					y1 = map(a[i], 0, max, posY + h + border, posY + border + (strokeWeight/2));
 				}
 				
 				text(a[i], x1, y1);
 			}
 		}
 			
-		// Draw border
+		// Draw bottom to cover round caps
+		noStroke();
+		fill(p.foreground);
+		rect(posX, posY + h + border, posX + w + (border * 2), posY + h + (border * 2));
 		noFill();
-		strokeWeight(1*px);
+		strokeWeight(3*px);
 		stroke(p.accent);
 		rect(posX + border, posY + border, w, h);
 		strokeCap(ROUND);
@@ -1692,14 +1701,30 @@ class Palette {
 	int hover;
 	int select;
 	int accent;
-	int font;
 	int barF;
 	int barB;
+
+	int font;
+	int barchartFont;
+	int barchartBg;
+	int barchartFg;
+	int btnHover;
+	int btnSelect;
+	int btnDepress;
+	int sliderTrackEnabled;
+	int sliderTrackDisabled;
+	int sliderHighlightEnabled;
+	int sliderHighlightDisabled;
+	// int sliderHover;
 
 	public Palette() {
 		// int[] lightMode = {#eeeeee,#dddddd,#cccccc,#bbbbbb,#aaaaaa,#2d3142}; // white
 		// int[] lightMode = {#6D769C,#dddddd,#cccccc,#bbbbbb,#A3A3A3,#525252}; // white2
-		int[] lightMode = {0xffffffff,0xffffffff,0xfff1f3f4,0xfffeefc3,0xfff8f9fa,0xffaecbfa, 0xff091540}; // white 3
+		int[] lightMode = {0xffffffff,0xffe0e0e0,0xff091540,0xff091540,0xffffffff,0xffaecbfa,
+		0xfff1f3f4,0xfffeefc3,0xff1a73e8,0xff8db9f4,0xffffffff,0xffbdc1c6}; //white 4
+
+
+		// int[] lightMode = {#ffffff,#ffffff,#f1f3f4,#feefc3,#f8f9fa,#aecbfa, #091540}; // white 3
 		
 		// int[] lightMode = {#2d3142,#aaaaaa,#bbbbbb,#cccccc,#dddddd,#eeeeee};
 		this.lightMode = lightMode;
@@ -1710,8 +1735,9 @@ class Palette {
 		this.barB = 0xff858585;
 		this.darkMode = darkMode;
 
-		dark();
+		// dark();
 		// light();
+		test();
 	}
 
 	public void dark() {
@@ -1734,6 +1760,22 @@ class Palette {
 		this.font = lightMode[6];
 		this.barF = lightMode[0];
 		this.barB = lightMode[5];
+	}
+
+	public void test() {
+		this.foreground = lightMode[0];
+		this.accent = lightMode[1];
+		this.font = lightMode[2];
+		this.barchartFont = lightMode[3];
+		this.barchartFg = lightMode[4];
+		this.barchartBg = lightMode[5];
+		this.btnHover = lightMode[6];
+		this.btnSelect = lightMode[7];
+		this.sliderHighlightEnabled = lightMode[8];
+		this.sliderTrackEnabled = lightMode[9];
+		this.sliderHighlightDisabled = lightMode[10];
+		this.sliderTrackDisabled = lightMode[11];
+		// int sliderHover = lightMode[12];
 	}
 
 
@@ -2397,25 +2439,26 @@ class Slider extends Component{
 	public void render() {
 		//Draw track base
 		strokeWeight(strokeM);
-		stroke(p.accent);
+		stroke(p.sliderTrackEnabled);
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
 		strokeWeight(strokeL);
-		stroke(p.font);
+		stroke(p.sliderHighlightEnabled);
 		line(posX, centreY, thumbX, centreY);
 		noStroke();
 		//Draw highlight for hover and depressed
 		if(depressed) {
-			fill(p.font, 130);
+			fill(p.sliderHighlightEnabled, 130);
 			circle(thumbX, centreY, thumbRadius * 2.5f);
 		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
-			fill(p.font, 40);
+			fill(p.sliderHighlightEnabled, 40);
 			circle(thumbX, centreY, thumbRadius * 2.5f);
 		}
 		//Draw Thumb
-		fill(p.font);
+		fill(p.sliderHighlightEnabled);
 		circle(thumbX, centreY, thumbRadius);
-		// Draw current value
+		// Draw text current value
+		fill(p.font);
 		textAlign(RIGHT, CENTER);
 		if (round) {
 			text(getVal(), this.posX -20*px, posY + (fontSize / 2) - 1*py);
@@ -2674,11 +2717,11 @@ class TickSlider extends Slider {
 
 		//Draw track base
 		strokeWeight(strokeM);
-		stroke(p.accent);
+		stroke(p.sliderTrackEnabled);
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
 		strokeWeight(strokeL);
-		stroke(p.font);
+		stroke(p.sliderHighlightEnabled);
 		line(posX, centreY, thumbX, centreY);
 
 		//Draw ticks
@@ -2686,9 +2729,9 @@ class TickSlider extends Slider {
 		for(int i = 1; i < numTicks; i++) {
 			tickmark = map(i, 0, numTicks, posX, posX + w);
 			if(tickmark <= thumbX) {
-				stroke(p.accent);
+				stroke(p.sliderTrackEnabled);
 			} else {
-				stroke(p.font);
+				stroke(p.sliderHighlightEnabled);
 			}
 			point(map(i, 0, numTicks, posX, posX + w), centreY);
 		}
@@ -2696,17 +2739,18 @@ class TickSlider extends Slider {
 		noStroke();
 		//Draw highlight depressed
 		if(depressed) {
-			fill(p.font, 130);
+			fill(p.sliderHighlightEnabled, 130);
 			circle(thumbX, centreY, thumbRadius * 2.5f);
 		//Draw highlight for hover
 		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
-			fill(p.font, 40);
+			fill(p.sliderHighlightEnabled, 40);
 			circle(thumbX, centreY, thumbRadius * 2.5f);
 		}
 		//Draw Thumb
-		fill(p.font);
+		fill(p.sliderHighlightEnabled);
 		circle(thumbX, centreY, thumbRadius);
-		// Draw current value
+		// Draw text current value
+		fill(p.font);
 		textAlign(RIGHT, CENTER);
 		text(getVal(), this.posX -20*px, posY + (fontSize / 2) + 7*py);
 		textAlign(LEFT, CENTER);
