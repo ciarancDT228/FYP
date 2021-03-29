@@ -119,22 +119,12 @@ void setup()
 	// volume = new AudioBtn(50*px, 50*py, 500*px, 500*py);
 	reset = new Reset(840*px, 1005*py, 50*px, 50*py);
 	volume = new AudioBtn(1030*px, 1005*py, 50*px, 50*py);
-
-	// noStroke();
-	// fill(p.foreground);
-	// play = new Play(910*px, 970*py, 100*px, 100*py);
-	// reset = new Reset(840*px, 995*py, 50*px, 50*py);
-	// volume = new AudioBtn(1030*px, 995*py, 50*px, 50*py);
-
-	// volume = new AudioBtn(500*px, 500*py, 500*px, 500*py);
 	settingsBtn = new SettingsBtn(1850*px, 1005*py, 70*px, 70*py);
-	//Sliders
 
 	//Sounds
 	s = new Sound(this);
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
-	// Menus
 	sound = new MySound(attackTime, sustainTime, sustainLevel, releaseTime, 50, 1200);
 	reset.reset();
 }
@@ -144,7 +134,7 @@ void draw() {
 	count++;
 	count2+=500;
 	
-	background(0);
+	background(p.foreground);
 
 	if (count % CalcSpeed.getModulus(speed) == 0 && play.active) {
 		// Mergesort
@@ -195,8 +185,6 @@ void draw() {
 
 	// Statistics
 	noStroke();
-	fill(p.foreground);
-	rect(0, height-75*py, width, 85*py);
 	fill(p.font);
 	textAlign(LEFT, TOP);
 	text("Array comparisons:", 10*px, height - 70*py);

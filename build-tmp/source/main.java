@@ -138,22 +138,12 @@ public void setup()
 	// volume = new AudioBtn(50*px, 50*py, 500*px, 500*py);
 	reset = new Reset(840*px, 1005*py, 50*px, 50*py);
 	volume = new AudioBtn(1030*px, 1005*py, 50*px, 50*py);
-
-	// noStroke();
-	// fill(p.foreground);
-	// play = new Play(910*px, 970*py, 100*px, 100*py);
-	// reset = new Reset(840*px, 995*py, 50*px, 50*py);
-	// volume = new AudioBtn(1030*px, 995*py, 50*px, 50*py);
-
-	// volume = new AudioBtn(500*px, 500*py, 500*px, 500*py);
 	settingsBtn = new SettingsBtn(1850*px, 1005*py, 70*px, 70*py);
-	//Sliders
 
 	//Sounds
 	s = new Sound(this);
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
-	// Menus
 	sound = new MySound(attackTime, sustainTime, sustainLevel, releaseTime, 50, 1200);
 	reset.reset();
 }
@@ -163,7 +153,7 @@ public void draw() {
 	count++;
 	count2+=500;
 	
-	background(0);
+	background(p.foreground);
 
 	if (count % CalcSpeed.getModulus(speed) == 0 && play.active) {
 		// Mergesort
@@ -214,8 +204,6 @@ public void draw() {
 
 	// Statistics
 	noStroke();
-	fill(p.foreground);
-	rect(0, height-75*py, width, 85*py);
 	fill(p.font);
 	textAlign(LEFT, TOP);
 	text("Array comparisons:", 10*px, height - 70*py);
@@ -685,6 +673,9 @@ class BubbleSort extends Algorithm {
 	public void stepThrough() {
 		checkSorted();
 		if (!sorted) {
+			if(!swapping) {
+				comparisons++;
+			}
 			if (pos1 < stop) {
 				compare();
 			} else {
@@ -2766,28 +2757,106 @@ class ToggleSwitch extends Button {
 	public void render() {
 		//Draw track base
 		strokeWeight(strokeL);
-		stroke(p.accent);
+		stroke(p.sliderTrackDisabled);
 		line(posX, centreY, posX + w, centreY);
 		//Draw track highlight
 		strokeWeight(strokeL);
-		stroke(p.font);
+		stroke(p.sliderTrackEnabled);
 		line(posX, centreY, thumbX, centreY);
 		noStroke();
 		//Draw highlight for hover and depressed
 		if(depressed) {
-			fill(shade, 130);
+			fill(p.sliderHighlightEnabled, 130);
 			circle(thumbX, centreY, h * 2.5f);
 		} else if(correctLocation()) {
-			fill(p.font, 40);
+			fill(p.sliderHighlightEnabled, 40);
 			circle(thumbX, centreY, h * 2.5f);
 		}
-		//Draw Thumb
-		if(active) {
-			fill(p.font);	
+		if (active) {
+			//Draw Thumb
+			fill(p.sliderHighlightEnabled);
+			circle(thumbX, centreY, h);
 		} else {
-			fill(p.hover);
+			//Draw Thumb
+			fill(p.sliderTrackDisabled);
+			circle(thumbX - (h/20), centreY + (h/20), h);
+			fill(p.sliderHighlightDisabled);
+			circle(thumbX, centreY, h);
 		}
-		circle(thumbX, centreY, h);
+
+
+		// if (active) {
+		// 	//Draw track base
+		// 	strokeWeight(strokeL);
+		// 	stroke(p.sliderTrackEnabled);
+		// 	line(posX, centreY, posX + w, centreY);
+		// 	//Draw track highlight
+		// 	strokeWeight(strokeL);
+		// 	stroke(p.sliderTrackEnabled);
+		// 	line(posX, centreY, thumbX, centreY);
+		// 	noStroke();
+		// 	//Draw highlight for hover and depressed
+		// 	if(depressed) {
+		// 		fill(p.sliderHighlightEnabled, 130);
+		// 		circle(thumbX, centreY, h * 2.5);
+		// 	} else if(correctLocation()) {
+		// 		fill(p.sliderHighlightEnabled, 40);
+		// 		circle(thumbX, centreY, h * 2.5);
+		// 	}
+		// 	//Draw Thumb
+		// 	fill(p.sliderHighlightEnabled);
+		// 	circle(thumbX, centreY, h);
+		// } else {
+		// 	//Draw track base
+		// 	strokeWeight(strokeL);
+		// 	stroke(p.sliderTrackDisabled);
+		// 	line(posX, centreY, posX + w, centreY);
+		// 	//Draw track highlight
+		// 	strokeWeight(strokeL);
+		// 	stroke(p.sliderHighlightDisabled);
+		// 	line(posX, centreY, thumbX, centreY);
+		// 	noStroke();
+		// 	//Draw highlight for hover and depressed
+		// 	if(depressed) {
+		// 		fill(p.sliderHighlightDisabled, 130);
+		// 		circle(thumbX, centreY, h * 2.5);
+		// 	} else if(correctLocation()) {
+		// 		fill(p.sliderHighlightDisabled, 40);
+		// 		circle(thumbX, centreY, h * 2.5);
+		// 	}
+		// 	//Draw Thumb
+		// 	fill(p.sliderHighlightDisabled);
+		// 	circle(thumbX, centreY, h);
+		// }
+
+
+
+
+
+		// //Draw track base
+		// strokeWeight(strokeL);
+		// stroke(p.accent);
+		// line(posX, centreY, posX + w, centreY);
+		// //Draw track highlight
+		// strokeWeight(strokeL);
+		// stroke(p.font);
+		// line(posX, centreY, thumbX, centreY);
+		// noStroke();
+		// //Draw highlight for hover and depressed
+		// if(depressed) {
+		// 	fill(shade, 130);
+		// 	circle(thumbX, centreY, h * 2.5);
+		// } else if(correctLocation()) {
+		// 	fill(p.font, 40);
+		// 	circle(thumbX, centreY, h * 2.5);
+		// }
+		// //Draw Thumb
+		// if(active) {
+		// 	fill(p.font);	
+		// } else {
+		// 	fill(p.hover);
+		// }
+		// circle(thumbX, centreY, h);
 	}
 
 	public void update() {
@@ -2797,14 +2866,14 @@ class ToggleSwitch extends Button {
 		} else {
 			thumbX = posX;
 		}
-		if(correctLocation() && depressed) {
-			shade = p.select;
-		} else if (correctLocation()) {
-			shade = p.hover;
-		}
-		else {
-			shade = p.foreground;
-		}
+		// if(correctLocation() && depressed) {
+		// 	shade = p.select;
+		// } else if (correctLocation()) {
+		// 	shade = p.hover;
+		// }
+		// else {
+		// 	shade = p.foreground;
+		// }
 	}
 
 	public float distance(float x1, float y1, float x2, float y2) {

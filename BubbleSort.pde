@@ -54,6 +54,9 @@ class BubbleSort extends Algorithm {
 	void stepThrough() {
 		checkSorted();
 		if (!sorted) {
+			if(!swapping) {
+				comparisons++;
+			}
 			if (pos1 < stop) {
 				compare();
 			} else {
