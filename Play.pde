@@ -11,15 +11,17 @@ class Play extends Button{
 	}
 
 	void render() {
-		if (correctLocation()) {
-			strokeWeight(1*px);
-			stroke(p.accent);
-		} else {
-			noStroke();
-		}
-		fill(shade);
+		noStroke();
+
+		fill(p.barchartBg);
+		circle(centreX - offsetXY - (w/35), centreY + offsetXY + (w/35), w + (w/6.36));
+		fill(p.foreground);
+		circle(centreX - offsetXY, centreY + offsetXY, w + (w/7));
+
+
+		fill(p.sliderHighlightEnabled);
 		circle(centreX - offsetXY, centreY + offsetXY, w);
-		fill(p.font);
+		fill(p.foreground);
 		if(active) {
 			rect(posX - offsetXY + (w/3.33), posY + offsetXY + (h/3.85), (w/5.55), (h/2), 2.5);
 			rect(posX - offsetXY + w - (w/3.33) - (w/5.55), posY + offsetXY + (h/3.85), (w/5.55), (h/2), 2.5);
@@ -28,8 +30,8 @@ class Play extends Button{
 			// rect(posX - offsetXY + (w/2.94), posY + offsetXY + (h/3.23), (h/7.69), (h/2.56), 2.5*px);
 			// rect(posX - offsetXY + w - (w/2.94) - (w/7.69), posY + offsetXY + (h/3.23), (h/7.69), (h/2.56), 2.5*px);
 		} else {
-			stroke(p.font);
-			strokeWeight(5);
+			stroke(p.foreground);
+			strokeWeight(5*px);
 			strokeJoin(ROUND);
 			triangle(posX - offsetXY + (w/2.94), posY + offsetXY + (h/4.16), 
 			posX - offsetXY + (w/2.94), posY + offsetXY + h - (h/4.16), 

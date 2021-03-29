@@ -66,7 +66,6 @@ class BubbleSort extends Algorithm {
 	}
 
 	void compare() {
-		comparisons++;
 		colours[pos1] = 1;
 		colours[pos0] = 1;
 		if (desc) {

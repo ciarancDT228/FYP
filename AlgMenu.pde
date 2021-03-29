@@ -54,40 +54,6 @@ class AlgMenu {
 		mergeBtn.b.posX = lerp(mergeBtn.b.posX, menu.wTarget + 344*px, menuLerp);
 	}
 
-	// void updatePos(boolean closed, float sw) {
-	// 	if(closed) {
-	// 		// Subtract w
-	// 		this.posX -= sw;
-	// 	} else {
-	// 		// Add w
-	// 		this.posX += sw;
-	// 	}
-	// 	mergeBtn.updatePos(closed, sw);
-	// 	bubbleBtn.updatePos(closed, sw);
-	// 	selectionBtn.updatePos(closed, sw);
-	// 	randomBtn.updatePos(closed, sw);
-	// }
-
-	// void updatePos() {
-	// 	this.posX = mouseX;
-	// 	this.posY = mouseY;
-	// 	this.w = 435*px;
-	// 	this.h = 114*py;
-	// 	mergeBtn.posX = mouseX + 7*px;
-	// 	bubbleBtn.posX = mouseX + 114*px;
-	// 	selectionBtn.posX = mouseX + 221*px;
-	// 	randomBtn.posX = mouseX + 328*px;
-	// 	mergeBtn.posY = mouseY + 7*py;
-	// 	bubbleBtn.posY = mouseY + 7*py;
-	// 	selectionBtn.posY = mouseY + 7*py;
-	// 	randomBtn.posY = mouseY + 7*py;
-	// 	mergeBtn.updatePos();
-	// 	bubbleBtn.updatePos();
-	// 	selectionBtn.updatePos();
-	// 	randomBtn.updatePos();
-	// }
-
-
 	void mouseUp() {
 		for (int i = 0; i < algThumbs.size(); i++) {
 			Thumbnail t = algThumbs.get(i);
@@ -98,16 +64,13 @@ class AlgMenu {
 				buttonClicked = false;
 			}
 		}
-		if (buttonClicked) {
-			for (int i = 0; i < algThumbs.size(); i++) {
-				Thumbnail t = algThumbs.get(i);
-				if (buttonClicked) {
-					t.active = false;
-					t.mouseUp();
-				}
+		for (int i = 0; i < algThumbs.size(); i++) {
+			Thumbnail t = algThumbs.get(i);
+			if (buttonClicked) {
+				t.active = false;
 			}
+			t.mouseUp();
 		}
-
 	}
 
 	void mouseDown() {

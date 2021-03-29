@@ -38,24 +38,6 @@ class ShapeMenu{
 		buttonClicked  = false;
 	}
 
-	// void updatePos(boolean closed, float sw) {
-	// 	if(closed) {
-	// 		// Subtract w
-	// 		this.posX -= sw;
-	// 	} else {
-	// 		// Add w
-	// 		this.posX += sw;
-	// 	}
-	// 	random.updatePos(closed, sw);
-	// 	sinWaveBtn.updatePos(closed, sw);
-	// 	quadrantBtn.updatePos(closed, sw);
-	// 	heartbeatBtn.updatePos(closed, sw);
-	// 	squiggle.updatePos(closed, sw);
-	// 	parabola.updatePos(closed, sw);
-	// 	parabolaInv.updatePos(closed, sw);
-	// 	descending.updatePos(closed, sw);
-	// }
-
 	void render() {
 		noStroke();
 		fill(p.foreground);
@@ -106,17 +88,30 @@ class ShapeMenu{
 				buttonClicked = false;
 			}
 		}
-		if (buttonClicked) {
-			for (int i = 0; i < btnThumbs.size(); i++) {
-				ShapeBtn t = btnThumbs.get(i);
+		for (int i = 0; i < btnThumbs.size(); i++) {
+			ShapeBtn t = btnThumbs.get(i);
+			if (buttonClicked) {
 				t.active = false;
-				t.mouseUp();
+				if (!play.active) {
+					reset.reset();
+				}
 			}
-			if (!play.active) {
-				reset.reset();
-			}
+			t.mouseUp();
 		}
 
+		// if (buttonClicked) {
+		// 	for (int i = 0; i < btnThumbs.size(); i++) {
+		// 		ShapeBtn t = btnThumbs.get(i);
+		// 		t.active = false;
+		// 		t.mouseUp();
+		// 	}
+			
+		// } else {
+		// 	for (int i = 0; i < btnThumbs.size(); i++) {
+		// 		ShapeBtn t = btnThumbs.get(i);
+		// 		t.mouseUp();
+		// 	}
+		// }
 	}
 
 	void mouseDown() {

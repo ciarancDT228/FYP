@@ -67,11 +67,11 @@ class Thumbnail {
 		if (!active) {
 			if (correctLocation()) {
 				if (depressed) {
-					shade = p.select;
+					shade = p.btnSelect;
 					highlight = true;
 					offsetXY = 1*px;
 				} else {
-					shade = p.hover;
+					shade = p.btnHover;
 					highlight = false;
 					offsetXY = -1*px;
 				}
@@ -81,7 +81,7 @@ class Thumbnail {
 				offsetXY = 0*px;
 			}
 		} else {
-			shade = p.select;
+			shade = p.btnSelect;
 			highlight = true;
 			offsetXY = 0*px;
 		}
@@ -100,9 +100,9 @@ class Thumbnail {
 				active = true;
 			}
 		} else {
-			depressed = false;
 			offsetXY = 0*px;
 		}
+		depressed = false;
 	}
 
 	boolean correctLocation() {

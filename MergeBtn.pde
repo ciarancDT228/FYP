@@ -7,7 +7,6 @@ class MergeBtn extends Thumbnail {
 		super(posX, posY, w, h);
 		m = new MergeSort(GenerateArray.random(arrSize), GenerateArray.blanks(arrSize), true);
 		m.steps(590, arr, crr);
-		println("mergeBtn line 10");
 		arr = m.getArray();
 		crr = GenerateArray.blanks(arrSize);
 		this.label = "Merge";

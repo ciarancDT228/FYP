@@ -13,16 +13,17 @@ class AudioBtn extends Button{
 	}
 
 	void render() {
-		if (correctLocation()) {
-			strokeWeight(1*px);
-			stroke(p.accent);
-		} else {
-			noStroke();
-		}
-		fill(shade);
+		noStroke();
+
+		fill(p.barchartBg);
+		circle(centreX - offsetXY - (w/35), centreY + offsetXY + (w/35), w + (w/6.36));
+		fill(p.foreground);
+		circle(centreX - offsetXY, centreY + offsetXY, w + (w/7));
+		
+		fill(p.sliderHighlightEnabled);
 		circle(centreX - offsetXY, centreY + offsetXY, w);
 		noStroke();
-		fill(p.font);
+		fill(p.foreground);
 		rect(posX - offsetXY + (w/6.25), posY + offsetXY + (h/2.77), (w/3), (h/3.57), 5*px);
 		triangle(posX - offsetXY + (w/1.85), posY + offsetXY + (h/5), 
 			posX - offsetXY + (w/1.85), posY + offsetXY + h - (h/5), 
@@ -30,7 +31,7 @@ class AudioBtn extends Button{
 
 		noFill();
 		strokeWeight(strokeW);
-		stroke(p.font);
+		stroke(p.foreground);
 		if (active) {
 			arc(centreX - offsetXY, centreY + offsetXY, (w/2.63) - strokeW, (h/2.63) - strokeW, radians(-45), radians(45));
 			arc(centreX - offsetXY, centreY + offsetXY, (w/1.72) - strokeW, (h/1.72) - strokeW, radians(-45), radians(45));

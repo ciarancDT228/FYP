@@ -124,13 +124,13 @@ class Barchart{
 
 
 		strokeWeight = w / a.length;
-		fill(p.barB);
+		fill(p.foreground);
 		noStroke();
 		rect(posX - t.offsetXY, posY + t.offsetXY, w, h);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
 		max = a.length - 1;
-		stroke(p.barF);
+		stroke(p.barchartBg);
 		for (int i = 0; i < a.length; i++) {
 			if (descThumb && (t.label.matches("Bubble") || t.label.matches("Merge") || t.label.matches("Selection"))) {
 				x1 = map(i, a.length, 0, posX - t.offsetXY, posX - t.offsetXY + w);

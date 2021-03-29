@@ -13,23 +13,24 @@ class Reset extends Button{
 	}
 
 	void render() {
-		if (correctLocation()) {
-			strokeWeight(1*px);
-			stroke(p.accent);
-		} else {
-			noStroke();
-		}
-		fill(shade);
+		noStroke();
+
+		fill(p.barchartBg);
+		circle(centreX - offsetXY - (w/35), centreY + offsetXY + (w/35), w + (w/6.36));
+		fill(p.foreground);
+		circle(centreX - offsetXY, centreY + offsetXY, w + (w/7));
+
+		fill(p.sliderHighlightEnabled);
 		circle(centreX - offsetXY, centreY + offsetXY, w);
 		strokeWeight(strokeW);
-		stroke(p.font);
+		stroke(p.foreground);
 		noFill();
 		strokeCap(SQUARE);
 		arc(centreX - offsetXY, centreY + offsetXY, 
 			w - strokeW - (w/2.94), h - strokeW - (h/2.94), 
 			radians(0), radians(270));
 		noStroke();
-		fill(p.font);
+		fill(p.foreground);
 		triangle(centreX - offsetXY, posY + (h/12.5) + offsetXY, 
 			centreX - offsetXY, posY + (h/2.7) + offsetXY, 
 			centreX + (w/4.76) - offsetXY, posY + (h/4.35) + offsetXY);

@@ -34,10 +34,10 @@ class Button extends Component {
 
 	void update() {
 		if(correctLocation() && depressed) {
-			shade = p.select;
+			shade = p.btnSelect;
 			offsetXY = offset;
 		} else if (correctLocation()) {
-			shade = p.hover;
+			shade = p.btnHover;
 			offsetXY = -(offset);
 		}
 		else {

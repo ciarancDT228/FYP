@@ -78,7 +78,7 @@ void settings() {
 	// size(1536, 846, P2D);
 	// size(800, 500, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(P2D, 2);
+	fullScreen(FX2D, 2);
 	// size(800, 500, P2D);
 	// fullScreen(1);
 	noSmooth();
@@ -97,7 +97,7 @@ void setup()
 
 	desc = false;
 	descThumb = false;
-	b = new Barchart(0, 0, width, height - 70*py, 80*px); //Barchart
+	b = new Barchart(0, 0, width, height - 75*py, 20*px); //Barchart
 	// b = new Barchart(0, 0, width, height, 20*px); //Barchart
 	arrayMax = width;
 	arrayMin = 16; //Min array size
@@ -111,14 +111,14 @@ void setup()
 	//Algorithms
 	bubble = new BubbleSort(array, colours);
 	selection = new SelectionSort(array, colours);
-	println("main line 114");
 	mergeSort = new MergeSort(array, colours, false);
 	
 
 	//Buttons
-	play = new Play(910*px, 990*py, 100*px, 100*py);
-	reset = new Reset(840*px, 1015*py, 50*px, 50*py);
-	volume = new AudioBtn(1030*px, 1015*py, 50*px, 50*py);
+	play = new Play(925*px, 995*py, 70*px, 70*py);
+	// volume = new AudioBtn(50*px, 50*py, 500*px, 500*py);
+	reset = new Reset(840*px, 1005*py, 50*px, 50*py);
+	volume = new AudioBtn(1030*px, 1005*py, 50*px, 50*py);
 
 	// noStroke();
 	// fill(p.foreground);
@@ -143,12 +143,10 @@ void draw() {
 	update();
 	count++;
 	count2+=500;
-
 	
 	background(0);
 
 	if (count % CalcSpeed.getModulus(speed) == 0 && play.active) {
-
 		// Mergesort
 		if(menu.algMenu.mergeBtn.active == true) {
 			// if (!mergeSort.sorted) {
@@ -189,6 +187,7 @@ void draw() {
 		}
 	}
 	b.render(array, colours);
+	p.display(100*px, 25*py, 100*px, 800*py);
 	// noStroke();
 	// fill(p.foreground);
 	// rect(865*px, 995*py, 190*px, 50*py);
@@ -197,7 +196,7 @@ void draw() {
 	// Statistics
 	noStroke();
 	fill(p.foreground);
-	rect(0, height-70*py, width, 80*py);
+	rect(0, height-75*py, width, 85*py);
 	fill(p.font);
 	textAlign(LEFT, TOP);
 	text("Array comparisons:", 10*px, height - 70*py);
@@ -210,6 +209,7 @@ void draw() {
 	reset.render();
 	volume.render();
 	settingsBtn.render();
+
 }
 
 void update() {

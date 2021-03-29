@@ -42,7 +42,6 @@ class MergeSort {
 		l = 0;
 		m = 0;
 		r = 0;
-		println("mergeSort line 43");
 	}
 
 	void reset(int[] array, int[] colours) {
@@ -79,10 +78,10 @@ class MergeSort {
 			if (!sorted) {
 				stepThrough();
 			} else {
-				// play.active = false;
-				// output.println("\nAlgorithm: Merge Sort\nSpeed: "	+ menu.speedSlider.getVal()
-				// 	 + "\nArray size: " + arr.length + "\nSound: " + volume.active + 
-				// 	 "\n Mirrored: " + menu.mirrorSwitch.active);
+				play.active = false;
+				output.println("\nAlgorithm: Merge Sort\nSpeed: "	+ menu.speedSlider.getVal()
+					 + "\nArray size: " + arr.length + "\nSound: " + volume.active + 
+					 "\n Mirrored: " + menu.mirrorSwitch.active);
 				break;
 			}
 		}
@@ -246,6 +245,9 @@ class MergeSort {
 					}
 				}
 			}
+		}
+		if(mergeQueue.size() > 0) {
+			sorted = false;
 		}
 		this.sorted = sorted;
 	}

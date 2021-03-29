@@ -85,5 +85,16 @@ class Palette {
 		// int sliderHover = lightMode[12];
 	}
 
+	void display(float x, float y, float w, float h) {
+		float spacer = 0;
+		for (int i = 0; i < lightMode.length; i++) {
+			fill(lightMode[i]);
+			rect(x, y + spacer, w, h / lightMode.length);
+			spacer += h / lightMode.length;
+		}
+		// fill(100);
+		// rect(100, 100, 100, 1000);
+	}
+
 
 }
