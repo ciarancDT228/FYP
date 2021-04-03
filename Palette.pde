@@ -22,6 +22,8 @@ class Palette {
 	int sliderTrackDisabled;
 	int sliderHighlightEnabled;
 	int sliderHighlightDisabled;
+
+	boolean colourMode;
 	// int sliderHover;
 
 	public Palette() {
@@ -41,10 +43,10 @@ class Palette {
 		this.barF = #dddddd;
 		this.barB = #858585;
 		this.darkMode = darkMode;
-
+		this.colourMode = false;
 		// dark();
 		// light();
-		test();
+		test2();
 	}
 
 	void dark() {
@@ -56,6 +58,21 @@ class Palette {
 		this.font = darkMode[5];
 		this.barF = darkMode[5];
 		this.barB = darkMode[0];
+	}
+
+	void test2() {
+		this.foreground = darkMode[1];
+		this.accent = darkMode[4];
+		this.font = darkMode[5];
+		this.barchartFont = darkMode[0];
+		this.barchartFg = darkMode[5];
+		this.barchartBg = darkMode[0];
+		this.btnHover = darkMode[2];
+		this.btnSelect = darkMode[3];
+		this.sliderHighlightEnabled = darkMode[0];
+		this.sliderTrackEnabled = darkMode[2];
+		this.sliderHighlightDisabled = darkMode[1];
+		this.sliderTrackDisabled = darkMode[3];
 	}
 
 	void light() {
@@ -84,6 +101,7 @@ class Palette {
 		this.sliderTrackDisabled = lightMode[11];
 		// int sliderHover = lightMode[12];
 	}
+
 
 	void display(float x, float y, float w, float h) {
 		float spacer = 0;

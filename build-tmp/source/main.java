@@ -19,17 +19,8 @@ public class main extends PApplet {
 
 
 
-// import java.io.BufferedWriter;
-// import java.io.File;
-// import java.io.FileOutputStream;
-// import java.io.FileWriter;
-// import java.io.IOException;
-// import java.io.OutputStream;
-// import java.nio.file.Files;
-// import java.nio.file.Paths;
 
 
-ArrayList<Component> components = new ArrayList<Component>();
 Queue<int[]> queue = new LinkedList<int[]>();
 PrintWriter output;
 
@@ -54,7 +45,6 @@ Reset reset;
 AudioBtn volume;
 SettingsBtn settingsBtn;
 Menu menu;
-// Slider speedSlider;
 
 // Arrays and counters
 int[] array;
@@ -94,10 +84,10 @@ float releaseTime = 0.2f;
 
 public void settings() {
 	// size(1000, 600, OPENGL);
-	// size(1536, 846, P2D);
+	// size(1536, 846, FX2D);
 	// size(800, 500, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(FX2D, 2);
+	fullScreen(P2D, 2);
 	// size(800, 500, P2D);
 	// fullScreen(1);
 	noSmooth();
@@ -105,6 +95,7 @@ public void settings() {
 
 public void setup()
 {
+	surface.setResizable(true);
 	output = createWriter("UserData.txt");
 	px = (width*5.2083333f*pow(10, -4));
 	py = (height*9.2592592f*pow(10, -4));
@@ -112,7 +103,6 @@ public void setup()
 	fontSize = 16*py;
 	pf = createFont("OpenSans-Regular.ttf", fontSize);
 	menuLerp = 0.5f;
-	// surface.setResizable(true);
 
 	desc = false;
 	descThumb = false;
@@ -196,7 +186,7 @@ public void draw() {
 		}
 	}
 	b.render(array, colours);
-	p.display(100*px, 25*py, 100*px, 800*py);
+	// p.display(100*px, 25*py, 100*px, 800*py);
 	// noStroke();
 	// fill(p.foreground);
 	// rect(865*px, 995*py, 190*px, 50*py);
@@ -346,36 +336,6 @@ class AlgMenu {
 	}
 
 }
-class Algorithm {
-
-	// void steps(int x) {
-	// 	numsteps = x;
-
-	// 	for (int i = 0; i < colours.length; i++) {
-	// 		colours[i] = 0;
-	// 	}
-	// 	for (int i = 0; i < x; i++) {
-	// 		if (!sorted) {
-	// 			stepThrough();
-	// 		} else {
-	// 			break;
-	// 		}
-	// 	}
-	// }
-
-	// void checkSorted() {
-	// 	boolean sorted = true;
-
-	// 	for(int i = 1; i < array.length; i++) {
-	// 		if(array[i] < array[i - 1]) {
-	// 			sorted = false;
-	// 			break;
-	// 		}
-	// 	}
-	// 	this.sorted = sorted;
-	// }
-
-}
 class AudioBtn extends Button{
 
 	float centreY;
@@ -395,13 +355,13 @@ class AudioBtn extends Button{
 
 		fill(p.barchartBg);
 		circle(centreX - offsetXY - (w/35), centreY + offsetXY + (w/35), w + (w/6.36f));
-		fill(p.foreground);
+		fill(p.barchartFg);
 		circle(centreX - offsetXY, centreY + offsetXY, w + (w/7));
 		
 		fill(p.sliderHighlightEnabled);
 		circle(centreX - offsetXY, centreY + offsetXY, w);
 		noStroke();
-		fill(p.foreground);
+		fill(p.barchartFg);
 		rect(posX - offsetXY + (w/6.25f), posY + offsetXY + (h/2.77f), (w/3), (h/3.57f), 5*px);
 		triangle(posX - offsetXY + (w/1.85f), posY + offsetXY + (h/5), 
 			posX - offsetXY + (w/1.85f), posY + offsetXY + h - (h/5), 
@@ -409,7 +369,7 @@ class AudioBtn extends Button{
 
 		noFill();
 		strokeWeight(strokeW);
-		stroke(p.foreground);
+		stroke(p.barchartFg);
 		if (active) {
 			arc(centreX - offsetXY, centreY + offsetXY, (w/2.63f) - strokeW, (h/2.63f) - strokeW, radians(-45), radians(45));
 			arc(centreX - offsetXY, centreY + offsetXY, (w/1.72f) - strokeW, (h/1.72f) - strokeW, radians(-45), radians(45));
@@ -466,26 +426,20 @@ class Barchart{
 		this.f = createFont("OpenSans-Regular.ttf", fontSize);
 	}
 
-	// void update(float wid, float hei) {
-	// 	border = mouseX;
-	// 	w = wid - (border*2);
-	// 	h = hei - (border*2);
-	// 	barWidth = w/array.length;
-	// }
-
-	public void update() {
-	}
-
 	public void render(int[] a, int[] c) {
 		float spacer = 0;
 		float x1 = 0;
 		float y1 = 0;
 		float barHeight = 0;
+		array = a;
+		colours = c;
+		max = a.length;
 
 		// Border
 		noStroke();
 		fill(p.foreground);
 		rect(posX, posY, border*2 + w, border*2 + h);
+
 		// Set strokeWeight
 		if (a.length > w / 3) {
 			strokeWeight = w / a.length;
@@ -494,19 +448,16 @@ class Barchart{
 			strokeWeight = (w-(a.length))/a.length;
 			spacer = strokeWeight / 2;
 		}
+
 		// Draw background
 		fill(p.barchartBg);
 		noStroke();
 		rect(posX + border, posY + border, w, h);
 		// Draw bars
 		strokeWeight(strokeWeight);
-		// strokeCap(SQUARE);
 		strokeCap(ROUND);
-		array = a;
-		colours = c;
-		max = a.length;
 		for (int i = 0; i < a.length; i++) {
-			if(c[i] == 0) {
+			if(c[i] == 0) { // Colours
 				stroke(p.barchartFg);
 			}
 			else if (c[i] == 1) {
@@ -516,7 +467,7 @@ class Barchart{
 				stroke(0xffccff90);
 			}
 			x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
-			if (menu.mirrorSwitch.active) {
+			if (menu.mirrorSwitch.active) { // Mirror option
 				y1 = map(a[i], -a.length, max, posY + h + border, posY + border + (strokeWeight / 2));
 				barHeight = map(a[i], 0, max, 0, h - strokeWeight);
 			} else {
@@ -532,7 +483,6 @@ class Barchart{
 			fontSize = (w/a.length/2);
 			f = createFont("OpenSans-Regular.ttf", fontSize);
 			textFont(f);
-			// textSize(fontSize);
 			for (int i = 0; i < a.length; i++) {
 				x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
 				if (menu.mirrorSwitch.active) {
@@ -566,21 +516,21 @@ class Barchart{
 
 
 		strokeWeight = w / a.length;
-		fill(p.foreground);
+		fill(p.barchartFg);
 		noStroke();
-		rect(posX - t.offsetXY, posY + t.offsetXY, w, h);
+		rect(posX, posY + t.offsetXY, w, h);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
 		max = a.length - 1;
 		stroke(p.barchartBg);
 		for (int i = 0; i < a.length; i++) {
 			if (descThumb && (t.label.matches("Bubble") || t.label.matches("Merge") || t.label.matches("Selection"))) {
-				x1 = map(i, a.length, 0, posX - t.offsetXY, posX - t.offsetXY + w);
+				x1 = map(i, a.length, 0, posX, posX + w);
 			} else {
-				x1 = map(i, 0, a.length, posX - t.offsetXY, posX - t.offsetXY + w);
+				x1 = map(i, 0, a.length, posX, posX + w);
 			}
 			if (menu.mirrorSwitch.active) {
-				y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
+				y1 = map(a[i], -a.length, max, posY + t.offsetXY + h + border, posY + t.offsetXY + border);
 			} else {
 				y1 = map(a[i], 0, max, posY + t.offsetXY + h, posY + t.offsetXY);
 			}
@@ -618,7 +568,7 @@ class BubbleBtn extends Thumbnail {
 
 }
 
-class BubbleSort extends Algorithm {
+class BubbleSort{
 
 	boolean sorted;
 	boolean swapping;
@@ -752,7 +702,7 @@ class BubbleSort extends Algorithm {
 	}
 
 }
-class Button extends Component {
+class Button{
 	
 	float posX, posY;
 	float w, h;
@@ -853,41 +803,6 @@ static class CalcSpeed {
 		return modulus;
 	}
 //
-}
-class Component{
-
-	// float posX, posY;
-	// float w, h;
-	// boolean depressed;
-	// boolean active;
-
-	// public Component(float posX, float posY, float w, float h) {
-	// 	this.posX = posX;
-	// 	this.posY = posY;
-	// 	this.w = w;
-	// 	this.h = h;
-	// 	depressed = false;
-	// 	active = false;
-	// }
-
-	// void render() {
-	// 	fill(255);
-	// 	if(offset) {
-	// 		rect(posX - offsetXY, posY + offsetXY, w, h);
-	// 	} else {
-	// 		rect(posX, posY, w, h);
-	// 	}
-	// }
-
-
-	// void update() {
-	// 	if(correctLocation() && depressed) {
-	// 		offset = true;
-	// 	} else {
-	// 		offset = false;
-	// 	}
-	// }
-
 }
 class DescSwitch extends ToggleSwitch {
 
@@ -1036,9 +951,11 @@ class Menu {
 
 	Button mirrorSwitch;
 	Button descSwitch;
+	Button colourSwitch;
 
 	boolean toggleMenu;
 	boolean closed;
+	boolean colourMode;
 
 	public Menu() {
 		this.w = 435*px;
@@ -1054,6 +971,7 @@ class Menu {
 		this.toggleMenu = true;
 		this.closed = false;
 		this.wTarget = width;
+		this.colourMode = false;
 		
 		descSwitch = new DescSwitch(
 			this.posX + this.w - spacer - 17*px, 
@@ -1119,11 +1037,12 @@ class Menu {
 			17*px, 
 			20*py);
 
+		colourSwitch = new ToggleSwitch(
+			this.posX + this.w - spacer - 17*px, 
+			soundRelSlider.posY + soundRelSlider.h + spacer,
+			17*px, 
+			20*py);
 
-		// mirrorSwitch = new ToggleSwitch(
-		// 	100, 100, 
-		// 	40*px, 
-		// 	20*py);
 	}
 
 	public void update() {
@@ -1140,6 +1059,14 @@ class Menu {
 		mirrorSwitch.update();
 		arrSizeDisplay = sizeSlider.getVal();
 		descSwitch.update();
+		colourSwitch.update();
+		if (colourSwitch.active && !colourMode) {
+			p.test();
+			colourMode = true;
+		} else if (!colourSwitch.active && colourMode) {
+			p.test2();
+			colourMode = false;
+		}
 	}
 
 	public void render() {
@@ -1181,6 +1108,7 @@ class Menu {
 		soundRelSlider.render();
 		mirrorSwitch.render();
 		descSwitch.render();
+		colourSwitch.render();
 
 		//Text
 		fill(p.font); // Array Size
@@ -1222,6 +1150,7 @@ class Menu {
 		speedSlider.mouseUp();
 		mirrorSwitch.mouseUp();
 		descSwitch.mouseUp();
+		colourSwitch.mouseUp();
 	}
 
 	public void mouseDown() {
@@ -1235,6 +1164,7 @@ class Menu {
 		speedSlider.mouseDown();
 		mirrorSwitch.mouseDown();
 		descSwitch.mouseDown();
+		colourSwitch.mouseDown();
 	}
 
 	public void keyPressed() {
@@ -1670,6 +1600,8 @@ class Palette {
 	int sliderTrackDisabled;
 	int sliderHighlightEnabled;
 	int sliderHighlightDisabled;
+
+	boolean colourMode;
 	// int sliderHover;
 
 	public Palette() {
@@ -1689,10 +1621,10 @@ class Palette {
 		this.barF = 0xffdddddd;
 		this.barB = 0xff858585;
 		this.darkMode = darkMode;
-
+		this.colourMode = false;
 		// dark();
 		// light();
-		test();
+		test2();
 	}
 
 	public void dark() {
@@ -1704,6 +1636,21 @@ class Palette {
 		this.font = darkMode[5];
 		this.barF = darkMode[5];
 		this.barB = darkMode[0];
+	}
+
+	public void test2() {
+		this.foreground = darkMode[1];
+		this.accent = darkMode[4];
+		this.font = darkMode[5];
+		this.barchartFont = darkMode[0];
+		this.barchartFg = darkMode[5];
+		this.barchartBg = darkMode[0];
+		this.btnHover = darkMode[2];
+		this.btnSelect = darkMode[3];
+		this.sliderHighlightEnabled = darkMode[0];
+		this.sliderTrackEnabled = darkMode[2];
+		this.sliderHighlightDisabled = darkMode[1];
+		this.sliderTrackDisabled = darkMode[3];
 	}
 
 	public void light() {
@@ -1733,6 +1680,7 @@ class Palette {
 		// int sliderHover = lightMode[12];
 	}
 
+
 	public void display(float x, float y, float w, float h) {
 		float spacer = 0;
 		for (int i = 0; i < lightMode.length; i++) {
@@ -1761,24 +1709,22 @@ class Play extends Button{
 	public void render() {
 		noStroke();
 
+		// Shadow
 		fill(p.barchartBg);
 		circle(centreX - offsetXY - (w/35), centreY + offsetXY + (w/35), w + (w/6.36f));
-		fill(p.foreground);
+		// Border
+		fill(p.barchartFg);
 		circle(centreX - offsetXY, centreY + offsetXY, w + (w/7));
 
-
+		// Main Body
 		fill(p.sliderHighlightEnabled);
 		circle(centreX - offsetXY, centreY + offsetXY, w);
-		fill(p.foreground);
-		if(active) {
+		fill(p.barchartFg);
+		if(active) { // Two Lines
 			rect(posX - offsetXY + (w/3.33f), posY + offsetXY + (h/3.85f), (w/5.55f), (h/2), 2.5f);
 			rect(posX - offsetXY + w - (w/3.33f) - (w/5.55f), posY + offsetXY + (h/3.85f), (w/5.55f), (h/2), 2.5f);
-
-
-			// rect(posX - offsetXY + (w/2.94), posY + offsetXY + (h/3.23), (h/7.69), (h/2.56), 2.5*px);
-			// rect(posX - offsetXY + w - (w/2.94) - (w/7.69), posY + offsetXY + (h/3.23), (h/7.69), (h/2.56), 2.5*px);
-		} else {
-			stroke(p.foreground);
+		} else { // Triangle
+			stroke(p.barchartFg);
 			strokeWeight(5*px);
 			strokeJoin(ROUND);
 			triangle(posX - offsetXY + (w/2.94f), posY + offsetXY + (h/4.16f), 
@@ -1841,20 +1787,20 @@ class Reset extends Button{
 
 		fill(p.barchartBg);
 		circle(centreX - offsetXY - (w/35), centreY + offsetXY + (w/35), w + (w/6.36f));
-		fill(p.foreground);
+		fill(p.barchartFg);
 		circle(centreX - offsetXY, centreY + offsetXY, w + (w/7));
 
 		fill(p.sliderHighlightEnabled);
 		circle(centreX - offsetXY, centreY + offsetXY, w);
 		strokeWeight(strokeW);
-		stroke(p.foreground);
+		stroke(p.barchartFg);
 		noFill();
 		strokeCap(SQUARE);
 		arc(centreX - offsetXY, centreY + offsetXY, 
 			w - strokeW - (w/2.94f), h - strokeW - (h/2.94f), 
 			radians(0), radians(270));
 		noStroke();
-		fill(p.foreground);
+		fill(p.barchartFg);
 		triangle(centreX - offsetXY, posY + (h/12.5f) + offsetXY, 
 			centreX - offsetXY, posY + (h/2.7f) + offsetXY, 
 			centreX + (w/4.76f) - offsetXY, posY + (h/4.35f) + offsetXY);
@@ -1933,7 +1879,7 @@ class SelectionBtn extends Thumbnail {
 	}
 
 }
-class SelectionSort extends Algorithm{
+class SelectionSort{
 
 	boolean sorted;
 	boolean swapping;
@@ -2179,34 +2125,6 @@ class ShapeBtn extends Thumbnail {
 		}
 	}
 
-	public void render() {
-		if (highlight) {
-			strokeWeight(1*px);
-			stroke(p.accent);
-		} else {
-			noStroke();
-		}
-		fill(shade);
-		rect(posX - offsetXY, posY + offsetXY, w, h, 8*px);
-		b.renderSimple(arr, this);
-		// Overlay
-		noFill();
-		strokeWeight(6*px);
-		stroke(shade);
-		rect(posX - offsetXY + 13*px, posY + offsetXY + 11*py, 74*px, 52*py, 10*px);
-		// Border
-		// noFill();
-		// strokeWeight(2*px);
-		// stroke(p.accent);
-		// rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
-		//Label
-		fill(p.font);
-		textFont(f);
-		textSize(fontSize);
-		textAlign(CENTER);
-		text(label, posX - offsetXY + 50*px, posY + offsetXY + 86*py);
-	}
-
 }
 class ShapeMenu{
 
@@ -2332,7 +2250,7 @@ class ShapeMenu{
 	}
 
 }
-class Slider extends Component{
+class Slider{
 
 	float posX, posY;
 	float thumbX, thumbRadius;
@@ -2510,19 +2428,19 @@ class Slider extends Component{
 class Thumbnail {
 
 	float posX, posY, w, h;
-	// float px;
 	int[] arr;
 	int[] crr;
-	Barchart b;
 	int arrSize;
-	String label;
-	float fontSize;
+	Barchart b;
 	boolean depressed;
 	boolean active;
-	float offsetXY;
 	boolean highlight;
+	float offsetXY;
+	float offset;
 	int shade;
 	PFont f;
+	float fontSize;
+	String label;
 
 	public Thumbnail (float posX, float posY, float w, float h) {
 		this.posX = posX;
@@ -2535,9 +2453,9 @@ class Thumbnail {
 		shade = p.foreground;
 		depressed = false;
 		active = false;
+		offset = 3*px;
 		offsetXY = 0*px;
 		highlight = false;
-		offsetXY = 2*px;
 		// arrSize = (int)(68*10);
 		arr = GenerateArray.random(arrSize);
 		crr = GenerateArray.blanks(arrSize);
@@ -2545,20 +2463,21 @@ class Thumbnail {
 	}
 
 	public void render() {
-		if (highlight) {
-			strokeWeight(1*px);
-			stroke(p.accent);
-		} else {
-			noStroke();
-		}
+		// if (highlight) {
+		// 	strokeWeight(1*px);
+		// 	stroke(p.accent);
+		// } else {
+		// 	noStroke();
+		// }
+		noStroke();
 		fill(shade);
-		rect(posX - offsetXY, posY + offsetXY, 100*px, 100*py, 8*px);
+		rect(posX, posY + offsetXY, 100*px, 100*py, 8*px);
 		b.renderSimple(arr, this);
 		// Overlay
 		noFill();
 		strokeWeight(6*px);
 		stroke(shade);
-		rect(posX - offsetXY + 13*px, posY + offsetXY + 11*py, 74*px, 52*py, 10*px);
+		rect(posX + 13*px, posY + offsetXY + 11*py, 74*px, 52*py, 10*px);
 		// Border
 		// noFill();
 		// strokeWeight(1*px);
@@ -2568,7 +2487,7 @@ class Thumbnail {
 		textFont(f);
 		textSize(fontSize);
 		textAlign(CENTER);
-		text(label, posX - offsetXY + 50*px, posY + offsetXY + 86*py);
+		text(label, posX + 50*px, posY + offsetXY + 86*py);
 	}
 
 	public void update() {
@@ -2578,11 +2497,11 @@ class Thumbnail {
 				if (depressed) {
 					shade = p.btnSelect;
 					highlight = true;
-					offsetXY = 1*px;
+					offsetXY = offset;
 				} else {
 					shade = p.btnHover;
 					highlight = false;
-					offsetXY = -1*px;
+					offsetXY = 0*px;
 				}
 			} else {
 				shade = p.foreground;

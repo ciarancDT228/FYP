@@ -1,5 +1,5 @@
 
-class BubbleSort extends Algorithm {
+class BubbleSort{
 
 	boolean sorted;
 	boolean swapping;

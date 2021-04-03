@@ -1,4 +1,4 @@
-class Button extends Component {
+class Button{
 	
 	float posX, posY;
 	float w, h;

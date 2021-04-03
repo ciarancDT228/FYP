@@ -1,4 +1,4 @@
-class SelectionSort extends Algorithm{
+class SelectionSort{
 
 	boolean sorted;
 	boolean swapping;

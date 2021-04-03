@@ -23,9 +23,11 @@ class Menu {
 
 	Button mirrorSwitch;
 	Button descSwitch;
+	Button colourSwitch;
 
 	boolean toggleMenu;
 	boolean closed;
+	boolean colourMode;
 
 	public Menu() {
 		this.w = 435*px;
@@ -41,6 +43,7 @@ class Menu {
 		this.toggleMenu = true;
 		this.closed = false;
 		this.wTarget = width;
+		this.colourMode = false;
 		
 		descSwitch = new DescSwitch(
 			this.posX + this.w - spacer - 17*px, 
@@ -106,11 +109,12 @@ class Menu {
 			17*px, 
 			20*py);
 
+		colourSwitch = new ToggleSwitch(
+			this.posX + this.w - spacer - 17*px, 
+			soundRelSlider.posY + soundRelSlider.h + spacer,
+			17*px, 
+			20*py);
 
-		// mirrorSwitch = new ToggleSwitch(
-		// 	100, 100, 
-		// 	40*px, 
-		// 	20*py);
 	}
 
 	void update() {
@@ -127,6 +131,14 @@ class Menu {
 		mirrorSwitch.update();
 		arrSizeDisplay = sizeSlider.getVal();
 		descSwitch.update();
+		colourSwitch.update();
+		if (colourSwitch.active && !colourMode) {
+			p.test();
+			colourMode = true;
+		} else if (!colourSwitch.active && colourMode) {
+			p.test2();
+			colourMode = false;
+		}
 	}
 
 	void render() {
@@ -168,6 +180,7 @@ class Menu {
 		soundRelSlider.render();
 		mirrorSwitch.render();
 		descSwitch.render();
+		colourSwitch.render();
 
 		//Text
 		fill(p.font); // Array Size
@@ -209,6 +222,7 @@ class Menu {
 		speedSlider.mouseUp();
 		mirrorSwitch.mouseUp();
 		descSwitch.mouseUp();
+		colourSwitch.mouseUp();
 	}
 
 	void mouseDown() {
@@ -222,6 +236,7 @@ class Menu {
 		speedSlider.mouseDown();
 		mirrorSwitch.mouseDown();
 		descSwitch.mouseDown();
+		colourSwitch.mouseDown();
 	}
 
 	void keyPressed() {

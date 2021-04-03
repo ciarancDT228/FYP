@@ -1,4 +1,4 @@
-class Slider extends Component{
+class Slider{
 
 	float posX, posY;
 	float thumbX, thumbRadius;

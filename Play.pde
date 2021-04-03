@@ -13,24 +13,22 @@ class Play extends Button{
 	void render() {
 		noStroke();
 
+		// Shadow
 		fill(p.barchartBg);
 		circle(centreX - offsetXY - (w/35), centreY + offsetXY + (w/35), w + (w/6.36));
-		fill(p.foreground);
+		// Border
+		fill(p.barchartFg);
 		circle(centreX - offsetXY, centreY + offsetXY, w + (w/7));
 
-
+		// Main Body
 		fill(p.sliderHighlightEnabled);
 		circle(centreX - offsetXY, centreY + offsetXY, w);
-		fill(p.foreground);
-		if(active) {
+		fill(p.barchartFg);
+		if(active) { // Two Lines
 			rect(posX - offsetXY + (w/3.33), posY + offsetXY + (h/3.85), (w/5.55), (h/2), 2.5);
 			rect(posX - offsetXY + w - (w/3.33) - (w/5.55), posY + offsetXY + (h/3.85), (w/5.55), (h/2), 2.5);
-
-
-			// rect(posX - offsetXY + (w/2.94), posY + offsetXY + (h/3.23), (h/7.69), (h/2.56), 2.5*px);
-			// rect(posX - offsetXY + w - (w/2.94) - (w/7.69), posY + offsetXY + (h/3.23), (h/7.69), (h/2.56), 2.5*px);
-		} else {
-			stroke(p.foreground);
+		} else { // Triangle
+			stroke(p.barchartFg);
 			strokeWeight(5*px);
 			strokeJoin(ROUND);
 			triangle(posX - offsetXY + (w/2.94), posY + offsetXY + (h/4.16), 

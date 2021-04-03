@@ -24,26 +24,20 @@ class Barchart{
 		this.f = createFont("OpenSans-Regular.ttf", fontSize);
 	}
 
-	// void update(float wid, float hei) {
-	// 	border = mouseX;
-	// 	w = wid - (border*2);
-	// 	h = hei - (border*2);
-	// 	barWidth = w/array.length;
-	// }
-
-	void update() {
-	}
-
 	void render(int[] a, int[] c) {
 		float spacer = 0;
 		float x1 = 0;
 		float y1 = 0;
 		float barHeight = 0;
+		array = a;
+		colours = c;
+		max = a.length;
 
 		// Border
 		noStroke();
 		fill(p.foreground);
 		rect(posX, posY, border*2 + w, border*2 + h);
+
 		// Set strokeWeight
 		if (a.length > w / 3) {
 			strokeWeight = w / a.length;
@@ -52,19 +46,16 @@ class Barchart{
 			strokeWeight = (w-(a.length))/a.length;
 			spacer = strokeWeight / 2;
 		}
+
 		// Draw background
 		fill(p.barchartBg);
 		noStroke();
 		rect(posX + border, posY + border, w, h);
 		// Draw bars
 		strokeWeight(strokeWeight);
-		// strokeCap(SQUARE);
 		strokeCap(ROUND);
-		array = a;
-		colours = c;
-		max = a.length;
 		for (int i = 0; i < a.length; i++) {
-			if(c[i] == 0) {
+			if(c[i] == 0) { // Colours
 				stroke(p.barchartFg);
 			}
 			else if (c[i] == 1) {
@@ -74,7 +65,7 @@ class Barchart{
 				stroke(#ccff90);
 			}
 			x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
-			if (menu.mirrorSwitch.active) {
+			if (menu.mirrorSwitch.active) { // Mirror option
 				y1 = map(a[i], -a.length, max, posY + h + border, posY + border + (strokeWeight / 2));
 				barHeight = map(a[i], 0, max, 0, h - strokeWeight);
 			} else {
@@ -90,7 +81,6 @@ class Barchart{
 			fontSize = (w/a.length/2);
 			f = createFont("OpenSans-Regular.ttf", fontSize);
 			textFont(f);
-			// textSize(fontSize);
 			for (int i = 0; i < a.length; i++) {
 				x1 = map(i, 0, a.length, posX, posX + w) + border + spacer;
 				if (menu.mirrorSwitch.active) {
@@ -124,21 +114,21 @@ class Barchart{
 
 
 		strokeWeight = w / a.length;
-		fill(p.foreground);
+		fill(p.barchartFg);
 		noStroke();
-		rect(posX - t.offsetXY, posY + t.offsetXY, w, h);
+		rect(posX, posY + t.offsetXY, w, h);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
 		max = a.length - 1;
 		stroke(p.barchartBg);
 		for (int i = 0; i < a.length; i++) {
 			if (descThumb && (t.label.matches("Bubble") || t.label.matches("Merge") || t.label.matches("Selection"))) {
-				x1 = map(i, a.length, 0, posX - t.offsetXY, posX - t.offsetXY + w);
+				x1 = map(i, a.length, 0, posX, posX + w);
 			} else {
-				x1 = map(i, 0, a.length, posX - t.offsetXY, posX - t.offsetXY + w);
+				x1 = map(i, 0, a.length, posX, posX + w);
 			}
 			if (menu.mirrorSwitch.active) {
-				y1 = map(a[i], -a.length, max, posY + h + border, posY + border);
+				y1 = map(a[i], -a.length, max, posY + t.offsetXY + h + border, posY + t.offsetXY + border);
 			} else {
 				y1 = map(a[i], 0, max, posY + t.offsetXY + h, posY + t.offsetXY);
 			}

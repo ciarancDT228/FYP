@@ -1,16 +1,7 @@
 
 import java.util.*;
-// import java.io.BufferedWriter;
-// import java.io.File;
-// import java.io.FileOutputStream;
-// import java.io.FileWriter;
-// import java.io.IOException;
-// import java.io.OutputStream;
-// import java.nio.file.Files;
-// import java.nio.file.Paths;
 import processing.sound.*;
 
-ArrayList<Component> components = new ArrayList<Component>();
 Queue<int[]> queue = new LinkedList<int[]>();
 PrintWriter output;
 
@@ -35,7 +26,6 @@ Reset reset;
 AudioBtn volume;
 SettingsBtn settingsBtn;
 Menu menu;
-// Slider speedSlider;
 
 // Arrays and counters
 int[] array;
@@ -75,10 +65,10 @@ float releaseTime = 0.2;
 
 void settings() {
 	// size(1000, 600, OPENGL);
-	// size(1536, 846, P2D);
+	// size(1536, 846, FX2D);
 	// size(800, 500, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(FX2D, 2);
+	fullScreen(P2D, 2);
 	// size(800, 500, P2D);
 	// fullScreen(1);
 	noSmooth();
@@ -86,6 +76,7 @@ void settings() {
 
 void setup()
 {
+	surface.setResizable(true);
 	output = createWriter("UserData.txt");
 	px = (width*5.2083333*pow(10, -4));
 	py = (height*9.2592592*pow(10, -4));
@@ -93,7 +84,6 @@ void setup()
 	fontSize = 16*py;
 	pf = createFont("OpenSans-Regular.ttf", fontSize);
 	menuLerp = 0.5;
-	// surface.setResizable(true);
 
 	desc = false;
 	descThumb = false;
@@ -177,7 +167,7 @@ void draw() {
 		}
 	}
 	b.render(array, colours);
-	p.display(100*px, 25*py, 100*px, 800*py);
+	// p.display(100*px, 25*py, 100*px, 800*py);
 	// noStroke();
 	// fill(p.foreground);
 	// rect(865*px, 995*py, 190*px, 50*py);

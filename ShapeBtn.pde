@@ -40,32 +40,4 @@ class ShapeBtn extends Thumbnail {
 		}
 	}
 
-	void render() {
-		if (highlight) {
-			strokeWeight(1*px);
-			stroke(p.accent);
-		} else {
-			noStroke();
-		}
-		fill(shade);
-		rect(posX - offsetXY, posY + offsetXY, w, h, 8*px);
-		b.renderSimple(arr, this);
-		// Overlay
-		noFill();
-		strokeWeight(6*px);
-		stroke(shade);
-		rect(posX - offsetXY + 13*px, posY + offsetXY + 11*py, 74*px, 52*py, 10*px);
-		// Border
-		// noFill();
-		// strokeWeight(2*px);
-		// stroke(p.accent);
-		// rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
-		//Label
-		fill(p.font);
-		textFont(f);
-		textSize(fontSize);
-		textAlign(CENTER);
-		text(label, posX - offsetXY + 50*px, posY + offsetXY + 86*py);
-	}
-
 }
