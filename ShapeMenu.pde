@@ -79,6 +79,7 @@ class ShapeMenu{
 	}
 
 	void mouseUp() {
+		// Check if any of the buttons were clicked
 		for (int i = 0; i < btnThumbs.size(); i++) {
 			ShapeBtn t = btnThumbs.get(i);
 			if (t.correctLocation() && t.depressed) {
@@ -88,30 +89,18 @@ class ShapeMenu{
 				buttonClicked = false;
 			}
 		}
-		for (int i = 0; i < btnThumbs.size(); i++) {
-			ShapeBtn t = btnThumbs.get(i);
-			if (buttonClicked) {
-				t.active = false;
-				if (!play.active) {
-					reset.reset();
-				}
-			}
-			t.mouseUp();
-		}
 
-		// if (buttonClicked) {
-		// 	for (int i = 0; i < btnThumbs.size(); i++) {
-		// 		ShapeBtn t = btnThumbs.get(i);
-		// 		t.active = false;
-		// 		t.mouseUp();
-		// 	}
-			
-		// } else {
-		// 	for (int i = 0; i < btnThumbs.size(); i++) {
-		// 		ShapeBtn t = btnThumbs.get(i);
-		// 		t.mouseUp();
-		// 	}
-		// }
+		// Deactivate every button and call mouseUp
+		if (buttonClicked) {
+			for (int i = 0; i < btnThumbs.size(); i++) {
+				ShapeBtn t = btnThumbs.get(i);
+				t.active = false;
+				t.mouseUp();
+			}
+			if (!play.active) {
+				reset.reset();
+			}
+		}
 	}
 
 	void mouseDown() {

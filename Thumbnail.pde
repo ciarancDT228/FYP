@@ -52,10 +52,11 @@ class Thumbnail {
 		stroke(shade);
 		rect(posX + 13*px, posY + offsetXY + 11*py, 74*px, 52*py, 10*px);
 		// Border
-		// noFill();
-		// strokeWeight(1*px);
-		// stroke(p.accent);
-		// rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
+		noFill();
+		strokeWeight(1*px);
+		stroke(p.accent);
+		rect(posX + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
+		// Label
 		fill(p.font);
 		textFont(f);
 		textSize(fontSize);

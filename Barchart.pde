@@ -76,8 +76,7 @@ class Barchart{
 		}
 
 		//Draw numbers
-		if (a.length <= 100) {
-			fill(p.barchartFont);
+		if (a.length <= 100) { // Threshold
 			fontSize = (w/a.length/2);
 			f = createFont("OpenSans-Regular.ttf", fontSize);
 			textFont(f);
@@ -90,11 +89,11 @@ class Barchart{
 					textAlign(CENTER, CENTER);
 					y1 = map(a[i], 0, max, posY + h + border, posY + border + (strokeWeight/2));
 				}
-				
+				fill(p.barchartFont);
 				text(a[i], x1, y1);
 			}
 		}
-			
+
 		// Draw bottom to cover round caps
 		noStroke();
 		fill(p.foreground);
@@ -114,13 +113,13 @@ class Barchart{
 
 
 		strokeWeight = w / a.length;
-		fill(p.barchartFg);
+		fill(p.thumbnailBg);
 		noStroke();
 		rect(posX, posY + t.offsetXY, w, h);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
 		max = a.length - 1;
-		stroke(p.barchartBg);
+		stroke(p.thumbnailFg);
 		for (int i = 0; i < a.length; i++) {
 			if (descThumb && (t.label.matches("Bubble") || t.label.matches("Merge") || t.label.matches("Selection"))) {
 				x1 = map(i, a.length, 0, posX, posX + w);

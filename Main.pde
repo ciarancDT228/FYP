@@ -68,7 +68,7 @@ void settings() {
 	// size(1536, 846, FX2D);
 	// size(800, 500, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(P2D, 2);
+	fullScreen(FX2D, 2);
 	// size(800, 500, P2D);
 	// fullScreen(1);
 	noSmooth();

@@ -114,6 +114,7 @@ class Menu {
 			soundRelSlider.posY + soundRelSlider.h + spacer,
 			17*px, 
 			20*py);
+		colourSwitch.active = true;
 
 	}
 
@@ -133,10 +134,10 @@ class Menu {
 		descSwitch.update();
 		colourSwitch.update();
 		if (colourSwitch.active && !colourMode) {
-			p.test();
+			p.dark();
 			colourMode = true;
 		} else if (!colourSwitch.active && colourMode) {
-			p.test2();
+			p.light();
 			colourMode = false;
 		}
 	}

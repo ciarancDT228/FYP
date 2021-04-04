@@ -9,7 +9,7 @@ class AudioBtn extends Button{
 		centreX = posX + (w/2);
 		centreY = posY + (h/2);
 		strokeW = w/20;
-		active = true;
+		active = false;
 	}
 
 	void render() {

@@ -22,6 +22,8 @@ class Palette {
 	int sliderTrackDisabled;
 	int sliderHighlightEnabled;
 	int sliderHighlightDisabled;
+	int thumbnailBg;
+	int thumbnailFg;
 
 	boolean colourMode;
 	// int sliderHover;
@@ -46,21 +48,21 @@ class Palette {
 		this.colourMode = false;
 		// dark();
 		// light();
-		test2();
+		dark();
 	}
+
+	// void dark() {
+	// 	this.background = darkMode[0];
+	// 	this.foreground = darkMode[1];
+	// 	this.hover = darkMode[2];
+	// 	this.select = darkMode[3];
+	// 	this.accent = darkMode[4];
+	// 	this.font = darkMode[5];
+	// 	this.barF = darkMode[5];
+	// 	this.barB = darkMode[0];
+	// }
 
 	void dark() {
-		this.background = darkMode[0];
-		this.foreground = darkMode[1];
-		this.hover = darkMode[2];
-		this.select = darkMode[3];
-		this.accent = darkMode[4];
-		this.font = darkMode[5];
-		this.barF = darkMode[5];
-		this.barB = darkMode[0];
-	}
-
-	void test2() {
 		this.foreground = darkMode[1];
 		this.accent = darkMode[4];
 		this.font = darkMode[5];
@@ -70,23 +72,25 @@ class Palette {
 		this.btnHover = darkMode[2];
 		this.btnSelect = darkMode[3];
 		this.sliderHighlightEnabled = darkMode[0];
-		this.sliderTrackEnabled = darkMode[2];
+		this.sliderTrackEnabled = darkMode[4];
 		this.sliderHighlightDisabled = darkMode[1];
 		this.sliderTrackDisabled = darkMode[3];
+		this.thumbnailBg = #595959;
+		this.thumbnailFg = darkMode[0];
 	}
+
+	// void light() {
+	// 	this.background = lightMode[0];
+	// 	this.foreground = lightMode[1];
+	// 	this.hover = lightMode[2];
+	// 	this.select = lightMode[3];
+	// 	this.accent = lightMode[4];
+	// 	this.font = lightMode[6];
+	// 	this.barF = lightMode[0];
+	// 	this.barB = lightMode[5];
+	// }
 
 	void light() {
-		this.background = lightMode[0];
-		this.foreground = lightMode[1];
-		this.hover = lightMode[2];
-		this.select = lightMode[3];
-		this.accent = lightMode[4];
-		this.font = lightMode[6];
-		this.barF = lightMode[0];
-		this.barB = lightMode[5];
-	}
-
-	void test() {
 		this.foreground = lightMode[0];
 		this.accent = lightMode[1];
 		this.font = lightMode[2];
@@ -99,6 +103,8 @@ class Palette {
 		this.sliderTrackEnabled = lightMode[9];
 		this.sliderHighlightDisabled = lightMode[10];
 		this.sliderTrackDisabled = lightMode[11];
+		this.thumbnailBg = #f6f6f6;
+		this.thumbnailFg = lightMode[5];
 		// int sliderHover = lightMode[12];
 	}
 

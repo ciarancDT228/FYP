@@ -87,7 +87,7 @@ public void settings() {
 	// size(1536, 846, FX2D);
 	// size(800, 500, P2D);
 	// fullScreen(P2D, SPAN);
-	fullScreen(P2D, 2);
+	fullScreen(FX2D, 2);
 	// size(800, 500, P2D);
 	// fullScreen(1);
 	noSmooth();
@@ -347,7 +347,7 @@ class AudioBtn extends Button{
 		centreX = posX + (w/2);
 		centreY = posY + (h/2);
 		strokeW = w/20;
-		active = true;
+		active = false;
 	}
 
 	public void render() {
@@ -478,8 +478,7 @@ class Barchart{
 		}
 
 		//Draw numbers
-		if (a.length <= 100) {
-			fill(p.barchartFont);
+		if (a.length <= 100) { // Threshold
 			fontSize = (w/a.length/2);
 			f = createFont("OpenSans-Regular.ttf", fontSize);
 			textFont(f);
@@ -492,11 +491,11 @@ class Barchart{
 					textAlign(CENTER, CENTER);
 					y1 = map(a[i], 0, max, posY + h + border, posY + border + (strokeWeight/2));
 				}
-				
+				fill(p.barchartFont);
 				text(a[i], x1, y1);
 			}
 		}
-			
+
 		// Draw bottom to cover round caps
 		noStroke();
 		fill(p.foreground);
@@ -516,13 +515,13 @@ class Barchart{
 
 
 		strokeWeight = w / a.length;
-		fill(p.barchartFg);
+		fill(p.thumbnailBg);
 		noStroke();
 		rect(posX, posY + t.offsetXY, w, h);
 		strokeWeight(strokeWeight);
 		strokeCap(SQUARE);
 		max = a.length - 1;
-		stroke(p.barchartBg);
+		stroke(p.thumbnailFg);
 		for (int i = 0; i < a.length; i++) {
 			if (descThumb && (t.label.matches("Bubble") || t.label.matches("Merge") || t.label.matches("Selection"))) {
 				x1 = map(i, a.length, 0, posX, posX + w);
@@ -1042,6 +1041,7 @@ class Menu {
 			soundRelSlider.posY + soundRelSlider.h + spacer,
 			17*px, 
 			20*py);
+		colourSwitch.active = true;
 
 	}
 
@@ -1061,10 +1061,10 @@ class Menu {
 		descSwitch.update();
 		colourSwitch.update();
 		if (colourSwitch.active && !colourMode) {
-			p.test();
+			p.dark();
 			colourMode = true;
 		} else if (!colourSwitch.active && colourMode) {
-			p.test2();
+			p.light();
 			colourMode = false;
 		}
 	}
@@ -1600,6 +1600,8 @@ class Palette {
 	int sliderTrackDisabled;
 	int sliderHighlightEnabled;
 	int sliderHighlightDisabled;
+	int thumbnailBg;
+	int thumbnailFg;
 
 	boolean colourMode;
 	// int sliderHover;
@@ -1624,21 +1626,21 @@ class Palette {
 		this.colourMode = false;
 		// dark();
 		// light();
-		test2();
+		dark();
 	}
+
+	// void dark() {
+	// 	this.background = darkMode[0];
+	// 	this.foreground = darkMode[1];
+	// 	this.hover = darkMode[2];
+	// 	this.select = darkMode[3];
+	// 	this.accent = darkMode[4];
+	// 	this.font = darkMode[5];
+	// 	this.barF = darkMode[5];
+	// 	this.barB = darkMode[0];
+	// }
 
 	public void dark() {
-		this.background = darkMode[0];
-		this.foreground = darkMode[1];
-		this.hover = darkMode[2];
-		this.select = darkMode[3];
-		this.accent = darkMode[4];
-		this.font = darkMode[5];
-		this.barF = darkMode[5];
-		this.barB = darkMode[0];
-	}
-
-	public void test2() {
 		this.foreground = darkMode[1];
 		this.accent = darkMode[4];
 		this.font = darkMode[5];
@@ -1648,23 +1650,25 @@ class Palette {
 		this.btnHover = darkMode[2];
 		this.btnSelect = darkMode[3];
 		this.sliderHighlightEnabled = darkMode[0];
-		this.sliderTrackEnabled = darkMode[2];
+		this.sliderTrackEnabled = darkMode[4];
 		this.sliderHighlightDisabled = darkMode[1];
 		this.sliderTrackDisabled = darkMode[3];
+		this.thumbnailBg = 0xff595959;
+		this.thumbnailFg = darkMode[0];
 	}
+
+	// void light() {
+	// 	this.background = lightMode[0];
+	// 	this.foreground = lightMode[1];
+	// 	this.hover = lightMode[2];
+	// 	this.select = lightMode[3];
+	// 	this.accent = lightMode[4];
+	// 	this.font = lightMode[6];
+	// 	this.barF = lightMode[0];
+	// 	this.barB = lightMode[5];
+	// }
 
 	public void light() {
-		this.background = lightMode[0];
-		this.foreground = lightMode[1];
-		this.hover = lightMode[2];
-		this.select = lightMode[3];
-		this.accent = lightMode[4];
-		this.font = lightMode[6];
-		this.barF = lightMode[0];
-		this.barB = lightMode[5];
-	}
-
-	public void test() {
 		this.foreground = lightMode[0];
 		this.accent = lightMode[1];
 		this.font = lightMode[2];
@@ -1677,6 +1681,8 @@ class Palette {
 		this.sliderTrackEnabled = lightMode[9];
 		this.sliderHighlightDisabled = lightMode[10];
 		this.sliderTrackDisabled = lightMode[11];
+		this.thumbnailBg = 0xfff6f6f6;
+		this.thumbnailFg = lightMode[5];
 		// int sliderHover = lightMode[12];
 	}
 
@@ -2216,16 +2222,38 @@ class ShapeMenu{
 				buttonClicked = false;
 			}
 		}
-		for (int i = 0; i < btnThumbs.size(); i++) {
-			ShapeBtn t = btnThumbs.get(i);
-			if (buttonClicked) {
+		// for (int i = 0; i < btnThumbs.size(); i++) {
+		// 	ShapeBtn t = btnThumbs.get(i);
+		// 	if (buttonClicked) {
+		// 		t.active = false;
+		// 		if (!play.active) {
+		// 			reset.reset();
+		// 		}
+		// 	}
+		// 	t.mouseUp();
+		// }
+
+		if (buttonClicked) {
+			for (int i = 0; i < btnThumbs.size(); i++) {
+				ShapeBtn t = btnThumbs.get(i);
 				t.active = false;
-				if (!play.active) {
-					reset.reset();
-				}
+				t.mouseUp();
 			}
-			t.mouseUp();
+			if (!play.active) {
+				reset.reset();
+			}
 		}
+
+		// for (int i = 0; i < btnThumbs.size(); i++) {
+		// 	ShapeBtn t = btnThumbs.get(i);
+		// 	if (buttonClicked) {
+		// 		t.active = false;
+		// 		if (!play.active) {
+		// 			reset.reset();
+		// 		}
+		// 	}
+		// 	t.mouseUp();
+		// }
 
 		// if (buttonClicked) {
 		// 	for (int i = 0; i < btnThumbs.size(); i++) {
@@ -2479,10 +2507,11 @@ class Thumbnail {
 		stroke(shade);
 		rect(posX + 13*px, posY + offsetXY + 11*py, 74*px, 52*py, 10*px);
 		// Border
-		// noFill();
-		// strokeWeight(1*px);
-		// stroke(p.accent);
-		// rect(posX - offsetXY + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
+		noFill();
+		strokeWeight(1*px);
+		stroke(p.accent);
+		rect(posX + 16*px, posY + offsetXY + 14*py, 68*px, 46*py, 8*px); 
+		// Label
 		fill(p.font);
 		textFont(f);
 		textSize(fontSize);
