@@ -73,7 +73,7 @@ class Menu {
 		speedSlider = new TickSlider(
 			this.posX + 225*px, 
 			sizeSlider.posY + sizeSlider.h + (spacer * 2), 
-			180*px, 20*py, 3, 14); // Speed
+			180*px, 20*py, 1, 14); // Speed
 		
 		soundAttSlider = new Slider(
 			this.posX + 225*px, 

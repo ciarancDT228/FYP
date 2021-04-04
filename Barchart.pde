@@ -59,7 +59,7 @@ class Barchart{
 				stroke(p.barchartFg);
 			}
 			else if (c[i] == 1) {
-				stroke(#aecbfa);
+				stroke(#feefc3);
 			}
 			else {
 				stroke(#ccff90);

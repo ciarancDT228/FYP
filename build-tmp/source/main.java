@@ -109,9 +109,9 @@ public void setup()
 	b = new Barchart(0, 0, width, height - 75*py, 20*px); //Barchart
 	// b = new Barchart(0, 0, width, height, 20*px); //Barchart
 	arrayMax = width;
-	arrayMin = 16; //Min array size
+	arrayMin = 8; //Min array size
 	// arraySize = (int)b.w/2; //Initial array size
-	arraySize = width/30;
+	arraySize = 16;
 	array = GenerateArray.random(arraySize); //Generate
 	colours = GenerateArray.blanks(arraySize);
 
@@ -461,7 +461,7 @@ class Barchart{
 				stroke(p.barchartFg);
 			}
 			else if (c[i] == 1) {
-				stroke(0xffaecbfa);
+				stroke(0xfffeefc3);
 			}
 			else {
 				stroke(0xffccff90);
@@ -1000,7 +1000,7 @@ class Menu {
 		speedSlider = new TickSlider(
 			this.posX + 225*px, 
 			sizeSlider.posY + sizeSlider.h + (spacer * 2), 
-			180*px, 20*py, 3, 14); // Speed
+			180*px, 20*py, 1, 14); // Speed
 		
 		soundAttSlider = new Slider(
 			this.posX + 225*px, 
@@ -2213,6 +2213,7 @@ class ShapeMenu{
 	}
 
 	public void mouseUp() {
+		// Check if any of the buttons were clicked
 		for (int i = 0; i < btnThumbs.size(); i++) {
 			ShapeBtn t = btnThumbs.get(i);
 			if (t.correctLocation() && t.depressed) {
@@ -2222,17 +2223,8 @@ class ShapeMenu{
 				buttonClicked = false;
 			}
 		}
-		// for (int i = 0; i < btnThumbs.size(); i++) {
-		// 	ShapeBtn t = btnThumbs.get(i);
-		// 	if (buttonClicked) {
-		// 		t.active = false;
-		// 		if (!play.active) {
-		// 			reset.reset();
-		// 		}
-		// 	}
-		// 	t.mouseUp();
-		// }
 
+		// Deactivate every button and call mouseUp
 		if (buttonClicked) {
 			for (int i = 0; i < btnThumbs.size(); i++) {
 				ShapeBtn t = btnThumbs.get(i);
@@ -2243,31 +2235,6 @@ class ShapeMenu{
 				reset.reset();
 			}
 		}
-
-		// for (int i = 0; i < btnThumbs.size(); i++) {
-		// 	ShapeBtn t = btnThumbs.get(i);
-		// 	if (buttonClicked) {
-		// 		t.active = false;
-		// 		if (!play.active) {
-		// 			reset.reset();
-		// 		}
-		// 	}
-		// 	t.mouseUp();
-		// }
-
-		// if (buttonClicked) {
-		// 	for (int i = 0; i < btnThumbs.size(); i++) {
-		// 		ShapeBtn t = btnThumbs.get(i);
-		// 		t.active = false;
-		// 		t.mouseUp();
-		// 	}
-			
-		// } else {
-		// 	for (int i = 0; i < btnThumbs.size(); i++) {
-		// 		ShapeBtn t = btnThumbs.get(i);
-		// 		t.mouseUp();
-		// 	}
-		// }
 	}
 
 	public void mouseDown() {

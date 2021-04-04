@@ -1,0 +1,36 @@
+
+Algorithm: Merge Sort
+Speed: 10
+Array size: 29
+Sound: true
+ Mirrored: false
+
+Algorithm: Merge Sort
+Speed: 120
+Array size: 29
+Sound: true
+ Mirrored: false
+
+Algorithm: Merge Sort
+Speed: 120
+Array size: 29
+Sound: true
+ Mirrored: false
+
+Algorithm: Merge Sort
+Speed: 120
+Array size: 29
+Sound: true
+ Mirrored: false
+
+Algorithm: Bubble Sort
+Speed: 120
+Array size: 29
+Sound: true
+ Mirrored: false
+
+Algorithm: Selection Sort
+Speed: 120
+Array size: 29
+Sound: true
+ Mirrored: false

@@ -90,9 +90,9 @@ void setup()
 	b = new Barchart(0, 0, width, height - 75*py, 20*px); //Barchart
 	// b = new Barchart(0, 0, width, height, 20*px); //Barchart
 	arrayMax = width;
-	arrayMin = 16; //Min array size
+	arrayMin = 8; //Min array size
 	// arraySize = (int)b.w/2; //Initial array size
-	arraySize = width/30;
+	arraySize = 16;
 	array = GenerateArray.random(arraySize); //Generate
 	colours = GenerateArray.blanks(arraySize);
 
