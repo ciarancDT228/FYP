@@ -1,0 +1,6 @@
+
+Algorithm: Bubble Sort
+Speed: 4000
+Array size: 18
+Sound: false
+ Mirrored: false
