@@ -1,4 +1,4 @@
-class Slider{
+class Slider {
 
 	float posX, posY;
 	float thumbX, thumbRadius;
@@ -53,6 +53,7 @@ class Slider{
 	void update() {
 		this.posX = lerp(this.posX, menu.wTarget + 225*px, menuLerp);
 		this.thumbX = map(currentVal, minVal, maxVal, posX, posX + w);
+
 		if(depressed) {
 			if(inRangeX()) {
 				thumbX = mouseX;
@@ -98,38 +99,6 @@ class Slider{
 		textAlign(LEFT, CENTER);
 	}
 
-	void render2() {
-		//Draw track base
-		strokeWeight(strokeM);
-		stroke(p.accent);
-		line(posX, centreY, posX + w, centreY);
-		//Draw track highlight
-		strokeWeight(strokeL);
-		stroke(p.font);
-		line(posX, centreY, thumbX, centreY);
-		noStroke();
-		//Draw highlight for hover and depressed
-		if(depressed) {
-			fill(p.font, 130);
-			circle(thumbX, centreY, thumbRadius * 2.5);
-		} else if(distance(mouseX, mouseY, thumbX, centreY) < (h/2)) {
-			fill(p.font, 40);
-			circle(thumbX, centreY, thumbRadius * 2.5);
-		}
-		//Draw Thumb
-		fill(p.font);
-		circle(thumbX, centreY, thumbRadius);
-		// Draw current value
-		textAlign(RIGHT, CENTER);
-		if (round) {
-			text(getVal(), this.posX -20*px, posY + (fontSize / 2) - 1*py);
-		} else {
-			text(getValFloat(), this.posX -20*px, posY + (fontSize / 2) - 1*py);
-		}
-		
-		textAlign(LEFT, CENTER);
-	}
-
 	void mouseDown() {
 		if(insideBoundsXY()) {
 			depressed = true;
@@ -165,7 +134,8 @@ class Slider{
 	}
 
 	int getVal() {
-		return(int)(map(thumbX, posX, posX + w, minVal, maxVal));
+		return(int)(map(thumbX, 
+			posX, posX + w, minVal, maxVal));
 	}
 
 	float getValFloat() {
@@ -173,3 +143,6 @@ class Slider{
 	}
 
 }
+
+
+

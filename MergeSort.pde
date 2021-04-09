@@ -88,10 +88,8 @@ class MergeSort {
 	}
 
 	void stepThrough() {
-		// println("\n --New Step");
 		checkSorted();
 		if (!sorted) {
-			// println("if not sorted");
 			//Colours
 			if (counterL == sizeL && counterR == sizeR) {
 				startMerge = true;
@@ -99,12 +97,10 @@ class MergeSort {
 			//Merge
 			if (startMerge) {
 				if (mergeQueue.size() > 0) {
-					// println("Merge");
 					merge();
 				} else {
 					startMerge = false;
 					endMerge = true;
-					// stop = counterA - 1;
 				}
 			}
 			//Reset
@@ -122,8 +118,6 @@ class MergeSort {
 					sizeR = r - m;
 					endMerge = false;
 					first = true;
-					// println("\nLine 96\ncounterL = " + counterL + "\tsizeL = " + sizeL + "\tl = " + l + 
-					// "\ncounterR = " + counterR + "\tsizeR = " + sizeR + "\tr = " + r);
 				} else {
 					sorted = true;
 				}
@@ -131,7 +125,6 @@ class MergeSort {
 			//Compare
 			checkSorted();
 			if (!startMerge && !endMerge && !sorted) {
-				// println("compare");
 				compare();
 			}
 		}

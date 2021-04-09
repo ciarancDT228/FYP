@@ -61,9 +61,10 @@ float attackTime = 0.001;
 float sustainTime = 0.004;
 float sustainLevel = 0.3;
 float releaseTime = 0.2;
-
+GenerateArrayNonStatic gen;
 
 void settings() {
+	noSmooth();
 	// size(1000, 600, OPENGL);
 	// size(1536, 846, FX2D);
 	// size(800, 500, P2D);
@@ -71,11 +72,11 @@ void settings() {
 	fullScreen(FX2D, 2);
 	// size(800, 500, P2D);
 	// fullScreen(1);
-	noSmooth();
 }
 
 void setup()
 {
+	noSmooth();
 	surface.setResizable(true);
 	output = createWriter("UserData.txt");
 	px = (width*5.2083333*pow(10, -4));
@@ -116,23 +117,22 @@ void setup()
 	triOsc = new TriOsc(this); 
 	env = new Env(this);
 	sound = new MySound(attackTime, sustainTime, sustainLevel, releaseTime, 50, 1200);
+	gen = new GenerateArrayNonStatic();
 	reset.reset();
 }
 
 void draw() {
 	update();
-	count++;
-	count2+=500;
-	
 	background(p.foreground);
+	
+
+	count++;
 
 	if (count % CalcSpeed.getModulus(speed) == 0 && play.active) {
 		// Mergesort
 		if(menu.algMenu.mergeBtn.active == true) {
-			// if (!mergeSort.sorted) {
-				mergeSort.steps(CalcSpeed.getNumSteps(speed), array, colours);
-				sound.play();
-			// }
+			mergeSort.steps(CalcSpeed.getNumSteps(speed), array, colours);
+			sound.play();
 			array = mergeSort.getArray();
 			colours = mergeSort.getColours();
 

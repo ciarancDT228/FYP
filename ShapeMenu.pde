@@ -11,6 +11,7 @@ class ShapeMenu{
 	ShapeBtn parabola;
 	ShapeBtn parabolaInv;
 	ShapeBtn descending;
+	
 
 	public ShapeMenu (float posX, float posY, float w, float h) {
 		this.posX = posX;

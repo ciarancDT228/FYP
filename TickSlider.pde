@@ -12,29 +12,29 @@ class TickSlider extends Slider {
 		current = getVal();
 	}
 
-	int getTickLocation() {
-		tick = (int)round(map(mouseX, posX, posX + w, 0, numTicks));
-		return (int)map(tick, 0, numTicks, posX, posX + w);
-	}
-
 	void update() {
 		this.posX = lerp(this.posX, menu.wTarget + 225*px, menuLerp);
 		this.thumbX = map(tick, 0, numTicks, posX, posX + w);
-		if(depressed) {
+
+		if (depressed) {
 			if(inRangeX()) {
 				thumbX = getTickLocation();
-			}
-			else if (mouseX < posX) {
+			} else if (mouseX < posX) {
 				thumbX = posX;
 				tick = 0;
-			}
-			else if (mouseX > posX + w) {
+			} else if (mouseX > posX + w) {
 				thumbX = posX + w;
 				tick = numTicks;
 			}
 		}
 		setVal();
 	}
+
+	int getTickLocation() {
+		tick = (int)round(map(mouseX, posX, posX + w, 0, numTicks));
+		return (int)map(tick, 0, numTicks, posX, posX + w);
+	}
+
 
 	// void updatePos(boolean closed, float sw) {
 	// 	if(closed) {
@@ -95,23 +95,17 @@ class TickSlider extends Slider {
 	}
 
 	int getVal() {
-		int[] x = {1, 2, 4, 10, 15, 30, 60, 120, 240, 480, 960, 1920, 3840, 7680, 15360};
-		if(tick < 4) {
-			return x[tick];
-		} else {
-			return (int)Math.pow(2, tick - 3) * 15;
-		}
-		//return x[tick];
-		// return (int)Math.pow(2, tick);
+		// int[] x = {1, 2, 4, 10, 15, 30, 
+		// 	60, 120, 240, 480, 1000, 2000, 
+		// 	4000, 8000, 16000, 30000, 60000};
+		int[] x = {1, 2, 4, 10, 30, 100, 300, 700, 1500, 4000, 10000, 20000, 40000, 100000, 200000, 400000, 600000};
+		return x[tick];
 	}
 
 	void setVal() {
-		int[] x = {1, 2, 4, 10, 15, 30, 60, 120, 240, 480, 960, 1920, 3840, 7680, 15360};
-		if(tick < 4) {
-			speed = x[tick];
-		} else {
-			speed = (int)Math.pow(2, tick - 3) * 15;
-		}
+		// int[] x = {1, 2, 4, 10, 15, 30, 60, 120, 240, 480, 1000, 2000, 4000, 8000, 16000, 30000, 60000};
+		int[] x = {1, 2, 4, 10, 30, 100, 300, 700, 1500, 4000, 10000, 20000, 40000, 100000, 200000, 400000, 600000};
+		speed = x[tick];
 	}
 
 }

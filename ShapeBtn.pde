@@ -1,9 +1,12 @@
 class ShapeBtn extends Thumbnail {
 
 	String name;
+	GenerateArrayNonStatic gen;
+
 
 	public ShapeBtn(float posX, float posY, float w, float h, String name) {
 		super(posX, posY, w, h);
+		gen = new GenerateArrayNonStatic();
 		crr = GenerateArray.blanks(arrSize);
 		if (name.matches("random")) {
 			arr = GenerateArray.random(arrSize);
@@ -19,11 +22,11 @@ class ShapeBtn extends Thumbnail {
 			this.name = "quadrant";
 		} else if (name.matches("heartbeat")) {
 			arr = GenerateArray.sinWave(arrSize, 7.5);
-			this.label = "Heartbeat";
+			this.label = "Squiggle";
 			this.name = "heartbeat";
 		} else if (name.matches("squiggle")) {
-			arr = GenerateArray.squiggle(arrSize);
-			this.label = "Spectrum";
+			arr = gen.perlin(arrSize);
+			this.label = "Perlin Noise";
 			this.name = "squiggle";
 		} else if (name.matches("parabola")) {
 			arr = GenerateArray.parabola(arrSize);

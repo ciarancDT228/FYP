@@ -60,7 +60,7 @@ class Reset extends Button{
 				} else if (s.name.matches("heartbeat")) {
 					array = GenerateArray.sinWave(arraySize, 7.5);
 				} else if (s.name.matches("squiggle")) {
-					array = GenerateArray.squiggle(arraySize);
+					array = gen.perlin(arraySize);
 				} else if (s.name.matches("parabola")) {
 					array = GenerateArray.parabola(arraySize);
 				} else if (s.name.matches("parabolaInv")) {

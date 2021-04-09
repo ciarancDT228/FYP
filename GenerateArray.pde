@@ -54,7 +54,7 @@ static class GenerateArray {
 
         length-=1;
         for(int i = 0; i < arr.length; i++){
-            arr[i] = (int)(Math.round(length*Math.sqrt(1-Math.pow(((double)i/(double)length),2))))+1;
+            arr[i] = (int)(round(length*sqrt(1-pow(((float)i/(float)length),2.0))))+1;
         }
         return arr;
     }
@@ -64,7 +64,7 @@ static class GenerateArray {
 
         length-=1;
         for(int i = 0; i < arr.length; i++){
-            arr[i] = (int)Math.round((4/(double)length)*(Math.pow((i-((double)length/2)),2)))+1;
+            arr[i] = (int)round((4/(float)length)*(pow((i-((float)length/2)),2)))+1;
         }
         return arr;
     }
@@ -74,7 +74,7 @@ static class GenerateArray {
 
         length-=1;
         for(int i = 0; i < arr.length; i++){
-            arr[i] = (int)Math.round((-4/(double)length)*(Math.pow((i-((double)length/2)),2)))+length+1;
+            arr[i] = (int)round((-4/(float)length)*(pow((i-((float)length/2)),2)))+length+1;
         }
         return arr;
     }
@@ -85,10 +85,20 @@ static class GenerateArray {
 
         length-=1;
         for(int i = 0; i < arr.length; i++){
-            arr[i] = (int)Math.round(length*(Math.pow((Math.sin(Math.PI+(Math.pow(2,((4*period)/length))))),2)))+1;
-            period += Math.PI;
+            arr[i] = (int)round(length*(pow((sin(PI+(pow(2,((4*period)/length))))),2)))+1;
+            period += PI;
         }
         return arr;
     }
+
+    // static int[] squiggle(int length){
+    //     // int period = 0;
+    //     int[] arr = new int[length];
+
+    //     for(int i = 0; i < arr.length; i++){
+    //         arr[i] = int(noise(i/100));
+    //     }
+    //     return arr;
+    // }
 
 }

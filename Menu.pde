@@ -24,6 +24,8 @@ class Menu {
 	Button mirrorSwitch;
 	Button descSwitch;
 	Button colourSwitch;
+	Button apply;
+	Button quit;
 
 	boolean toggleMenu;
 	boolean closed;
@@ -111,10 +113,22 @@ class Menu {
 
 		colourSwitch = new ToggleSwitch(
 			this.posX + this.w - spacer - 17*px, 
-			soundRelSlider.posY + soundRelSlider.h + spacer,
+			soundRelSlider.posY + soundRelSlider.h  + (spacer * 2),
 			17*px, 
 			20*py);
 		colourSwitch.active = true;
+
+		apply = new Apply(
+			this.posX + 8*px, 
+			height - 179*py, 
+			195*px, 
+			76*py);
+
+		quit = new Quit(
+			this.posX + 215*px, 
+			height - 179*py, 
+			195*px, 
+			76*py);
 
 	}
 
@@ -133,6 +147,8 @@ class Menu {
 		arrSizeDisplay = sizeSlider.getVal();
 		descSwitch.update();
 		colourSwitch.update();
+		apply.update();
+		quit.update();
 		if (colourSwitch.active && !colourMode) {
 			p.dark();
 			colourMode = true;
@@ -170,6 +186,10 @@ class Menu {
 			speedSlider.posY + speedSlider.h + spacer, 
 			this.posX + this.w - margin, 
 			speedSlider.posY + speedSlider.h + spacer);
+		line(this.posX + margin, // Below Sound
+			soundRelSlider.posY + soundRelSlider.h + spacer, 
+			this.posX + this.w - margin, 
+			soundRelSlider.posY + soundRelSlider.h + spacer);
 
 		algMenu.render();
 		shapeMenu.render();
@@ -182,6 +202,8 @@ class Menu {
 		mirrorSwitch.render();
 		descSwitch.render();
 		colourSwitch.render();
+		apply.render();
+		quit.render();
 
 		//Text
 		fill(p.font); // Array Size
@@ -196,8 +218,9 @@ class Menu {
 		textFont(f);
 		textSize(fontSize);
 		textAlign(LEFT, TOP);
-		text("Mirror", this.posX + spacer + (w/1.5), algMenu.posY + algMenu.h + (spacer * 2) + (fontSize / 3));
-		text("Desc", this.posX + spacer + (w/1.5), posY + (spacer * 2) + (fontSize / 3));
+		text("Desc", this.posX + spacer + (w/1.5), posY + (spacer * 2.1) + (fontSize / 3));
+		text("Mirror", this.posX + spacer + (w/1.5), algMenu.posY + algMenu.h + (spacer * 2.1) + (fontSize / 3));
+		text("Dark Mode", this.posX + spacer*15, soundRelSlider.posY + soundRelSlider.h + (spacer * 1.6) + (fontSize / 3));
 		// text("Speed", this.posX + 30*px, sizeSlider.posY + sizeSlider.h + (spacer * 2) + (fontSize / 2));
 
 		textAlign(LEFT, CENTER);
@@ -224,6 +247,8 @@ class Menu {
 		mirrorSwitch.mouseUp();
 		descSwitch.mouseUp();
 		colourSwitch.mouseUp();
+		apply.mouseUp();
+		quit.mouseUp();
 	}
 
 	void mouseDown() {
@@ -238,6 +263,8 @@ class Menu {
 		mirrorSwitch.mouseDown();
 		descSwitch.mouseDown();
 		colourSwitch.mouseDown();
+		apply.mouseDown();
+		quit.mouseDown();
 	}
 
 	void keyPressed() {
